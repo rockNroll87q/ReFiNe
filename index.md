@@ -8,7 +8,7 @@ title: <a href="https://rocknroll87q.github.io/ReFiNe">ReFiNe</a>
 ReFiNe (Replicability of Findings in Neuroimaging) is an open community initiative aimed at systematically evaluating the replicability of neuroimaging findings. The project is based on a series of direct replication studies that reproduce original analyses as closely as possible in independent datasets to determine which findings replicate, which do not, and which factors predict replication success.
 
 <p align="center">
-<img src="./misc/img.png" width="50%" />  
+<img src="./misc/refine_logo_text-large.png" width="50%" />  
 <!--<figcaption>Figure | Investigating the Replicability of Findings in Neuroimaging </figcaption>-->
 </p>
 
