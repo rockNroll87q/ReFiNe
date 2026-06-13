@@ -1,16 +1,27 @@
-const FEATURE_KEYS = [
-  "t1w_mri",
-  "fmap",
-  "resting_state_fMRI",
-  "task_fMRI",
-  "dti",
-  "pet",
-  "eeeg",
-  "meg",
-  "eyetracking",
-  "genetic_or_genomic_data",
-  "structural_connectivity"
+const REFINE_FEATURES = [
+  ["t1w_mri", "T1w MRI"],
+  ["vbm_or_voxelwise_morphometry", "VBM / voxel-wise morphometry"],
+  ["mdd_patients", "MDD patients"],
+  ["healthy_controls", "Healthy controls"],
+  ["genetic_data", "Genetic data"],
+  ["depression_scale", "Depression scale"],
+  ["anxiety_scale", "Anxiety scale"],
+  ["clinical_outcomes", "Clinical outcomes"],
+  ["longitudinal_data", "Longitudinal data"],
+  ["medication_status", "Medication status"],
+  ["trauma_or_life_stress", "Trauma / life-stress data"],
+  ["cognitive_data", "Cognitive data"],
+  ["blood_or_biomarker_data", "Blood / biomarker data"]
 ];
+
+function getFeatureKeys() {
+  return REFINE_FEATURES.map(f => f[0]);
+}
+
+function getFeatureLabel(key) {
+  const found = REFINE_FEATURES.find(f => f[0] === key);
+  return found ? found[1] : key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
 
 const CONTACT_LABELS = {
   "Contact via project coordinator": "Contact via project coordinator",
@@ -142,12 +153,11 @@ function renderCard(paper) {
   card += `<div class="meta">${escapeHtml(paper.authors)} · ${paper.year}</div>`;
   card += `<div class="meta">DOI: <a href="${paper.doi}" target="_blank">${paper.doi}</a></div>`;
 
-  // Dataset features needed
+  // Dataset features needed (ReFiNe features)
   card += `<p><strong>Dataset features needed:</strong></p>`;
   card += `<div class="badges">`;
-  for (const key of FEATURE_KEYS) {
+  for (const [key, label] of REFINE_FEATURES) {
     const val = paper.dataset_features_needed?.[key] || "unclear";
-    const label = key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
     card += `<span class="badge ${val}">${label}: ${val}</span>`;
   }
   card += `</div>`;
@@ -164,16 +174,27 @@ function renderCard(paper) {
 }
 
 function render() {
-  const activeFilters = new Set(
-    Array.from(document.querySelectorAll(".filter select"))
-      .map(s => s.value)
-      .filter(v => v !== "any")
-  );
+  // Collect active filter values keyed by feature key
+  const activeFilters = {};
+  for (const [key] of REFINE_FEATURES) {
+    const sel = document.querySelector(`.filter select[data-key="${key}"]`);
+    if (sel && sel.value !== "any") {
+      activeFilters[key] = sel.value;
+    }
+  }
 
   const filtered = papers.filter(p => {
     const features = p.dataset_features_needed || {};
-    for (const key of activeFilters) {
-      if (features[key] !== "yes") return false;
+    for (const [key, filterVal] of Object.entries(activeFilters)) {
+      const paperVal = features[key] || "unclear";
+      // If filter is "yes", only show papers with yes
+      if (filterVal === "yes" && paperVal !== "yes") return false;
+      // If filter is "no", only show papers with no
+      if (filterVal === "no" && paperVal !== "no") return false;
+      // If filter is "unclear", only show papers with unclear
+      if (filterVal === "unclear" && paperVal !== "unclear") return false;
+      // If filter is "not_applicable", only show papers with not_applicable
+      if (filterVal === "not_applicable" && paperVal !== "not_applicable") return false;
     }
     return true;
   });
@@ -186,13 +207,14 @@ function render() {
 function buildFilters() {
   const container = document.getElementById("filters");
   let html = "";
-  for (const key of FEATURE_KEYS) {
-    const label = key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+  for (const [key, label] of REFINE_FEATURES) {
     html += `<div class="filter">`;
-    html += `<label>${label}</label>`;
+    html += `<label>${escapeHtml(label)}</label>`;
     html += `<select class="filter" data-key="${key}">`;
     html += `<option value="any">Any</option>`;
     html += `<option value="yes">Yes only</option>`;
+    html += `<option value="no">No only</option>`;
+    html += `<option value="unclear">Unclear only</option>`;
     html += `</select>`;
     html += `</div>`;
   }

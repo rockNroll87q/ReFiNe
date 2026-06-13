@@ -200,7 +200,7 @@ def extract_paper(paper_id: str) -> None:
     force_pdf = os.environ.get("REFINE_FORCE_PDF", "false").lower() == "true"
     
     if text_path.exists() and not force_pdf:
-        console.print(f"Reusing existing text file: {text_path}")
+        console.print(f"Using cached text: {text_path}")
         text = text_path.read_text(encoding="utf-8")
     else:
         if force_pdf:
