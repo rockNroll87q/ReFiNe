@@ -1,0 +1,750 @@
+International Journal of Psychiatry in Clinical Practice
+ISSN: 1365-1501 (Print) 1471-1788 (Online) Journal homepage: www.tandfonline.com/journals/ijpc20
+FKBP5 is associated with amygdala volume in
+the human brain and mood state: A voxel-based
+morphometry (VBM) study
+Hirofumi Hirakawa, Jotaro Akiyoshi, Masaaki Muronaga, Yoshihiro Tanaka,
+Yoshinobu Ishitobi, Ayako Inoue, Harumi Oshita, Saeko Aizawa, Koji Masuda,
+Haruka Higuma, Masayuki Kanehisa, Taiga Ninomiya & Yoshihisa Kawano
+To cite this article: Hirofumi Hirakawa, Jotaro Akiyoshi, Masaaki Muronaga, Yoshihiro
+Tanaka, Yoshinobu Ishitobi, Ayako Inoue, Harumi Oshita, Saeko Aizawa, Koji Masuda, Haruka
+Higuma, Masayuki Kanehisa, Taiga Ninomiya & Yoshihisa Kawano (2016) FKBP5 is associated
+with amygdala volume in the human brain and mood state: A voxel-based morphometry
+(VBM) study, International Journal of Psychiatry in Clinical Practice, 20:2, 106-115, DOI:
+10.3109/13651501.2016.1144772
+To link to this article:  https://doi.org/10.3109/13651501.2016.1144772
+Published online: 16 Mar 2016.
+Submit your article to this journal 
+Article views: 375
+View related articles 
+View Crossmark data
+Citing articles: 7 View citing articles 
+Full Terms & Conditions of access and use can be found at
+https://www.tandfonline.com/action/journalInformation?journalCode=ijpc20
+
+INTERNATIONAL JOURNAL OF PSYCHIATRY IN CLINICAL PRACTICE, 2016
+VOL. 20, NO. 2, 106–115
+http://dx.doi.org/10.3109/13651501.2016.1144772
+ORIGINAL ARTICLE
+FKBP5 is associated with amygdala volume in the human brain and mood
+state: A voxel-based morphometry (VBM) study
+Hirofumi Hirakawa a, Jotaro Akiyoshi a, Masaaki Muronaga a, Yoshihiro Tanaka a, Yoshinobu Ishitobi a,
+Ayako Inoue a, Harumi Oshita b, Saeko Aizawa a, Koji Masuda a, Haruka Higuma a, Masayuki Kanehisa a,
+Taiga Ninomiya a and Yoshihisa Kawano c
+aDepartment of Neuropsychiatry, Oita University Faculty of Medicine, Hasama-Machi, Oita, Japan; bDepartment of Applied Linguistics,
+Oita University Faculty of Medicine, Hasama-Machi, Oita, Japan; cKawano Neurosurgery Hospital, Mori-Machi, Oita, Japan
+ABSTRACT
+The present study was to investigate the effects of 6 FK506 binding protein 51 (FKBP5) single
+nucleotide polymorphisms (SNPs) on brain structure using voxel-based morphometry (VBM) and
+the psychological tests to psychological stress. We genotyped 112 healthy controls with respect to
+6 SNPs (rs) of FKBP5. We examined the Beck Depression Inventory and the State (STAI-S) and Trait
+(STAI-T) versions of the Spielberger Anxiety Inventory and the Profile of Mood States (POMS) to
+evaluate mood. The right amygdala was larger in subjects with the minor allele (C) of rs3800373
+and rs992105 and the minor allele (T) of rs1360780. The right middle orbitofrontal region in those
+with the minor allele (C) of rs3800373 and the right inferior orbitofrontal region in those with the
+minor allele (T) of rs9470080 was larger. Both the amygdala volumes were associated significantly
+with FKBP5 SNPs. We found significant relationships between factors in POMS and the right and left
+amygdala and left insula. Our results suggest that FKBP5 SNPs are associated with the alternations
+of volumes in right amygdala and the right middle and inferior orbitofrontal region. Genetic
+variants of FKBP5 may be associated with depressive and anxiety state via differential effects on
+amygdala and orbitofrontal region.
+ARTICLE HISTORY
+Received 6 May 2015
+Revised 30 November 2015
+Accepted 15 January 2016
+Published online 15 March
+2016
+KEYWORDS
+Amygdala; FKBP5; genetic
+susceptibility; genetics;
+magnetic resonance ima-
+ging; POMS
+Introduction
+Stress has been associated with the onset, symptoms
+and course of psychiatric illness (Read et al. 2005;
+Khashan et al. 2008; Arseneault et al. 2011).
+Dysregulation of the hypothalamic–pituitary–adrenal
+(HPA) axis has been observed in patients with psychiatric
+disorders, both under basal conditions and during stress
+(Gallagher et al. 2007; Bradley et al. 2010). Post-mortem
+analysis has revealed decreased messenger ribonucleic
+acid (mRNA) expression of the glucocorticoid receptor
+(GR), the crucial receptor that is responsible for stress-
+induced cortisol secretion (Sinclair et al. 2012a, b).
+We investigated the role of FK506 binding protein 51
+(FKBP5) in modulating the reaction of the HPA axis to
+social stress (Mahon et al., 2013). This protein is a
+negative regulator of glucocorticoids that reduces their
+binding affinity for the GR (Denny et al. 2000). When
+glucocorticoids bind to the GR, the receptor complex is
+stimulated, and FKBP51 is exchanged for FK506 binding
+protein 52 (FKBP52 or FKBP4), a positive regulator of GR
+signaling (Riggs et al. 2003). We postulated that these
+associations are at least partly due to the influence of
+the observed FKPB5 polymorphism and the subsequent
+changes in the GR-mediated HPA axis.
+Stressful life events (SLEs) have been consistently
+implicated in the pathophysiology of mood and anxiety
+disorders (Kendler et al. 1999). The stress response
+is induced by exposure to stressors and results in
+catecholamine and glucocorticoid secretion, which are
+the primary effectors of the stress system. GR function is
+regulated by a multi-protein complex composed of
+several FKBP5 variants that have been associated with an
+increased recurrence of depression and a rapid response
+to antidepressant treatment (Binder et al. 2004;
+Kirchheiner et al. 2008; Lekman et al. 2008). The
+T allele of rs1360780 occurs more frequently among
+patients affected by major depressive disorder (MDD)
+with comorbid anxiety disorders (Minelli et al. 2013). The
+T allele is more often associated with personality traits
+CONTACT Jotaro Akiyoshi akiyoshi@oita-u.ac.jp Department of Neuropsychiatry, Oita University Faculty of Medicine, Hasama-Machi, Oita 879–5593,
+Japan
+Supplemental data for this article can be accessed here
+/C2232016 Taylor & Francis
+
+that lead to increased vulnerability to anxiety. Decreased
+GR sensitivity in MDD has only been observed in patients
+with an FKBP5 risk allele, such as the minor T allele of
+rs1360780 (Vreeburg et al. 2009; Menke et al. 2013).
+Basic animal investigations have demonstrated that
+stress and anxiety during early development or during
+the infant or juvenile periods can lead to long-lasting
+changes in brain structure and function. The most
+prominent of these changes have been detected in the
+amygdala, an area that is central to the brain’s emotional
+circuitry (LeDoux 2000; Dolan and Vuilleumier 2003;
+McEwen 2003; Lupien et al. 2009; Pessoa and Adolphs
+2010). Stress and anxiety have also been associated with
+an enlarged amygdala, particularly the basolateral
+nuclei, resulting from the persistent interaction of
+stress-sensitive hormones and experience-dependent
+plasticity in the growing animal brain (Mitra et al.
+2005, 2008; Vyas et al. 2006; Lupien et al. 2009).
+Generalised anxiety disorder has also been reported to
+be associated with an increased size of the adult
+amygdala (Etkin et al. 2007; Schienle et al. 2011;
+Hettema et al. 2012), as well as in healthy adults with
+high trait anxiety (Baur et al. 2012; Holmes et al. 2012).
+The amygdala is the core area for neural emotional
+processing and plays fundamental roles in mood and
+anxiety disorders (Drevets et al. 2008). This structure is
+involved in the regulation of stress responses by the
+excitatory effects of the HPA axis (Feldman and
+Weidenfeld 1998). The main effect of FKBP5 occurs
+within the left amygdala, which has the highest activity,
+largest volume and increased coupling with the left
+hippocampus and the orbitofrontal cortex (OFC; Holz
+et al. 2014).
+We focused on brain regions involved in the initial
+processing of emotional information (amygdala) and
+investigated the influence of emotional information
+(amygdala and OFC) on regions related to appraisal
+and decision making (Wright al. 2007). The aim of our
+study was to investigate whether this polymorphism
+might be associated with altered brain structure and
+psychological stress in 112 healthy controls.
+Material and methods
+Subjects
+The study included 112 non-clinical Japanese volunteers
+from an affective and anxiety neuroimaging study. The
+study population consisted of healthy volunteers with
+no history of mental illness. None of the participants
+were taking any medications at the time of the tests. The
+exclusion criteria included the following: (1) a history of
+or current axis I pathology as defined by the Diagnostic
+and Statistical Manual of Mental Disorders, 4th Edition
+(DSM IV); (2) any use of psychoactive drugs; (3) any
+history of or concurrent major internal or neurological
+disorder; (4) alcohol and/or drug dependency or recent
+abuse (past year); (5) hypertension; and (6) general
+contraindications to magnetic resonance imaging (MRI).
+All subjects were biologically unrelated. All participants
+were screened using the Japanese version of the Mini
+International Neuropsychiatric Interview (M.I.N.I.)
+(Otsubo et al. 2005) and underwent unstructured inter-
+views conducted by a research psychiatrist. The study
+was carried out in accordance with the Declaration of
+Helsinki and was approved by the Ethical Review Boards
+of the Oita University Faculty of Medicine. After
+providing a description of the study, written informed
+consent was obtained from each subject.
+SNP genotyping
+Deoxyribonucleic acid (DNA) was extracted from blood
+samples using a DNA extractor SP Kit (WAKO, Osaka,
+Japan). The single nucleotide polymorphisms (SNPs)
+were genotyped using the TaqMan 50 exonuclease
+allelic discrimination assay (Applied Biosystems, Foster
+City, CA). The following reference SNPs (rs) were tested
+(A, C, G, and T refer to the alleles under the SNP database
+nomenclature system): rs3800373, A/C; rs992105, A/C;
+rs9296158, A/G; rs1360780, C/T; rs9470080, C/T;
+rs2766534, G/T. According to the manufacturer’s instruc-
+tions, 10 mL of a PCR reaction mixture containing 2 ng of
+genomic DNA was analysed using the TaqMan PCR kit
+including a universal PCR master mix. Deviations of
+the genotype distributions from the Hardy–Weinberg
+equilibrium (HWE) were assessed with the /C31
+2-test for
+goodness of fit.
+Magnetic resonance imaging procedure
+MRI scans were performed using a Siemens 3.0-T scanner
+(Verena, Siemens Medical System) in the Magnetic
+Resonance Center of Kawano Neurosurgical Hospital.
+The subjects were asked to lie in the scanner with their
+eyes closed. A standard birdcage head coil was used
+with restraining foam pads placed on either side of the
+head to minimise head motion, and cotton ear plugs
+were used to reduce noise. For the morphometric study,
+high spatial resolution, three-dimensional (3D) T1-
+weighted brain images were obtained by scanning in
+the sagittal plane (echo time [TE]/repetition time [TR],
+slice thickness ¼ 1 mm, gap ¼ 0 mm, repetition time
+(TR) ¼ 2300 ms, echo time (TE) ¼ 2.03 ms, field of view
+(FOV) ¼ 256 /C2 256 cm, flip angle ¼ 9, matrix size ¼ 256 /C2
+256, and slices ¼ 176). Raw 3D T1-weighted volume data
+were transferred to an appropriate workstation.
+INTERNATIONAL JOURNAL OF PSYCHIATRY IN CLINICAL PRACTICE 107
+
+A preprocessing voxel-based morphometry (VBM) step
+from a statistical parametric mapping (SPM) protocol
+was improved using the DARTEL registration method
+(Ashburner 2007). This technique was more deformable,
+and it notably improved the small inner structure
+realignment (Yassa and Stark 2009). Segmentation,
+normalisation and modulation were performed using
+DARTEL as a toolbox for SPM8 (Wellcome Department of
+Imaging Neuroscience, London, UK) running on MATLAB
+R2013a software (MathWorks, Natick, MA). Gray matter
+probability values were smoothed using an 8-mm full-
+width, half-maximum Gaussian kernel.
+Psychological tests
+We administered the Beck Depression Inventory and the
+State-Trait Anxiety Inventory (STAI-S and STAI-T) versions
+of the Spielberger Anxiety Inventory to all participants to
+evaluate state and trait anxiety (Beck et al. 1979;
+Spielberger 1983). The STAI has demonstrated well to
+excellent reliability in trait- and state-anxiety
+(Spielberger et al. 1970). We also administered the
+Profile of Mood States to evaluate mood (POMS; McNair
+et al. 1992). The POMS was designed for use with non-
+depressed populations and is perceptive to subclinical
+variations inmood states.
+Statistical analyses
+Data were presented as mean ± standard deviation and
+analysed using the SPSS statistical package version 22
+(SPSS Inc., Chicago, IL, USA). A one-way analysis of
+variance was used for the analysis of age, education
+years, BDI, STAI, and POMS among the six genotype
+groups. The /C31
+2-test was used for the analysis of gender
+distribution and the relationship between FKBP5 poly-
+morphism and VBM. Differences in the gray matter
+volume among the genotype groups were determined
+using analysis of covariance (ANCOVA), controlling for
+age, gender, years of education, and whole-brain volume.
+A seed level of 50.001 (uncorrected) and a cluster size
+over 759, which was calculated by the AlphaSim
+programme in AFNI (http://afni.nimh.nih.gov/afni/) for
+cluster-based multiple comparison correction, were
+selected as criteria. Pearson correlations were used to
+determine the associations between brain structures and
+the POMS. Logistic regression analysis was used to
+identify possible demographic variables and independ-
+ent predictors of FKBP5 SNPs.
+Results
+There were no significant differences in the mean age,
+years of education, or gender distribution among the six
+genotype groups. The obtained genotype distributions
+(rs3800373, rs992105, rs9296158, rs1360780, rs9470080,
+and rs2766534) did not deviate significantly from
+the HWE.
+Differences in the grey matter volumes among
+the genotyped groups
+SNPs rs3800373, rs992105, rs1360780, and rs9470080:
+There were significant differences in the right amygdala,
+F(1, 2) ¼ 4.14, p ¼ 0.02, and the right-middle and inferior
+orbitofrontal cortices, F(1, 2) ¼ 3.72, p ¼ 0.03; F(1,
+2) ¼ 3.73, p ¼ 0.03, associated with the rs3800373 SNP
+(Figures 1 and 2). Figure 1 shows an MRI demonstrating
+the higher grey matter volume (GMV) in the right
+amygdala associated with the C allele (rs3800373; CC
+carriers4AC and AA). Figure 2 shows an MRI depicting
+the larger GMV in the right-middle and inferior
+orbitofrontal cortices associated with the C allele
+(rs3800373; CC carriers 4AC and AA).
+There was a significant difference in the right amyg-
+dala, F(1, 2) ¼ 3.50, p ¼ 0.03, associated with the rs992105
+SNP (Figure 3). Figure 3 shows an MRI exhibiting a larger
+GMV in the right-middle and inferior OFC associated with
+the C allele (rs992105; CC carriers 4AC and AA).
+There was a significant difference in the right amyg-
+dala for the rs1360780 SNP, F(1, 2) ¼ 5.21, p ¼ 0.001
+(Figure 4). Figure 4 shows an MRI depicting a larger GMV
+in the right amygdala associated with the T allele
+(rs1360780; TT carriers 4CT and CC).
+There was a significant difference in the right inferior
+OFC for the rs9470080 SNP, F(1, 2) ¼ 5.65, p ¼ 0.005
+(Figure 5). Figure 5 shows an MRI revealing a larger GMV
+in the right inferior OFC associated with the T allele
+(rs9470080; TT carriers 4CT and CC).
+SNPs rs929615 and rs2766534: we found no statistic-
+ally significant alterations of the GMV in several cortical
+regions associated with the rs9296158 and rs2766534
+SNPs (Supplementary Table S1).
+Differences in the psychological tests among the
+genotyped groups
+The BDI scores in the AA group of rs992105 were higher
+than those in the AC and CC groups ( p50.049)
+(Supplementary Table S2). There were no significant
+differences among STAI scores in the rs3800373,
+rs992105, rs9296158, rs1360780, rs9470080, and
+rs2766534 SNP groups (Supplementary Table S2). There
+were no significant differences among POMS scores in
+the rs3800373, rs992105, rs9296158, rs1360780,
+rs9470080 and rs2766534 SNP groups (Supplementary
+Table S2).
+108 H. HIRAKAWA ET AL.
+
+Figure 1. Magnetic resonance imaging (MRI) exhibiting higher grey matter volume in the right amygdala associated with the C allele
+(rs3800373; CC carriers 4AC and AA). For illustrative purposes, the statistical threshold was set at p50.001 (uncorrected). There were
+no differences between the CC carriers and the AC + AA carriers with regard to tension–anxiety, depression–dejection, anger–hostility,
+vigor, fatigue or confusion.
+Figure 2. Magnetic resonance imaging (MRI) exhibiting higher grey matter volumes in the right middle and inferior orbitofrontal
+cortices associated with the C allele (rs3800373; CC carriers 4AC and AA). For illustrative purposes, the statistical threshold was set at
+p 5 0.001 (uncorrected). There were no differences between the CC carriers and the AC + AA carriers with regard to tension–anxiety,
+depression–dejection, anger–hostility, vigor, fatigue or confusion.
+INTERNATIONAL JOURNAL OF PSYCHIATRY IN CLINICAL PRACTICE 109
+
+Figure 3. Magnetic resonance imaging (MRI) exhibiting higher grey matter volume in the right amygdala associated with the C allele
+(rs992105; CC carriers 4AC and AA). For illustrative purposes, the statistical threshold was set at p 5 0.001 (uncorrected). The scores
+for tension–anxiety and depression–dejection were significantly higher among the CC carriers compared with the AC + AA carriers
+(p50.01). There scores for vigor were significantly lower among the CC carriers compared with the AC + AA carriers ( p 5 0.05). There
+were no differences between the CC carriers and the AC + AA carriers with regard to anger–hostility, fatigue or confusion.
+Figure 4. Magnetic resonance imaging (MRI) exhibiting higher grey matter volume in the right amygdala associated with the T allele
+(rs1360780; TT carriers 4CT and CC). For illustrative purposes, the statistical threshold was set at p 5 0.001 (uncorrected). There were
+no differences between the TT carriers and the TC + TT carriers with regard to tension–anxiety, depression–dejection, anger–hostility,
+vigor, fatigue or confusion.
+110 H. HIRAKAWA ET AL.
+
+Relationship between the POMS and VBM
+We found significant relationships between depression–
+dejection, anger–hostility and fatigue and the right
+amygdala. There were significant relationships between
+tension–anxiety, depression–dejection, anger–hostility
+and fatigue and the left amygdala. There was a
+significant relationship between anger–hostility and
+the left insula (Table 2).
+Predictors of FKBP5 SNPs
+According to the logistic regression analysis, two
+variables were identified as independent predictors
+of FKBP5 SNPs: VBM and the POMS. These variables
+explained 19.29% of the variation in rs3800373 (AA),
+18.61% of the variation in rs3800373 (AC), 14.60% of
+the variation in rs3800373 (AA), and 12.79% of the
+variation in rs9470080 (CC). The right and left amyg-
+dala volumes were associated significantly with
+FKBP5 SNPs.
+Discussion
+We identified variations in gray matter brain volume that
+were independently associated with 4 SNPs (rs3800373,
+rs992105, rs1360780 and rs9470080) of FKBP5.
+Specifically, MRI revealed increases in GMV that were
+associated with the FKBP5 SNPs.
+Figure 5. Magnetic resonance imaging (MRI) exhibiting higher grey matter volume in the right inferior orbitofrontal cortex associated
+with the T allele (rs9470080; TT carriers 4CT and CC). For illustrative purposes, the statistical threshold was set at p 5 0.001
+(uncorrected). The scores for anger–hostility, vigor and fatigue were significantly lower among the TT carriers compared with the
+CT + TT carriers (p 50.05). There were no differences between the TT carriers and the CT + TT carriers with regard to tension–anxiety,
+depression–dejection, fatigue or confusion.
+Table 1. Relationship between STAI and VBM.
+Trait State
+Right
+Amygdala 0.16 0.20 *
+Hippocampus 0.08 0.05
+Anterior cingulate 0.08 0.08
+Middle cingulate 0.03 /C0 0.05
+Posterior cingulate 0.05 /C0 0.01
+Insula 0.14 0.08
+Superior orbitofrontal /C0 0.02 /C0 0.03
+Middle orbitofrontal /C0 0.01 /C0 0.13
+Inferior orbitofrontal 0.06 0.06
+Left
+Amygdala 0.17 * 0.18*
+Hippocampus 0.14 0.07
+Anterior cingulate 0.03 0.09
+Middle cingulate /C0 0.06 /C0 0.12
+Posterior cingulate /C0 0.05 /C0 0.08
+Insula 0.11 0.09
+Superior orbitofrontal 0.01 0.00
+Middle orbitofrontal 0.09 /C0 0.06
+Inferior orbitofrontal 0.12 0.07
+STAI, State-Trait Anxiety Inventory; VBM, voxel-based
+morphometry.
+*p 5 0.05.
+INTERNATIONAL JOURNAL OF PSYCHIATRY IN CLINICAL PRACTICE 111
+
+The right amygdala volume was associated with the
+C allele (rs3800373; CC carriers 4AC and AA). rs3800373
+has been reported to interact with emotional neglect
+and right-dorsal amygdala reactivity (White et al. 2012).
+The right-middle and inferior orbitofrontal cortices were
+associated with the C allele (rs3800373; CC carriers 4AC
+and AA). The right amygdala was associated with the C
+allele (rs992105; CC carriers 4AC and AA). There were
+significantly higher levels of tension–anxiety and depres-
+sion–dejection among the CC carriers of the rs992105
+allele than among the AC + AA carriers. There was also a
+significantly lower level of vigor among the CC carriers
+than the AC + AA carriers ( p50.05). This is a novel report
+nf the associations among the amygdala, the rs992105
+allele, and psychological effects. The carriers of the CC
+genotype for the rs992105 SNP exhibited anxiety and
+depression and enlargement of the right amygdala.
+Some reports have linked the right amygdala to an early,
+rapid, and possibly more automatic recognition of
+emotional stimuli with less adaptation and, eventually,
+a favored reaction to negative stimuli (Sergerie et al.
+2008; Baeken et al. 2010; Dyck et al. 2011). Conversely,
+the left amygdala was thought to be involved in more
+complex and intricate stimulus evaluation, as occurs
+with other cognitive stimuli (Sergerie et al. 2008; Dyck
+et al. 2011).
+The right amygdala was associated with the T allele
+(rs1360780; TT carriers 4CT and CC). rs1360780 was
+associated with emotional neglect and right dorsal
+amygdala reactivity (White et al. 2012). However, Holz
+et al. (2014) reported the opposite results, showing a
+significant increase in T homozygotes and a significant
+decrease in C homozygotes. Some reasons for this
+inconsistency may include differences in sample con-
+formation and the application of the imaging paradigm
+being used. The rs1360780 T allele was correlated with
+higher scores for harm avoidance (HA) and lower scores
+for cooperativeness (CO) compared with individuals
+lacking the T allele (Shibuya et al. 2010). The T allele
+was associated with higher scores for HA among females
+and lower scores for CO among males. Carriers of the
+rs1360780 T allele exhibit the following: increased FKBP5
+protein levels, reduced basal cortisol levels, impaired
+HPA negative feedback (dexamethasone) and psycho-
+social stress. Further investigations are necessary to
+address this inconsistency. rs1360780, but not
+rs3800373, was significantly associated with depressive
+status (Lekman et al. 2008). Homozygous minor allele
+carriers of the rs1360780 SNP exhibited increased FKBP5
+protein levels in healthy controls (Binder et al. 2004).
+rs1360780 has also been associated with the Trier Social
+Stress Test (TSST) response in an adult sample (Ising
+et al. 2008).
+The right inferior OFC was associated with the T allele
+(rs9470080; TT carriers 4CT and CC). rs9470080 influ-
+enced the suicide risk in individuals exposed to high
+levels of childhood trauma (Roy et al. 2010). For
+example, rs9470080 was associated with both the area
+under the receiver operating characteristic curve (AUC)
+for cortisol and the likelihood of depressive symptoms
+(Velders et al. 2011). Exposure to childhood trauma
+specifically influences behavioural dyscontrol and the
+lifetime history of aggression and violent behaviour
+(Bevilacqua et al. 2012). Furthermore, rs9470080 inter-
+acted with emotional neglect and right dorsal amygdala
+reactivity (White et al. 2012). The T allele of rs9470080
+Table 2. Relationship between POMS and VBM.
+T–A D A–H V F C
+Right
+Amygdala 0.16 0.20 * 0.19* 0.10 0.18 ** 0.07
+Hippocampus 0.08 0.05 0.11 0.04 0.09 0.04
+Anterior cingulate 0.08 0.08 0.09 0.12 0.04 0.04
+Middle cingulate 0.03 /C0 0.05 0.00 0.02 /C0 0.05 0.04
+Posterior cingulate 0.05 /C0 0.01 /C0 0.06 0.03 0.08 0.05
+Insula 0.14 0.08 0.14 0.04 0.12 0.07
+Superior orbitofrontal /C0 0.02 /C0 0.03 /C0 0.02 0.02 0.04 /C0 0.07
+Middle orbitofrontal /C0 0.01 /C0 0.13 0.02 0.07 /C0 0.06 /C0 0.15
+Inferior orbitofrontal 0.06 0.06 /C0 0.02 0.00 0.01 /C0 0.08
+Left
+Amygdala 0.17 * 0.18* 0.22 0.09 0.23 ** /C0 0.04
+Hippocampus 0.14 0.07 0.16 0.07 0.14 0.00
+Anterior cingulate 0.03 0.09 0.13 0.10 0.07 0.05
+Middle cingulate /C0 0.06 /C0 0.12 /C0 0.03 0.05 /C0 0.13 /C0 0.03
+Posterior cingulate /C0 0.05 /C0 0.08 /C0 0.06 0.13 /C0 0.01 /C0 0.14
+Insula 0.11 0.09 0.19 * 0.12 0.09 0.02
+Superior orbitofrontal 0.01 0.00 /C0 0.05 /C0 0.03 /C0 0.02 0.02
+Middle orbitofrontal 0.09 /C0 0.06 0.08 0.04 0.04 /C0 0.01
+Inferior orbitofrontal 0.12 0.07 0.05 0.05 0.04 0.06
+POMS, Profile of Mood States; VBM, voxel-based morphometry; T–A, tension–anxiety; D, depression–dejection; A–H,
+anger–hostility; V, vigor; F, fatigue; C, confusion.
+*p 5 0.05, **p 5 0.01.
+112 H. HIRAKAWA ET AL.
+
+was more common in PTSD in the context of adverse
+environmental exposure (Boscarino et al. 2012). FKBP5,
+including rs9470080, was associated with exposure to
+child maltreatment and limbic irritability symptoms
+(Dackis et al. 2012).
+We found that state anxiety in STAI was associated
+with right and left amygdala higher GMV, and trait
+anxiety in STAI was associated with left amygdala. We
+also found depression–dejection, anger–hostility and
+fatigue in POMS were associated with right amygdala,
+and tension–anxiety, depression–dejection, anger–hos-
+tility and fatigue in POMS were associated with left
+amygdala. Recently, Mincic (2015) reported that higher
+negative emotionality (NE)-related traits are linked to
+higher GMV in left amygdala. He suggests that the
+behavioural phenotype associated to NE traits is dis-
+played in structural differences with in the cortico-limbic
+system. This higher GMV in amygdala might be
+associated with CC carrier in rs3800373 and rs992105
+and TT carriers in rs1360780.
+Recently, stress has been shown to induce serine
+protease neuropsin activity in the amygdala, thereby
+inducing anxiety in mice via an FKBP5-dependent
+mechanism (Attwood et al. 2011). FKBP5 SNPs might
+contribute to increased sensitivity of the amygdala/HPA
+axis response to adult stress. The amygdala con-
+trols emotional learning in the brain, and FKBP5 expres-
+sion can be upregulated by GR activation (Scharf et al.
+2011).
+This study has several limitations. Although all
+participants who had no history of mental disorder
+were considered healthy, they were not evaluable for life
+trauma and life stress events. Because the sample size
+was small, it was difficult to detect any genotype-
+dependent differences in this study. Furthermore, our
+research was limited by the cross-sectional design. A
+prospective study is necessary to elucidate the changes
+in GMV volume in specific brain regions during the aging
+process; indeed, the effect of FKBP5 on GMV volume
+may vary with time and age. Thus, the enrollment of
+subjects with the wide range of ages present in the
+current study may mask unique effects occurring within
+specific age groups. These limitations should be resolved
+in future studies.
+Conclusions
+We found that the FKBP5 SNP could modulate the
+regional GMV volume in a healthy population and
+significant alterations in the volume of the amygdala in
+association with FKBP5 SNPs. These results suggested
+that FKBP5 SNPs were associated with the right
+and left amygdala and the left insula structure and
+tension–anxiety, depression–dejection, anger–hostility
+and fatigue in POMS in 112 healthy controls.
+Key points
+/C15 We examined 6 FKBP5 polymorphisms in 112
+healthy controls.
+/C15 The brain structural alterations were analysed using
+the VBM method.
+/C15 The volume of amygdala was associated with
+rs3800373, rs992105 and rs1360780 genotypes.
+/C15 The volume of right middle orbitofrontal region was
+associated with rs3800373 genotype.
+/C15 The right inferior orbitofrontal region was associated
+with rs9470080 genotype.
+Acknowledgements
+This research was supported by a Grant-in-Aid for Scientific
+Research (Number 20591371) from the Japanese Society for the
+Promotion of Science (JSPS). We are grateful to Mr. Shunsuke
+Kobayashi and Masaaki Muronaga for her excellent technical
+assistance.
+Disclosure Statement
+The authors report no conflicts of interest.
+References
+Arseneault L, Cannon M, Fisher HL, Polanczyk G, Moffitt TE,
+Caspi A, et al. 2011. Childhood trauma and children’s
+emerging psychotic symptoms: a genetically sensitive
+longitudinal cohort study. Am J Psychiatry 168:65–72.
+Ashburner J. 2007. A fast diffeomorphic image registration
+algorithm. Neuroimage 38:95–113.
+Attwood BK, Bourgognon J-M, Patel S, Mucha M, Schiavon E,
+Skrzypiec AE, et al. 2011. Neuropsin cleaves EphB2 in the
+amygdala to control anxiety. Nature 473:372–375.
+Baeken C, De Raedt R, Van Schuerbeek P, Vanderhasselt MA, De
+Mey J, Bossuyt A, et al. 2010. Right prefrontal HF-rTMS
+attenuates right amygdala processing of negatively valenced
+emotional stimuli in healthy females. Behav Brain Res
+214:450–455.
+Baur V, Ha ¨nggi J, Ja ¨ncke L. 2012. Volumetric associations
+between uncinate fasciculus, amygdala, and trait anxiety.
+BMC Neurosci 13:437–446.
+Beck AT, Rush AJ, Shaw BF, Emery G. 1979. Cognitive therapy of
+depression. New York: Guilford Press.
+Bevilacqua L, Carli V, Sarchiapone M, George DK, Goldman D,
+Roy A, et al. 2012. Interaction between FKBP5 and childhood
+trauma and risk of aggressive behavior. Arch Gen Psychiatry
+69:62–70.
+Binder EB, Salyakina D, Lichtner P, Wochnik GM, Ising M, Putz B,
+et al. 2004. Polymorphisms in FKBP5 are associated with
+increased recurrence of depressive episodes and
+rapid response to antidepressant treatment. Nat Genet
+36:1319–1325.
+INTERNATIONAL JOURNAL OF PSYCHIATRY IN CLINICAL PRACTICE 113
+
+Boscarino JA, Erlich PM, Hoffman SN, Zhang X. 2012. Higher
+FKBP5, COMT, CHRNA5, and CRHR1 allele burdens are
+associated with PTSD and interact with trauma exposure:
+implications for neuropsychiatric research and treatment.
+Neuropsychiatr Dis Treat 8:131–139.
+Bradley AJ, Dinan TG. 2010. A systematic review of hypothal-
+amic-pituitary-adrenal axis function in schizophrenia:
+implications for mortality. J Psychopharmacol 24:91–118.
+Dackis MN, Rogosch FA, Oshri A, Cicchetti D. 2012. The role of
+limbic system irritability in linking history of childhood
+maltreatment and psychiatric outcomes in low-income,
+high-risk women: moderation by FK506 binding protein
+5 haplotype. Dev Psychopathol 24:1237–1252.
+Denny WB, Valentine DL, Reynolds PD, Smith DF, Scammell JG.
+2000. Squirrel monkey immunophilin FKBP51 is a potent
+inhibitor of glucocorticoid receptor binding. Endocrinology
+141:4107–4113.
+Dolan RJ, Vuilleumier P. 2003. Amygdala automaticity in
+emotional processing. Ann N Y Acad Sci 985:348–355.
+Drevets WC, Price JL, Furey ML. 2008. Brain structural and
+functional abnormalities in mood disorders: implications for
+neurocircuitry models of depression. Brain Struct Funct
+213:93–118.
+Dyck M, Loughead J, Kellermann T, Boers F, Gur RC, Mathiak K.
+2011. Cognitive versus automatic mechanisms of mood
+induction differentially activate left and right amygdala.
+Neuroimage 54:2503–2513.
+Etkin A, Wager TD. 2007. Functional neuroimaging of anxiety: a
+meta-analysis of emotional processing in PTSD, social
+anxiety disorder, and specific phobia. Am J Psychiatry
+164:1476–1488.
+Feldman S, Weidenfeld J. 1998. The excitatory effects of
+the amygdala on hypothalamo-pituitary-adrenocortical
+responses are mediated by hypothalamic norepinephrine,
+serotonin, and CRF-41. Brain Res Bull 45:389–393.
+Gallagher P, Watson S, Smith MS, Young AH, Ferrier IN. 2007.
+Plasma cortisol-dehydroepiandrosterone (DHEA) ratios
+in schizophrenia and bipolar disorder. Schizophr Res
+90:258–265.
+Hettema JM, Kettenmann B, Ahluwalia V, McCarthy C, Kates
+WR, Schmitt JE, et al. 2012. Pilot multimodal twin imaging
+study of generalized anxiety disorder. Depress Anxiety
+29:202–209.
+Holmes AJ, Lee PH, Hollinshead MO, Bakst L, Roffman JL,
+Smoller JW, et al. 2012. Individual differences in amygdala-
+medial prefrontal anatomy link negative affect, impaired
+social functioning, and polygenic depression risk. J Neurosci
+32:18087–18100.
+Holz NE, Buchmann AF, Boecker R, Blomeyer D, Baumeister S,
+Wolf I, et al. 2014. Role of FKBP5 in emotion processing:
+results on amygdala activity, connectivity and volume. Brain
+Struct Funct 220:1355–1368.
+Ising M, Depping AM, Siebertz A, Lucae S, PG U, Kloiber S. 2008.
+Polymorphisms in the FKBP5 gene region modulate recovery
+from psychosocial stress in healthy controls. Eur J Neurosci
+28:389–398.
+Kendler KS, Karkowski LM, Prescott CA. 1999. Causal relation-
+ship between stressful life events and the onset of major
+depression. Am J Psychiatry 156:837–841.
+Khashan AS, Abel KM, McNamee R, Pedersen MG, Webb RT,
+Baker PN, et al. 2008 Higher risk of offspring schizophrenia
+following antenatal maternal exposure to severe adverse life
+events. Arch Gen Psychiatry 65:146–152.
+Kirchheiner J, Lorch R, Lebedeva E, Seeringer A, Roots I, Sasse J,
+et al. 2008. Genetic variants in FKBP5 affecting response
+to antidepressant drug treatment. Pharmacogenomics
+9:841–846.
+LeDoux JE. 2000. Emotion circuits in the brain. Annu Rev
+Neurosci 23:155–184.
+Lekman M, Laje G, Charney D, Rush AJ, Wilson AF, Sorant AJ,
+et al. 2008. The FKBP5-gene in depression and treatment
+response – an association study in the Sequenced Treatment
+Alternatives to Relieve Depression (STAR*D) Cohort. Biol
+Psychiatry 63:1103–1110.
+Lupien SJ, McEwen BS, Gunnar MR, Heim C. 2009. Effects of
+stress throughout the lifespan on the brain, behaviour and
+cognition. Nat Rev Neurosci 10:434–445.
+Mahon PB, Zandi PP, Potash JB, Nestadt G, Wand GS. 2013.
+Genetic association of FKBP5 and CRHR1 with cortisol
+response to acute psychosocial stress in healthy adults.
+Psychopharmacology (Berl). 227:231–241.
+McEwen BS. 2003. Early life influences on life-long patterns
+of behavior and health. Ment Retard Dev Disabil Res Rev
+9:149–154.
+McNair DM, Lorr M, Droppleman LF. 1992. Revised manual for
+the profile of mood states. San Diego (CA): Educational and
+Industrial Testing Services.
+Mincic AM. 2015. Neuroanatomical correlates of negative
+emotionality-related traits: a systematic review and meta-
+analysis. Neuropsychologia 77:97–118.
+Mitra R, Jadhav S, McEwen BS, Vyas A, Chattarji S. 2005. Stress
+duration modulates the spatiotemporal patterns of spine
+formation in the basolateral amygdala. Proc Natl Acad Sci
+USA 102:9371–9376.
+Mitra R, Sapolsky RM. 2008. Acute corticosterone treatment is
+sufficient to induce anxiety and amygdaloid dendritic
+hypertrophy. Proc Natl Acad Sci USA 105:5573–5578.
+Otsubo T, Tanaka K, Koda R, Shinoda J, Sano N, Tanaka S, et al.
+2005. Reliability and validity of Japanese version of the Mini-
+International Neuropsychiatric Interview. Psychiatry Clin
+Neurosci 59:517–526.
+Pessoa L, Adolphs R. 2010. Emotion processing and the
+amygdala: from a ‘‘low road’’ to ‘‘many roads’’ of evaluating
+biological significance. Nat Rev Neurosci 11:773–783.
+Read J, van Os J, Morrison AP, Ross CA. 2005. Childhood
+trauma, psychosis and schizophrenia: a literature review with
+theoretical and clinical implications. Acta Psychiatr Scand
+112:330–350.
+Riggs DL, Roberts PJ, Chirillo SC, Cheung-Flynn J, Prapapanich
+V, Ratajczak T, et al. 2003. The Hsp90-binding peptidylprolyl
+isomerase FKBP52 potentiates glucocorticoid signaling in
+vivo. EMBO J 22:1158–1167.
+Roy A, Gorodetsky E, Yuan Q, Goldman D, Enoch MA. 2010.
+Interaction of FKBP5, a stress-related gene, with childhood
+trauma increases the risk for attempting suicide.
+Neuropsychopharmacology 35:1674–1683.
+Scharf SH, Liebl C, Binder EB, Schmidt MV, Muller MB. 2011.
+Expression and regulation of the Fkbp5 gene in the adult
+mouse brain. PLoS One 6:e16883.
+Schienle A, Ebner F, Schafer A. 2011. Localized gray matter
+volume abnormalities in generalized anxiety disorder. Eur
+Arch Psychiatry Clin Neurosci 261:303–307.
+Sergerie K, Chochol C, Armony JL. 2008. The role of the
+amygdala in emotional processing: a quantitative meta-
+analysis of functional neuroimaging studies. Neurosci
+Biobehav Rev 32:811–830.
+114 H. HIRAKAWA ET AL.
+
+Shibuya N, Suzuki A, Sadahiro R, Kamata M, Matsumoto Y, Goto
+K, et al. 2010. Association study between a functional
+polymorphism of FK506-binding protein 51 (FKBP5) gene
+and personality traits in healthy subjects. Neurosci Lett
+485:194–197.
+Sinclair D, Fullerton JM, Webster MJ, Shannon Weickert C. 2012.
+Glucocorticoid receptor 1B and 1C mRNA transcript alter-
+ations in schizophrenia and bipolar disorder, and their
+possible regulation by GR gene variants. PLoS One 7:e31720.
+Sinclair D, Webster MJ, Fullerton JM, Weickert CS. 2012.
+Glucocorticoid receptor mRNA and protein isoform alter-
+ations in the orbitofrontal cortex in schizophrenia and
+bipolar disorder. BMC Psychiatry 12:84.
+Spielberger C. 1983. State-Trait Anxiety Inventory (Form Y). Palo
+Alto (CA): Mind Garden.
+Spielberger CD, Gorsuch RL, Lushene RE. 1970. Handbook of
+STAI. Palo Alto, CA: Consulting Psychologist Press.
+Velders FP, Kuningas M, Kumari M, Dekker MJ, Uitterlinden AG,
+Kirschbaum C, et al. 2011. Genetics of cortisol secretion and
+depressive symptoms: a candidate gene and genome wide
+association approach. Psychoneuroendocrinology 36:
+1053–1061.
+Vreeburg SA, Hoogendijk WJG, van Pelt J, Derijk RH,
+Verhagen JCM, van Dyck R, et al. 2009. Major depressive
+disorder and hypothalamic-pituitary-adrenal axis activity:
+results from a large cohort study. Arch Gen Psychiatry
+66:617–626.
+Vyas A, Jadhav S, Chattarji S. 2006. Prolonged behavioral stress
+enhances synaptic connectivity in the basolateral amygdala.
+Neuroscience 143:387–393.
+White MG, Bogdan R, Fisher PM, Munoz KE, Williamson DE,
+Hariri AR. 2012. FKBP5 and emotional neglect interact to
+predict individual differences in amygdala reactivity. Genes
+Brain Behav 11:869–878.
+Wright CI, Feczko E, Dickerson B, Williams D. 2007.
+Neuroanatomical correlates of personality in the elderly.
+Neuroimage 35:263–272.
+Yassa MA, Stark CEL. 2009. A quantitative evaluation of cross-
+participant registration techniques for MRI studies of the
+medial temporal lobe. Neuroimage 44:319–327.
+INTERNATIONAL JOURNAL OF PSYCHIATRY IN CLINICAL PRACTICE 115

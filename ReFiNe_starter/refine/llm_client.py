@@ -1,0 +1,109 @@
+"""LLM client for ReFiNe extraction.
+
+Supports two providers:
+  - ``none``        – no LLM; returns a valid template with all features ``"unclear"``
+  - ``openai_compatible`` – calls any OpenAI-compatible HTTP API
+
+Configuration is done entirely through environment variables:
+
+  * ``REFINE_LLM_PROVIDER``      – ``none`` (default) or ``openai_compatible``
+  * ``REFINE_LLM_BASE_URL``      – e.g. ``http://localhost:8000/v1``
+  * ``REFINE_LLM_MODEL``         – e.g. ``qwen/qwen3.6-35b-a3b``
+  * ``REFINE_LLM_API_KEY``       – API key (required for ``openai_compatible``)
+"""
+
+import os
+from pathlib import Path
+
+
+from .schema import FEATURE_KEYS
+
+class Console:
+    def print(self, *args, **kwargs):
+        print(*args)
+
+console = Console()
+
+# ---------------------------------------------------------------------------
+# Provider: none
+# ---------------------------------------------------------------------------
+
+def _call_none(prompt: str, system_prompt: str) -> str:
+    """Return a valid JSON template with all features set to ``unclear``."""
+    features = {k: "unclear" for k in FEATURE_KEYS}
+    json_str = (
+        '{"paper_id": "PLACEHOLDER", '
+        '"dataset_features_needed": '
+        + _json_encode(features)
+        + ', '
+        '"website_card": {"short_description": null, "dataset_features_summary": []}, '
+        '"extraction_status": "completed", '
+        '"extraction_notes": null}'
+    )
+    return json_str.replace('"paper_id": "PLACEHOLDER"', '"paper_id": ""')
+
+
+# ---------------------------------------------------------------------------
+# Provider: openai_compatible
+# ---------------------------------------------------------------------------
+
+def _call_openai_compatible(prompt: str, system_prompt: str) -> str:
+    """Call an OpenAI-compatible chat completions endpoint."""
+    try:
+        from openai import OpenAI
+    except ImportError:
+        raise RuntimeError("openai package is required for openai_compatible provider")
+
+    base_url = os.environ.get("REFINE_LLM_BASE_URL", "http://localhost:8000/v1")
+    model = os.environ.get("REFINE_LLM_MODEL", "gpt-3.5-turbo")
+    api_key = os.environ.get("REFINE_LLM_API_KEY", "dummy")
+
+    client = OpenAI(base_url=base_url, api_key=api_key)
+
+    response = client.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": prompt},
+        ],
+        temperature=0.0,
+        max_tokens=2048,
+    )
+
+    return response.choices[0].message.content
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def _json_encode(obj: object) -> str:
+    """Simple JSON encoder (avoids importing json inside the function scope)."""
+    import json
+    return json.dumps(obj, ensure_ascii=False)
+
+
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
+
+def call_llm(prompt: str, system_prompt: str) -> str:
+    """Call the configured LLM provider and return the raw text response.
+
+    Falls back to ``none`` when no provider is configured or when the
+    configured provider is ``none``.
+    """
+    provider = os.environ.get("REFINE_LLM_PROVIDER", "none").strip().lower()
+
+    if provider == "none" or provider == "":
+        console.print("No LLM configured (provider=none). Using fallback template.")
+        return _call_none(prompt, system_prompt)
+    elif provider == "openai_compatible":
+        console.print(
+            f"LLM provider=openai_compatible, model={os.environ.get('REFINE_LLM_MODEL')}, "
+            f"base_url={os.environ.get('REFINE_LLM_BASE_URL')}"
+        )
+        return _call_openai_compatible(prompt, system_prompt)
+    else:
+        console.print(f"Unknown provider '{provider}'. Falling back to none.")
+        return _call_none(prompt, system_prompt)
