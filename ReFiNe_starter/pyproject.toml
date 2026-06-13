@@ -1,8 +1,0 @@
-[project]
-name = "ReFiNe"
-version = "0.1.0"
-description = "A simple pipeline for building a ReFiNe paper-level dataset-features catalogue."
-requires-python = ">=3.10"
-
-[tool.refine]
-project_name = "ReFiNe"
