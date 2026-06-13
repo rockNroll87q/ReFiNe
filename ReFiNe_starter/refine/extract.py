@@ -9,6 +9,7 @@ This module orchestrates:
 
 import json
 import logging
+import os
 from pathlib import Path
 
 class Console:
@@ -56,24 +57,10 @@ def _load_prompt_template() -> str:
     """Load the extraction prompt template from disk."""
     if PROMPT_TEMPLATE_PATH.exists():
         return PROMPT_TEMPLATE_PATH.read_text(encoding="utf-8")
-    # Inline fallback
-    return (
-        "You are a research data extractor. Given the text of a scientific paper, "
-        "extract the broad dataset features listed below.\n\n"
-        "Return ONLY valid JSON matching this schema:\n"
-        "{\n"
-        '  "paper_id": "string",\n'
-        '  "dataset_features_needed": {<feature>: "yes"|"no"|"unclear"|"not_applicable"},\n'
-        '  "website_card": {"short_description": null, "dataset_features_summary": []},\n'
-        '  "extraction_status": "completed",\n'
-        '  "extraction_notes": null\n'
-        "}\n\n"
-        "Rules:\n"
-        "- Use \"yes\" only when the paper explicitly reports the feature.\n"
-        "- Use \"no\" only when the paper explicitly states absence or non-use.\n"
-        "- Use \"unclear\" when information is missing, ambiguous, or only implied.\n"
-        "- Do not infer. Do not guess. Bias toward \"unclear\".\n"
-        "- Return valid JSON only. No markdown, no explanations, no comments.\n"
+    # Inline fallback (should not normally be reached)
+    raise FileNotFoundError(
+        f"Prompt template not found at {PROMPT_TEMPLATE_PATH}. "
+        "Ensure the prompts/ directory exists with extract_dataset_features.md."
     )
 
 
@@ -206,51 +193,79 @@ def extract_paper(paper_id: str) -> None:
         _save_papers_json(papers)
         return
 
-    # --- 3. Convert PDF to text ---
+    # --- 3. Convert PDF to text (reuse existing by default) ---
     text_path = TEXT_DIR / f"{paper_id}.md"
-    try:
-        text = pdf_to_text(pdf_path, output_path=text_path)
-    except Exception as exc:
-        console.print(f"PDF conversion failed: {exc}")
-        _update_paper_status(papers, record_index, paper_id, "failed",
-                             f"PDF conversion failed: {exc}")
-        _save_papers_json(papers)
-        return
+    
+    # Check if --force-pdf flag is set (passed via sys.argv or env)
+    force_pdf = os.environ.get("REFINE_FORCE_PDF", "false").lower() == "true"
+    
+    if text_path.exists() and not force_pdf:
+        console.print(f"Reusing existing text file: {text_path}")
+        text = text_path.read_text(encoding="utf-8")
+    else:
+        if force_pdf:
+            console.print("REFINE_FORCE_PDF=true: rerunning Docling despite existing text file.")
+        try:
+            text = pdf_to_text(pdf_path, output_path=text_path)
+        except Exception as exc:
+            console.print(f"PDF conversion failed: {exc}")
+            _update_paper_status(papers, record_index, paper_id, "failed",
+                                 f"PDF conversion failed: {exc}")
+            _save_papers_json(papers)
+            return
 
     # --- 4. LLM extraction ---
     prompt_template = _load_prompt_template()
     prompt = prompt_template.replace("{{PAPER_ID}}", paper_id).replace("{{PAPER_TEXT}}", text)
 
-    raw_response = call_llm(prompt, SYSTEM_PROMPT)
+    raw_response, llm_metadata = call_llm(prompt, SYSTEM_PROMPT, paper_id=paper_id)
 
-    # --- 5. Validate and parse ---
+    # Print preview of raw response (first 500 chars)
+    console.print(f"\n--- LLM Response Preview (first 500 chars) ---")
+    console.print(raw_response[:500])
+    console.print("--- End Preview ---\n")
+
+    extracted = None
     extraction_status = "completed"
     extraction_notes = None
 
-    try:
-        extracted = _validate_and_parse(raw_response, paper_id)
-    except ValueError as ve:
-        console.print(f"First parse failed: {ve}")
-        console.print("Retrying with repair prompt...")
-        try:
-            extracted = _repair_and_parse(raw_response, paper_id, str(ve))
-        except Exception as ve2:
-            console.print(f"Repair also failed: {ve2}")
-            extraction_status = "failed"
-            extraction_notes = str(ve2)
-            extracted = _make_fallback(paper_id)
-
-    # Ensure paper_id is set correctly
-    extracted.paper_id = paper_id
-
-    # If extraction failed, mark it
-    if extraction_status == "failed":
-        extracted.extraction_status = "failed"
+    # Check if this is the no-LLM fallback template
+    if llm_metadata and llm_metadata.get("status") == "template_no_llm":
+        console.print("Using no-LLM fallback template (REFINE_LLM_PROVIDER=none).")
+        extracted = ExtractedFeatures(
+            paper_id=paper_id,
+            dataset_features_needed={k: "unclear" for k in FEATURE_KEYS},
+            website_card={"short_description": None, "dataset_features_summary": []},
+            extraction_status="template_no_llm",
+            extraction_notes="No LLM configured. Fallback template generated with all dataset features set to unclear.",
+        )
     else:
-        extracted.extraction_status = "completed"
-        extracted.extraction_notes = None
+        # --- 5. Validate and parse ---
+        try:
+            extracted = _validate_and_parse(raw_response, paper_id)
+            console.print("JSON parsing and schema validation: SUCCESS")
+        except ValueError as ve:
+            console.print(f"JSON parsing/validation: FAILED - {ve}")
+            
+            # When LLM is configured but parsing fails, do NOT silently fall back.
+            extraction_status = "failed"
+            extraction_notes = f"LLM response failed JSON validation: {ve}"
+            console.print(f"LLM configured but parsing failed. Status set to 'failed'.")
+            
+            # Create a minimal extracted object for saving (with failure status)
+            extracted = ExtractedFeatures(
+                paper_id=paper_id,
+                dataset_features_needed={k: "unclear" for k in FEATURE_KEYS},
+                website_card={"short_description": None, "dataset_features_summary": []},
+                extraction_status="failed",
+                extraction_notes=extraction_notes,
+            )
 
     # --- 6. Save extracted features JSON ---
+    if extracted is None:
+        console.print("ERROR: No extracted data available.")
+        return
+    
     features_path = EXTRACTED_DIR / f"{paper_id}.features.json"
     features_path.parent.mkdir(parents=True, exist_ok=True)
     features_path.write_text(
@@ -263,7 +278,7 @@ def extract_paper(paper_id: str) -> None:
     _merge_into_papers(papers, record_index, extracted)
     _save_papers_json(papers)
 
-    console.print(f"Extraction complete for {paper_id}")
+    console.print(f"Extraction complete for {paper_id}: status={extraction_status}")
 
     # Log
     _log_extraction(paper_id, extraction_status, extraction_notes)

@@ -87,19 +87,19 @@
     "doi_url": "https://doi.org/10.3109/13651501.2016.1144772",
     "citation": "Hirakawa, H., Akiyoshi, J., Muronaga, M., Tanaka, Y., Ishitobi, Y., Inoue, A., Oshita, H., Aizawa, S., Masuda, K., Higuma, H., Kanehisa, M., Ninomiya, T., & Kawano, Y. (2016). FKBP5 is associated with amygdala volume in the human brain and mood state: A voxel-based morphometry (VBM) study. International Journal of Psychiatry in Clinical Practice, 20(2), 106–115. https://doi.org/10.3109/13651501.2016.1144772",
     "dataset_features_needed": {
-      "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
-      "genetic_data": "unclear",
-      "depression_scale": "unclear",
-      "anxiety_scale": "unclear",
+      "t1w_mri": "yes",
+      "vbm_or_voxelwise_morphometry": "yes",
+      "mdd_patients": "no",
+      "healthy_controls": "yes",
+      "genetic_data": "yes",
+      "depression_scale": "yes",
+      "anxiety_scale": "yes",
       "clinical_outcomes": "unclear",
-      "longitudinal_data": "unclear",
-      "medication_status": "unclear",
-      "trauma_or_life_stress": "unclear",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear"
+      "longitudinal_data": "no",
+      "medication_status": "yes",
+      "trauma_or_life_stress": "no",
+      "cognitive_data": "no",
+      "blood_or_biomarker_data": "yes"
     },
     "sample_summary": {
       "sample_size": null,
@@ -108,14 +108,23 @@
     "website_card": {
       "short_title": "FKBP5 is associated with amygdala volume in the human brain and mood state: A voxel-based ",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "T1-weighted MRI acquisition",
+        "Voxel-based morphometry (VBM) analysis",
+        "FKBP5 SNP genotyping from blood samples",
+        "Beck Depression Inventory (BDI)",
+        "State-Trait Anxiety Inventory (STAI-S/T)",
+        "Profile of Mood States (POMS)",
+        "Healthy control cohort (n=112)",
+        "Cross-sectional design"
+      ]
     },
     "extraction": {
-      "status": "failed",
-      "notes": "PDF conversion failed: libGL.so.1: cannot open shared object file: No such file or directory"
+      "status": "completed",
+      "notes": "Features extracted directly from paper text. Study is cross-sectional with 112 healthy controls. T1 MRI and VBM were used. FKBP5 genetic data collected via blood DNA extraction. Depression (BDI) and anxiety (STAI) scales administered. No MDD patients, no longitudinal follow-up, trauma/stress not evaluated in this cohort."
     },
-    "extraction_status": "failed",
-    "extraction_notes": "PDF conversion failed: libGL.so.1: cannot open shared object file: No such file or directory"
+    "extraction_status": "completed",
+    "extraction_notes": "Features extracted directly from paper text. Study is cross-sectional with 112 healthy controls. T1 MRI and VBM were used. FKBP5 genetic data collected via blood DNA extraction. Depression (BDI) and anxiety (STAI) scales administered. No MDD patients, no longitudinal follow-up, trauma/stress not evaluated in this cohort."
   },
   {
     "paper_id": "REFINE-0004",

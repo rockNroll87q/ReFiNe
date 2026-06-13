@@ -28,8 +28,13 @@ console = Console()
 # Provider: none
 # ---------------------------------------------------------------------------
 
-def _call_none(prompt: str, system_prompt: str) -> str:
-    """Return a valid JSON template with all features set to ``unclear``."""
+def _call_none(prompt: str, system_prompt: str, paper_id: str | None = None) -> tuple[str, dict | None]:
+    """Return a valid JSON template with all features set to ``unclear``.
+    
+    Returns:
+        (raw_response, metadata): The raw JSON string and optional metadata dict.
+        metadata includes 'status' for the extraction_status field.
+    """
     features = {k: "unclear" for k in FEATURE_KEYS}
     json_str = (
         '{"paper_id": "PLACEHOLDER", '
@@ -37,18 +42,28 @@ def _call_none(prompt: str, system_prompt: str) -> str:
         + _json_encode(features)
         + ', '
         '"website_card": {"short_description": null, "dataset_features_summary": []}, '
-        '"extraction_status": "completed", '
-        '"extraction_notes": null}'
+        '"extraction_status": "template_no_llm", '
+        '"extraction_notes": "No LLM configured. Fallback template generated with all dataset features set to unclear."}'
     )
-    return json_str.replace('"paper_id": "PLACEHOLDER"', '"paper_id": ""')
+    result = json_str.replace('"paper_id": "PLACEHOLDER"', f'"paper_id": "{paper_id}"') if paper_id else json_str.replace('"paper_id": "PLACEHOLDER"', '"paper_id": ""')
+    
+    # Save the raw response for debugging
+    _save_raw_response(result, prompt, paper_id)
+    
+    return result, {"status": "template_no_llm"}
 
 
 # ---------------------------------------------------------------------------
 # Provider: openai_compatible
 # ---------------------------------------------------------------------------
 
-def _call_openai_compatible(prompt: str, system_prompt: str) -> str:
-    """Call an OpenAI-compatible chat completions endpoint."""
+def _call_openai_compatible(prompt: str, system_prompt: str, paper_id: str | None = None) -> tuple[str, dict | None]:
+    """Call an OpenAI-compatible chat completions endpoint.
+    
+    Returns:
+        (raw_response, metadata): The raw response string and optional metadata dict.
+        metadata is None for openai_compatible provider (status determined by parsing).
+    """
     try:
         from openai import OpenAI
     except ImportError:
@@ -61,16 +76,21 @@ def _call_openai_compatible(prompt: str, system_prompt: str) -> str:
     client = OpenAI(base_url=base_url, api_key=api_key)
 
     response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": prompt},
-        ],
-        temperature=0.0,
-        max_tokens=2048,
-    )
+            model=model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.0,
+            max_tokens=32768,
+        )
 
-    return response.choices[0].message.content
+    raw_content = response.choices[0].message.content
+    
+    # Save the raw response for debugging
+    _save_raw_response(raw_content, prompt, paper_id)
+    
+    return raw_content, None
 
 
 # ---------------------------------------------------------------------------
@@ -83,13 +103,36 @@ def _json_encode(obj: object) -> str:
     return json.dumps(obj, ensure_ascii=False)
 
 
-# ---------------------------------------------------------------------------
-# Public API
-# ---------------------------------------------------------------------------
+def _save_raw_response(raw_response: str, prompt: str, paper_id: str | None = None) -> None:
+    """Save raw LLM response and prompt to logs directory for debugging."""
+    if not paper_id:
+        return
+    
+    LOGS_DIR = Path(__file__).resolve().parent.parent / "data" / "logs"
+    LOGS_DIR.mkdir(parents=True, exist_ok=True)
+    
+    # Save raw response
+    response_path = LOGS_DIR / f"{paper_id}.llm_raw_response.txt"
+    response_path.write_text(raw_response, encoding="utf-8")
+    
+    # Save prompt
+    prompt_path = LOGS_DIR / f"{paper_id}.llm_prompt.txt"
+    prompt_path.write_text(prompt, encoding="utf-8")
 
-def call_llm(prompt: str, system_prompt: str) -> str:
-    """Call the configured LLM provider and return the raw text response.
 
+def call_llm(prompt: str, system_prompt: str, paper_id: str | None = None) -> tuple[str, dict | None]:
+    """Call the configured LLM provider and return (raw_response, metadata).
+    
+    Args:
+        prompt: The user prompt text.
+        system_prompt: The system prompt text.
+        paper_id: Optional paper ID for logging/debugging purposes.
+    
+    Returns:
+        Tuple of (raw_response_string, metadata_dict_or_None).
+        For 'none' provider: metadata contains {'status': 'template_no_llm'}
+        For 'openai_compatible' provider: metadata is None
+    
     Falls back to ``none`` when no provider is configured or when the
     configured provider is ``none``.
     """
@@ -97,13 +140,13 @@ def call_llm(prompt: str, system_prompt: str) -> str:
 
     if provider == "none" or provider == "":
         console.print("No LLM configured (provider=none). Using fallback template.")
-        return _call_none(prompt, system_prompt)
+        return _call_none(prompt, system_prompt, paper_id)
     elif provider == "openai_compatible":
         console.print(
             f"LLM provider=openai_compatible, model={os.environ.get('REFINE_LLM_MODEL')}, "
             f"base_url={os.environ.get('REFINE_LLM_BASE_URL')}"
         )
-        return _call_openai_compatible(prompt, system_prompt)
+        return _call_openai_compatible(prompt, system_prompt, paper_id)
     else:
         console.print(f"Unknown provider '{provider}'. Falling back to none.")
-        return _call_none(prompt, system_prompt)
+        return _call_none(prompt, system_prompt, paper_id)
