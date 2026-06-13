@@ -1,0 +1,9 @@
+theme: jekyll-theme-cayman
+title: "<a href='https://github.com/rockNroll87q/ReFiNe'>ReFiNe</a>"
+description: "Investigating the Replicability of Findings in Neuroimaging"
+
+show_downloads: true
+
+github:
+  zip_url: https://github.com/rockNroll87q/ReFiNe/
+  another_url: https://github.com/rockNroll87q/ReFiNe/
