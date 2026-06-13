@@ -72,23 +72,32 @@ If you find this work useful, please consider citing our paper:
 # BrainHack contributers
 
 
-<div style="text-align:center; line-height:1.9; font-size:18px; display:flex; justify-content:center; gap:24px; flex-wrap:wrap;">
+<div style="text-align:center; font-size:18px; display:flex; justify-content:center; gap:28px; flex-wrap:wrap; margin:0 0 0.5rem 0;">
 
-  <span><a href="https://www.linkedin.com/in/janik-goltermann-4089ba303/" target="_blank">Janik Goltermann</a> &#9826;</span>
+  <span>
+    <a href="https://www.linkedin.com/in/janik-goltermann-4089ba303/" target="_blank">Janik Goltermann</a>
+    <sup>✦</sup>
+  </span>
 
-  <span><a href="https://www.linkedin.com/in/michele-svanera/" target="_blank">Michele Svanera</a> &#x266B;</span>
+  <span>
+    <a href="https://www.linkedin.com/in/michele-svanera/" target="_blank">Michele Svanera</a>
+    <sup>♫</sup>
+  </span>
 
-  <span><a href="https://www.linkedin.com/in/katie-robertson-6704a61a3/" target="_blank">Katie Robertson</a> &#x266B;</span>
+  <span>
+    <a href="https://www.linkedin.com/in/katie-robertson-6704a61a3/" target="_blank">Katie Robertson</a>
+    <sup>♫</sup>
+  </span>
+
 </div>
-  <br>
 
-  <div style="text-align:center; font-size:16px; line-height:1.7;">
+<div style="text-align:center; font-size:15px; line-height:1.5; margin-top:0;">
 
-  &#9826; - Charité - Universitätsmedizin Berlin <br>
+  <div><sup>✦</sup> Charité – Universitätsmedizin Berlin</div>
 
-  &#x266B; - Center for Cognitive Neuroimaging, University of Glasgow, UK <br>
+  <div><sup>♫</sup> Center for Cognitive Neuroimaging, University of Glasgow, UK</div>
 
-  </div>
+</div>
   
 <hr>
 <!--
