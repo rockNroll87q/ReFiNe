@@ -3,12 +3,12 @@ layout: page
 title: <a href="https://rocknroll87q.github.io/ReFiNe">ReFiNe</a>
 ---
 
-## About the replication project
+# About the replication project
 
 ReFiNe (Replicability of Findings in Neuroimaging) is an open community initiative aimed at systematically evaluating the replicability of neuroimaging findings. The project is based on a series of direct replication studies that reproduce original analyses as closely as possible in independent datasets to determine which findings replicate, which do not, and which factors predict replication success.
 
 <p align="center">
-<img src="./misc/refine_logo_text-large.png" width="50%" />  
+<img src="./misc/refine_logo_text-large.png" width="20%" />  
 <!--<figcaption>Figure | Investigating the Replicability of Findings in Neuroimaging </figcaption>-->
 </p>
 
@@ -19,7 +19,7 @@ The ReFiNe website serves as a central hub for coordinating and standardizing re
 Researchers interested in conducting replications, contributing datasets, developing methods, or supporting the initiative are invited to join the growing ReFiNe community.
 
 
-### Planned Resources
+## Planned Resources
 
 **Replication Protocols**
 
@@ -68,7 +68,28 @@ If you find this work useful, please consider citing our paper:
 }
 ```
 -->
+<hr>
+# BrainHack contributers
 
+
+<div style="text-align:center; line-height:1.9; font-size:18px; display:flex; justify-content:center; gap:24px; flex-wrap:wrap;">
+
+  <span><a href="https://www.linkedin.com/in/janik-goltermann-4089ba303/" target="_blank">Janik Goltermann</a> &#9826;</span>
+
+  <span><a href="https://www.linkedin.com/in/michele-svanera/" target="_blank">Michele Svanera</a> &#x266B;</span>
+
+  <span><a href="https://www.linkedin.com/in/katie-robertson-6704a61a3/" target="_blank">Katie Robertson</a> &#x266B;</span>
+</div>
+  <br>
+
+  <div style="text-align:center; font-size:16px; line-height:1.7;">
+
+  &#9826; - Charité - Universitätsmedizin Berlin <br>
+
+  &#x266B; - Center for Cognitive Neuroimaging, University of Glasgow, UK <br>
+
+  </div>
+  
 <hr>
 <!--
 # Acknowledgments
@@ -76,11 +97,13 @@ xxx
 
 <hr>
 -->
-# Slides
+<!--# Slides
 
 Call for ReFiNe replication project - [link](https://docs.google.com/presentation/d/1Cnp0aUq7NzE-Q5TsfxHGOZatzmeiUWtZP1Ee-_VhzuU/edit?usp=sharing)
 
-<hr>
+<hr>-->
+
+
 
 # Open Call
 Call for ReFiNe replication project - form to contribute: [link](https://forms.gle/gM9EymHnxZRJBWRC6)
