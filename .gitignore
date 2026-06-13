@@ -1,5 +1,4 @@
 ReFiNe_starter/out.txt
 ReFiNe_starter/refine/__pycache__
 ReFiNe_starter/refine/__pycache__/*
-ReFiNe_starter/refine/__pycache__/extract.cpython-311.pyc
-ReFiNe_starter/refine/__pycache__/llm_client.cpython-311.pyc
+ReFiNe_starter/refine/__pycache__/*.pyc

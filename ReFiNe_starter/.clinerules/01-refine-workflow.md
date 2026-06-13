@@ -28,4 +28,10 @@ site/data/papers.json
 
 The extraction pipeline should work locally and should not depend on GitHub, a backend, or Cline itself.
 
+# Git rule
 
+Never run git commands unless explicitly asked. Do not run git add, git commit, git checkout, git restore, git reset, or git diff. The user manages git manually.
+
+# Scope rule
+
+If the user asks for website/frontend work, do not inspect or modify the `refine/` folder unless explicitly asked.
