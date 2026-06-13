@@ -65,3 +65,14 @@ Data were [in part] provided by the 1000 Functional Connectomes Project (FCP). F
 
 <hr>
 
+# Slides
+
+Call for ReFiNe replication project - [link](https://docs.google.com/presentation/d/1Cnp0aUq7NzE-Q5TsfxHGOZatzmeiUWtZP1Ee-_VhzuU/edit?usp=sharing)
+
+<hr>
+
+# Open Call
+Call for ReFiNe replication project - form to contribute: [link](https://forms.gle/gM9EymHnxZRJBWRC6)
+
+
+
