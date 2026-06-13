@@ -3,13 +3,48 @@ layout: page
 title: <a href="https://rocknroll87q.github.io/ReFiNe">ReFiNe</a>
 ---
 
-# Abstract
+## About the replication project
 
+ReFiNe (Replicability of Findings in Neuroimaging) is an open community initiative aimed at systematically evaluating the replicability of neuroimaging findings. The project is based on a series of direct replication studies that reproduce original analyses as closely as possible in independent datasets to determine which findings replicate, which do not, and which factors predict replication success.
 
 <p align="center">
-<img src="./misc/img.png" width="60%" />  
-<figcaption>Figure | Investigating the Replicability of Findings in Neuroimaging </figcaption>
+<img src="./misc/img.png" width="50%" />  
+<!--<figcaption>Figure | Investigating the Replicability of Findings in Neuroimaging </figcaption>-->
 </p>
+
+The current focus of ReFiNe is structural MRI research in major depressive disorder, where ongoing pilot work has established the feasibility of the approach. Over time, the initiative aims to expand across psychiatric disorders, research topics, and neuroimaging modalities.
+
+The ReFiNe website serves as a central hub for coordinating and standardizing replication research. It will provide resources such as curated lists of potential replication targets, replication protocols, preregistration templates, study matching guidance, standardized data extraction forms, replication reporting templates, and information on ongoing and completed replication projects.
+
+Researchers interested in conducting replications, contributing datasets, developing methods, or supporting the initiative are invited to join the growing ReFiNe community.
+
+
+### Planned Resources
+
+**Replication Protocols**
+
+* Standardized protocols for conducting direct and conceptual neuroimaging replication studies
+* Preregistration templates and reporting guidelines
+* Practical guidance for study selection, dataset matching, and replication workflows
+
+**Replication Targets**
+
+* Curated database of published neuroimaging findings suitable for replication
+* Information on study characteristics and replication requirements (e.g., population, predictors, imaging modality, analysis approach)
+* Registration and tracking of planned, ongoing, and completed replication attempts
+
+**Replication Surveys**
+
+* Standardized pre-analysis surveys assessing expected replication success
+* Standardized post-analysis surveys documenting replication outcomes
+* Collection of data to investigate predictors of replicability and calibration of researcher expectations
+
+**Community Hub**
+
+* Information on how to contribute to the project
+* Updates on ongoing projects and collaborative opportunities
+* Open resources supporting coordinated, transparent, and cumulative replication research
+
 
 
 
