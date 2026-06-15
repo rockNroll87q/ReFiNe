@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Contributors
 permalink: /contributors/
 ---
@@ -10,3 +10,10 @@ permalink: /contributors/
 
 
 # Contributors
+
+
+
+
+# Open Call
+Call for ReFiNe replication project - form to contribute: [link](https://forms.gle/gM9EymHnxZRJBWRC6)
+

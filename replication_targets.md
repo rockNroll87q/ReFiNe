@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Replication targets
 permalink: /replication-targets/
 ---
