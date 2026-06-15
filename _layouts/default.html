@@ -47,8 +47,28 @@
       
         
   </header>
-        
-  <table align=center width=600px>
+      <nav class="home-buttons" aria-label="Main site navigation">
+
+  <a class="home-button" href="{{ '/contributors/' | relative_url }}">
+    <img src="{{ '/misc/contributors.png' | relative_url }}" alt="" class="home-button-icon">
+    <div class="home-button-title">Contributors</div>
+    <div class="home-button-subtitle">Join the community</div>
+  </a>
+
+  <a class="home-button" href="{{ '/resources/' | relative_url }}">
+    <img src="{{ '/misc/resources.png' | relative_url }}" alt="" class="home-button-icon">
+    <div class="home-button-title">Resources</div>
+    <div class="home-button-subtitle">Protocols and templates</div>
+  </a>
+
+  <a class="home-button" href="{{ '/replication-targets/' | relative_url }}">
+    <img src="{{ '/misc/replication_targets.png' | relative_url }}" alt="" class="home-button-icon">
+    <div class="home-button-title">Replication targets</div>
+    <div class="home-button-subtitle">Find studies to replicate</div>
+  </a>
+
+</nav>  
+  <!-- <table align=center width=600px>
     <tr>
       <td align=center width=150px>
         <center>
@@ -73,7 +93,7 @@
       </td>
     </tr>
     </table><br>
-	  
+	   -->
 	<hr>
     <main id="content" class="main-content" role="main">
       {{ content }}
