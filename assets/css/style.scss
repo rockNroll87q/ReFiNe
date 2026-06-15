@@ -257,6 +257,7 @@ figcaption {
   margin-top: 1rem;
 }
 
+
 .card {
   background: #e7f9e4;
   border-radius: 16px;
@@ -539,4 +540,40 @@ figcaption {
 
 .btn-secondary:hover {
   background: #f3f4f6;
+}
+
+//  New colours
+
+.filters,
+.demo-actions {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #159957;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.volunteer-info {
+  background: #f8fafc;
+  border: 1px solid #dbeafe;
+}
+
+.unclear {
+  background: #fff7d6;
+  color: #92400e;
+}
+
+.yes {
+  background: #e6f7ec;
+  color: #166534;
+}
+
+.no {
+  background: #fdeaea;
+  color: #991b1b;
 }
