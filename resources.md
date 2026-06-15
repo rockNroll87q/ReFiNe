@@ -1,6 +1,7 @@
 ---
-layout: page
-title: <a href="https://rocknroll87q.github.io/ReFiNe">ReFiNe</a>
+layout: default
+title: Resources
+permalink: /resources/
 ---
 
 [<-- main page](https://rocknroll87q.github.io/ReFiNe)
