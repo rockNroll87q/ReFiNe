@@ -100,4 +100,4 @@ Use the filters below to identify papers that could be feasible replication targ
   </div>
 </div>
 
-<script src="{{ '/app.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/app.js' | relative_url }}"></script>
