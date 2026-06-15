@@ -4,6 +4,8 @@ title: Replication targets
 permalink: /replication-targets/
 ---
 
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+
 # Replication targets
 
 Use the filters below to identify papers that could be feasible replication targets for your dataset.
@@ -14,20 +16,22 @@ Use the filters below to identify papers that could be feasible replication targ
   <button id="reset">Reset filters</button>
 </section>
 
-<main>
+<section>
   <div id="count"></div>
   <div id="cards"></div>
-</main>
+</section>
 
 <section class="demo-actions">
   <h2>Indicate interest</h2>
   <p class="demo-note">
     This is currently a static demo. Selections are stored only in your browser and are not submitted anywhere.
   </p>
+
   <div class="demo-buttons">
     <button id="export-json">Export selections as JSON</button>
     <button id="clear-demo">Clear demo selections</button>
   </div>
+
   <div id="export-output" class="export-output" style="display:none;"></div>
 </section>
 
@@ -96,4 +100,4 @@ Use the filters below to identify papers that could be feasible replication targ
   </div>
 </div>
 
-<script src="{{ '/assets/js/app.js' | relative_url }}"></script>
+<script src="{{ '/app.js' | relative_url }}"></script>
