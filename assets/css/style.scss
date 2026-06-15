@@ -161,3 +161,26 @@ figcaption {
   color: #666;
   line-height: 1.35;
 }
+.contributor-counter {
+  text-align: center;
+  margin: 2rem auto 2.5rem auto;
+  padding: 1.5rem;
+  max-width: 360px;
+  border: 1px solid #d8dee4;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+}
+
+.counter-number {
+  font-size: 4.5rem;
+  font-weight: 700;
+  color: #159957;
+  line-height: 1;
+}
+
+.counter-label {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: #555;
+}
