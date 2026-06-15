@@ -27,11 +27,6 @@ Use the filters below to identify papers that could be feasible replication targ
     This is currently a static demo. Selections are stored only in your browser and are not submitted anywhere.
   </p>
 
-  <div class="demo-buttons">
-    <button id="export-json">Export selections as JSON</button>
-    <button id="clear-demo">Clear demo selections</button>
-  </div>
-
   <div id="export-output" class="export-output" style="display:none;"></div>
 </section>
 
