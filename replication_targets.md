@@ -6,85 +6,94 @@ permalink: /replication-targets/
 
 # Replication targets
 
-Use the filters below to identify replication targets that are feasible for your available dataset.
+Use the filters below to identify papers that could be feasible replication targets for your dataset.
 
-<section id="filter-panel" class="panel">
+<section class="filters">
   <h2>Filter by dataset features needed</h2>
-
   <div id="filters"></div>
-
   <button id="reset">Reset filters</button>
 </section>
 
-<p id="count"></p>
+<main>
+  <div id="count"></div>
+  <div id="cards"></div>
+</main>
 
-<div id="cards" class="card-grid"></div>
+<section class="demo-actions">
+  <h2>Indicate interest</h2>
+  <p class="demo-note">
+    This is currently a static demo. Selections are stored only in your browser and are not submitted anywhere.
+  </p>
+  <div class="demo-buttons">
+    <button id="export-json">Export selections as JSON</button>
+    <button id="clear-demo">Clear demo selections</button>
+  </div>
+  <div id="export-output" class="export-output" style="display:none;"></div>
+</section>
 
-<div id="volunteer-modal" class="modal">
-  <div class="modal-content">
-    <span id="close-modal" class="close">&times;</span>
-    <h3>Indicate interest in this replication</h3>
-    <p id="modal-paper-info"></p>
+<div id="volunteer-modal" class="modal-overlay" style="display:none;">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Volunteer to replicate this paper</h2>
+      <button id="close-modal" class="close-btn">&times;</button>
+    </div>
+
+    <p id="modal-paper-info" class="modal-paper-info"></p>
+
+    <p class="demo-disclaimer">
+      Demo only. This information is stored only in your browser and is not submitted anywhere.
+    </p>
 
     <form id="volunteer-form">
-      <input type="hidden" id="form-paper-id" />
+      <input type="hidden" id="form-paper-id">
 
-      <label>Name:
-        <input type="text" id="form-name" required />
-      </label>
+      <div class="form-group">
+        <label for="form-name">Name *</label>
+        <input type="text" id="form-name" required>
+      </div>
 
-      <label>Institution / Research Group:
-        <input type="text" id="form-institution" />
-      </label>
+      <div class="form-group">
+        <label for="form-institution">Institution / research group *</label>
+        <input type="text" id="form-institution" required>
+      </div>
 
-      <label>Contact Preference:
-        <select id="form-contact">
-          <option value="email">Email</option>
-          <option value="phone">Phone</option>
-          <option value="institution">Institution</option>
+      <div class="form-group">
+        <label for="form-contact">Contact preference *</label>
+        <select id="form-contact" required>
+          <option value="">Select...</option>
+          <option value="Contact via project coordinator">Contact via project coordinator</option>
+          <option value="Contact directly via email">Contact directly via email</option>
+          <option value="Contact via phone">Contact via phone</option>
+          <option value="No preference">No preference</option>
         </select>
-      </label>
+      </div>
 
-      <label>Dataset Description:
-        <textarea id="form-dataset" rows="3"></textarea>
-      </label>
+      <div class="form-group">
+        <label for="form-dataset">Dataset description, short free text *</label>
+        <textarea id="form-dataset" rows="3" required></textarea>
+      </div>
 
-      <label>Replication Type:
-        <select id="form-replication">
+      <div class="form-group">
+        <label for="form-replication">Type of replication *</label>
+        <select id="form-replication" required>
+          <option value="">Select...</option>
           <option value="direct">Direct</option>
-          <option value="conceptual">Conceptual</option>
-          <option value="collaborative">Collaborative</option>
+          <option value="partial">Partial</option>
+          <option value="exploratory">Exploratory</option>
         </select>
-      </label>
+      </div>
 
-      <label>Number of MDD Patients Available:
-        <input type="number" id="form-mdd-n" min="0" />
-      </label>
-
-      <label>Number of Healthy Controls Available:
-        <input type="number" id="form-hc-n" min="0" />
-      </label>
-
-      <label>Other Clinical Groups Available:
-        <textarea id="form-other-groups" rows="2"></textarea>
-      </label>
-
-      <label>Minimum Age Available:
-        <input type="number" id="form-age-min" min="18" />
-      </label>
-
-      <label>Maximum Age Available:
-        <input type="number" id="form-age-max" max="90" />
-      </label>
-
-      <label>Notes:
+      <div class="form-group">
+        <label for="form-notes">Notes</label>
         <textarea id="form-notes" rows="3"></textarea>
-      </label>
+      </div>
 
-      <button type="submit">Submit</button>
-      <button type="button" id="cancel-volunteer">Cancel</button>
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Save demo selection</button>
+        <button type="button" id="cancel-volunteer" class="btn-secondary">Cancel</button>
+      </div>
     </form>
   </div>
 </div>
 
-<script src="{{ '/app.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/app.js' | relative_url }}"></script>
