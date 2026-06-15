@@ -97,7 +97,49 @@ function getClaimsForPaper(paperId) {
   return claims.filter(c => c.paper_id === paperId);
 }
 
-// Check if any claim for a paper is selected/pending
+// Compute coverage totals for a specific paper from its claims
+function computeCoverageForPaper(paperId) {
+  const paperClaims = getClaimsForPaper(paperId);
+  let mddTotal = 0;
+  let healthyTotal = 0;
+  let mddSpecified = false;
+  let healthySpecified = false;
+
+  for (const claim of paperClaims) {
+    if (claim.mdd_n_available != null && claim.mdd_n_available > 0) {
+      mddTotal += claim.mdd_n_available;
+      mddSpecified = true;
+    }
+    if (claim.healthy_control_n_available != null && claim.healthy_control_n_available > 0) {
+      healthyTotal += claim.healthy_control_n_available;
+      healthySpecified = true;
+    }
+  }
+
+  return { mddTotal, healthyTotal, mddSpecified, healthySpecified };
+}
+
+// Render a compact coverage line for a paper
+function renderCoverageLine(coverage) {
+  if (!coverage.mddSpecified && !coverage.healthySpecified) {
+    return "Coverage: none yet";
+  }
+
+  const parts = [];
+  if (coverage.mddSpecified) {
+    parts.push(`MDD ${coverage.mddTotal} / not specified`);
+  } else {
+    parts.push("MDD not specified");
+  }
+  if (coverage.healthySpecified) {
+    parts.push(`Healthy controls ${coverage.healthyTotal} / not specified`);
+  } else {
+    parts.push("Healthy controls not specified");
+  }
+
+  return "Coverage: " + parts.join(" | ");
+}
+
 function hasActiveClaimForPaper(paperId) {
   return getClaimsForPaper(paperId).some(
     c => c.status?.toLowerCase() === "selected" || c.status?.toLowerCase() === "volunteer_pending"
@@ -176,6 +218,10 @@ function renderCard(paper) {
     card += `<span class="badge ${val}">${label}: ${val}</span>`;
   }
   card += `</div>`;
+
+  // Coverage line
+  const coverage = computeCoverageForPaper(paper.paper_id);
+  card += `<div class="coverage-line">${renderCoverageLine(coverage)}</div>`;
 
   // Volunteer section
   if (activeCount === 0) {
@@ -302,6 +348,8 @@ function setupVolunteerModal() {
     const contact = document.getElementById("form-contact").value;
     const dataset = document.getElementById("form-dataset").value.trim();
     const replication = document.getElementById("form-replication").value;
+    const mddN = document.getElementById("form-mdd-n").value;
+    const healthyN = document.getElementById("form-healthy-n").value;
     const notes = document.getElementById("form-notes").value.trim();
 
     // Build new claim entry (array-based)
@@ -315,6 +363,14 @@ function setupVolunteerModal() {
       replication_type: replication,
       notes: notes || "No additional notes"
     };
+
+    // Add optional sample-size fields only if provided
+    if (mddN !== "") {
+      newClaim.mdd_n_available = parseInt(mddN, 10);
+    }
+    if (healthyN !== "") {
+      newClaim.healthy_control_n_available = parseInt(healthyN, 10);
+    }
 
     // Load current claims array and append the new claim
     const demoClaims = loadDemoClaims();
