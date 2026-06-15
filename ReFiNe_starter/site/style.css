@@ -356,3 +356,70 @@ button:disabled {
 .btn-secondary:hover {
   background: #f3f4f6;
 }
+
+/* Volunteer list styles (multiple volunteers per paper) */
+.volunteer-list {
+  margin-top: 12px;
+}
+
+.volunteer-list details summary {
+  cursor: pointer;
+  color: #3b82f6;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 4px 0;
+}
+
+.volunteer-list details summary:hover {
+  color: #2563eb;
+}
+
+.volunteer-list-inner {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.volunteer-entry {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+}
+
+.volunteer-entry p {
+  margin: 4px 0;
+}
+
+.volunteer-details {
+  margin-top: 8px;
+}
+
+.volunteer-details summary {
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 13px;
+  padding: 4px 0;
+}
+
+.volunteer-details .detail-row {
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+.volunteer-details .detail-label {
+  font-weight: 600;
+  color: #6b7280;
+}
+
+/* Add another group button */
+.add-another-btn {
+  margin-top: 8px;
+  background: #10b981;
+}
+
+.add-another-btn:hover {
+  background: #059669;
+}

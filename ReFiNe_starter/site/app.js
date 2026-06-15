@@ -39,9 +39,10 @@ const REPLICATION_LABELS = {
 const STORAGE_KEY = "refine_demo_claims";
 
 let papers = [];
+// claims is now an array of all claim objects (multiple per paper_id allowed)
 let claims = [];
 
-// Load static claims from claims.json
+// Load static claims from claims.json (returns array)
 async function loadStaticClaims() {
   try {
     const resp = await fetch("data/claims.json");
@@ -54,86 +55,99 @@ async function loadStaticClaims() {
   return [];
 }
 
-// Load demo claims from localStorage
+// Load demo claims from localStorage as an array
 function loadDemoClaims() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    // Backward compatibility: old format was an object keyed by paper_id
+    if (Array.isArray(parsed)) {
+      return parsed;
+    }
+    // Convert old object format to array
+    if (parsed && typeof parsed === "object") {
+      return Object.values(parsed);
+    }
+    return [];
   } catch (e) {
     console.warn("Could not load demo claims from localStorage:", e);
-    return {};
+    return [];
   }
 }
 
-// Save demo claims to localStorage
-function saveDemoClaims(demoClaims) {
+// Save demo claims to localStorage as an array
+function saveDemoClaims(claimsArray) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(demoClaims));
+    const storage = { claims: claimsArray };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
   } catch (e) {
     console.warn("Could not save demo claims to localStorage:", e);
   }
 }
 
-// Merge static claims and demo claims
+// Merge static claims and demo claims into a single array
 function mergeClaims(staticClaims, demoClaims) {
-  const merged = {};
-
-  // Start with static claims
-  for (const claim of staticClaims) {
-    merged[claim.paper_id] = { ...claim };
-  }
-
-  // Overlay demo claims (demo takes precedence)
-  for (const [paperId, demoClaim] of Object.entries(demoClaims)) {
-    if (merged[paperId]) {
-      // Merge: demo values override static
-      merged[paperId] = { ...merged[paperId], ...demoClaim };
-    } else {
-      merged[paperId] = { ...demoClaim };
-    }
-  }
-
-  return merged;
+  // Combine both arrays; demo claims come last so they appear at the end when rendering
+  return [...staticClaims, ...demoClaims];
 }
 
-function getClaimForPaper(paperId) {
-  return claims[paperId] || null;
+// Get all claims for a specific paper (returns array)
+function getClaimsForPaper(paperId) {
+  return claims.filter(c => c.paper_id === paperId);
 }
 
-function getStatusDisplay(claim) {
-  if (!claim) return { label: "Available", class: "status-available" };
-  const status = claim.status?.toLowerCase() || "available";
-  if (status === "selected") return { label: "Selected", class: "status-selected" };
-  if (status === "volunteer_pending") return { label: "Volunteer pending", class: "status-volunteer-pending" };
-  return { label: "Available", class: "status-available" };
+// Check if any claim for a paper is selected/pending
+function hasActiveClaimForPaper(paperId) {
+  return getClaimsForPaper(paperId).some(
+    c => c.status?.toLowerCase() === "selected" || c.status?.toLowerCase() === "volunteer_pending"
+  );
 }
 
-function renderVolunteerInfo(claim) {
-  if (!claim) return "";
+function getStatusDisplay(count) {
+  if (count === 0) return { label: "Available", class: "status-available" };
+  if (count === 1) return { label: "1 group volunteered", class: "status-selected" };
+  return { label: `${count} groups volunteered`, class: "status-volunteer-pending" };
+}
 
-  let html = `<div class="volunteer-info">`;
-  html += `<p><strong>Volunteer:</strong> ${escapeHtml(claim.volunteer_name || "")}</p>`;
-  html += `<p><strong>Institution:</strong> ${escapeHtml(claim.institution || "")}</p>`;
+// Render a compact list of all volunteers for a paper
+function renderVolunteerList(claimsArray) {
+  if (!claimsArray || claimsArray.length === 0) return "";
 
-  if (claim.notes || claim.dataset_description || claim.replication_type) {
-    html += `<details>`;
-    html += `<summary>Show details</summary>`;
-    if (claim.contact_preference) {
-      html += `<div class="detail-row"><span class="detail-label">Contact:</span> ${escapeHtml(claim.contact_preference)}</div>`;
-    }
-    if (claim.dataset_description) {
-      html += `<div class="detail-row"><span class="detail-label">Dataset:</span> ${escapeHtml(claim.dataset_description)}</div>`;
-    }
-    if (claim.replication_type) {
-      html += `<div class="detail-row"><span class="detail-label">Replication type:</span> ${REPLICATION_LABELS[claim.replication_type] || claim.replication_type}</div>`;
-    }
-    if (claim.notes) {
-      html += `<div class="detail-row"><span class="detail-label">Notes:</span> ${escapeHtml(claim.notes)}</div>`;
-    }
-    html += `</details>`;
-  }
+  let html = `<div class="volunteer-list">`;
 
-  html += `</div>`;
+  // Show volunteer names/institutions in a collapsed details block
+  html += `<details>`;
+  html += `<summary>View ${claimsArray.length} volunteer group${claimsArray.length > 1 ? "s" : ""}</summary>`;
+  html += `<div class="volunteer-list-inner">`;
+
+  claimsArray.forEach((claim, idx) => {
+    html += `<div class="volunteer-entry">`;
+    html += `<p><strong>Group ${idx + 1}:</strong> ${escapeHtml(claim.volunteer_name || "Unknown")}</p>`;
+    html += `<p><strong>Institution:</strong> ${escapeHtml(claim.institution || "Unknown")}</p>`;
+
+    if (claim.notes || claim.dataset_description || claim.replication_type) {
+      html += `<details class="volunteer-details">`;
+      html += `<summary>Show details</summary>`;
+      if (claim.contact_preference) {
+        html += `<div class="detail-row"><span class="detail-label">Contact:</span> ${escapeHtml(claim.contact_preference)}</div>`;
+      }
+      if (claim.dataset_description) {
+        html += `<div class="detail-row"><span class="detail-label">Dataset:</span> ${escapeHtml(claim.dataset_description)}</div>`;
+      }
+      if (claim.replication_type) {
+        html += `<div class="detail-row"><span class="detail-label">Replication type:</span> ${REPLICATION_LABELS[claim.replication_type] || claim.replication_type}</div>`;
+      }
+      if (claim.notes) {
+        html += `<div class="detail-row"><span class="detail-label">Notes:</span> ${escapeHtml(claim.notes)}</div>`;
+      }
+      html += `</details>`;
+    }
+
+    html += `</div>`;
+  });
+
+  html += `</div></details></div>`;
   return html;
 }
 
@@ -145,8 +159,9 @@ function escapeHtml(str) {
 }
 
 function renderCard(paper) {
-  const claim = getClaimForPaper(paper.paper_id);
-  const status = getStatusDisplay(claim);
+  const paperClaims = getClaimsForPaper(paper.paper_id);
+  const activeCount = paperClaims.filter(c => c.status?.toLowerCase() === "selected" || c.status?.toLowerCase() === "volunteer_pending").length;
+  const status = getStatusDisplay(activeCount);
 
   let card = `<div class="card" data-paper-id="${paper.paper_id}">`;
   card += `<h3>${escapeHtml(paper.title)} <span class="status-badge ${status.class}">${status.label}</span></h3>`;
@@ -162,11 +177,14 @@ function renderCard(paper) {
   }
   card += `</div>`;
 
-  // Volunteer button for available papers
-  if (!claim) {
+  // Volunteer section
+  if (activeCount === 0) {
+    // No volunteers: show available badge and volunteer button
     card += `<button class="volunteer-btn" onclick="openVolunteerModal('${paper.paper_id}')">Volunteer to replicate this paper</button>`;
-  } else if (claim.status?.toLowerCase() === "selected" || claim.status?.toLowerCase() === "volunteer_pending") {
-    card += renderVolunteerInfo(claim);
+  } else {
+    // One or more volunteers: show list and "Add another group" button
+    card += renderVolunteerList(paperClaims);
+    card += `<button class="volunteer-btn add-another-btn" onclick="openVolunteerModal('${paper.paper_id}')">Add another group</button>`;
   }
 
   card += `</div>`;
@@ -228,7 +246,7 @@ async function init() {
   const papersResp = await fetch("data/papers.json");
   papers = await papersResp.json();
 
-  // Load and merge claims
+  // Load and merge claims (both are arrays)
   const staticClaims = await loadStaticClaims();
   const demoClaims = loadDemoClaims();
   const merged = mergeClaims(staticClaims, demoClaims);
@@ -286,11 +304,8 @@ function setupVolunteerModal() {
     const replication = document.getElementById("form-replication").value;
     const notes = document.getElementById("form-notes").value.trim();
 
-    // Get current demo claims
-    const demoClaims = loadDemoClaims();
-
-    // Save demo claim
-    demoClaims[paperId] = {
+    // Build new claim entry (array-based)
+    const newClaim = {
       paper_id: paperId,
       status: "selected",
       volunteer_name: name,
@@ -300,6 +315,10 @@ function setupVolunteerModal() {
       replication_type: replication,
       notes: notes || "No additional notes"
     };
+
+    // Load current claims array and append the new claim
+    const demoClaims = loadDemoClaims();
+    demoClaims.push(newClaim);
 
     saveDemoClaims(demoClaims);
 
@@ -331,11 +350,12 @@ function openVolunteerModal(paperId) {
 
 function clearDemoSelections() {
   if (confirm("Clear all demo volunteer selections? This will restore the original static claims from claims.json.")) {
-    localStorage.removeItem(STORAGE_KEY);
+    const storage = { claims: [] };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
 
     // Reload static claims and re-render
     loadStaticClaims().then(static => {
-      claims = mergeClaims(static, {});
+      claims = mergeClaims(static, []);
       render();
     });
   }
@@ -343,13 +363,12 @@ function clearDemoSelections() {
 
 function exportSelectionsAsJson() {
   const demoClaims = loadDemoClaims();
-  const staticClaims = claims; // This is already merged, need to get fresh static
 
-  // Build export from all claims (static + demo)
+  // Build export from all claims (static + demo) as an array
   loadStaticClaims().then(static => {
     const allClaims = mergeClaims(static, demoClaims);
     const exportData = {
-      claims: Object.values(allClaims).map(c => ({
+      claims: allClaims.map(c => ({
         paper_id: c.paper_id,
         status: c.status?.toLowerCase() || "available",
         volunteer_name: c.volunteer_name || "",
