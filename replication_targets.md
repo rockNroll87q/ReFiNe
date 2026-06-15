@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Replication targets
+title: ReFiNe
 permalink: /replication-targets/
 ---
 

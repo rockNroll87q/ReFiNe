@@ -1,15 +1,12 @@
 ---
 layout: page
-title: Contributors
+title: ReFiNe
 permalink: /contributors/
 ---
 
 [<-- main page](https://rocknroll87q.github.io/ReFiNe)
 
 <hr>
-
-
-# Contributors
 
 
 
