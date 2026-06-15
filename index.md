@@ -5,12 +5,13 @@ title: <a href="https://rocknroll87q.github.io/ReFiNe">ReFiNe</a>
 
 # About the replication project
 
-ReFiNe (Replicability of Findings in Neuroimaging) is an open community initiative aimed at systematically evaluating the replicability of neuroimaging findings. The project is based on a series of direct replication studies that reproduce original analyses as closely as possible in independent datasets to determine which findings replicate, which do not, and which factors predict replication success.
 
-<p align="center">
-<img src="./misc/refine_logo_text-large.png" width="20%" />  
-<!--<figcaption>Figure | Investigating the Replicability of Findings in Neuroimaging </figcaption>-->
-</p>
+<img src="./misc/refine_logo_text-large.png"
+     align="right"
+     width="180"
+     style="margin-left: 24px; margin-bottom: 12px;" />
+
+**ReFiNe** (*Replicability of Findings in Neuroimaging*) is an open community initiative aimed at systematically evaluating the replicability of neuroimaging findings. The project is based on a series of direct replication studies that reproduce original analyses as closely as possible in independent datasets to determine which findings replicate, which do not, and which factors predict replication success.
 
 The current focus of ReFiNe is structural MRI research in major depressive disorder, where ongoing pilot work has established the feasibility of the approach. Over time, the initiative aims to expand across psychiatric disorders, research topics, and neuroimaging modalities.
 
