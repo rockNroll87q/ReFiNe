@@ -20,6 +20,10 @@ The ReFiNe website serves as a central hub for coordinating and standardizing re
 Researchers interested in conducting replications, contributing datasets, developing methods, or supporting the initiative are invited to join the growing ReFiNe community.
 
 
+<hr>
+# Project overview
+
+![](./misc/framework.png)
 
 <!--<hr>
 # Citation
