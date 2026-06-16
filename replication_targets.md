@@ -10,6 +10,10 @@ permalink: /replication-targets/
 
 Use the filters below to identify papers that could be feasible replication targets for your dataset.
 
+<span style="background-color: #FFFF00">**Note**</span>: This is a demo version! The site is currently under construction (started at the OHBM hackathon 2026).
+
+
+
 <section class="filters">
   <h2>Filter by dataset features needed</h2>
   <div id="filters"></div>
