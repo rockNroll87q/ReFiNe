@@ -12,6 +12,54 @@ This starter keeps the system deliberately lightweight:
 - no manual-review stage for now
 - one command builds the website database
 
+## Full Pipeline: From Eligible Studies to Extracted Features
+
+This is a **two-stage workflow**: first download PDFs for your eligible studies, then run feature extraction on each paper.
+
+### Stage 1: Download PDFs from OpenAlex
+
+```bash
+# Set your OpenAlex API key (get one free at https://openalex.org/)
+export OPENALEX_API_KEY="your-api-key-here"
+
+# Download all PDFs
+python scripts/download_openalex_pdfs.py \
+  --input data/input/eligible_studies.csv \
+  --out-dir data/pdfs
+```
+
+**Optional flags:**
+- `--limit N` — Process only the first N papers
+- `--overwrite` — Re-download existing PDFs
+- `--dry-run` — Preview what would be downloaded without downloading anything
+
+A download manifest is saved to `data/input/openalex_pdf_downloads.csv` with status for each paper.
+
+### Stage 2: Run Feature Extraction
+
+Once PDFs are in place, run the extraction pipeline:
+
+```bash
+# Extract features for all downloaded papers
+python -m refine.run extract-all
+```
+
+**Optional flags:**
+- `--limit N` - Process only the first N papers
+- `--paper-id ID` - Extract a single paper
+
+
+---
+
+### Notes
+
+- The script uses DOI lookup first, falling back to title search if DOI is missing.
+- Only downloads **open-access** PDFs (free via OpenAlex). Subscription-only papers will be skipped with `no_pdf` status.
+- A download manifest is written to `data/input/openalex_pdf_downloads.csv`.
+- Use `--overwrite` to re-download existing PDFs.
+- Papers are named using the `REFINE-XXXX` ID scheme expected by the extraction pipeline.
+
+
 ## What is included
 
 - `data/input/eligible_studies.csv`  
@@ -188,52 +236,6 @@ In future versions, the localStorage-based demo could be replaced with a real ba
 
 The current static demo is designed to be a drop-in visual replacement — the frontend code structure makes it straightforward to swap `localStorage` calls for real API calls later.
 
-## Full Pipeline: From Eligible Studies to Extracted Features
-
-This is a **two-stage workflow**: first download PDFs for your eligible studies, then run feature extraction on each paper.
-
-### Stage 1: Download PDFs from OpenAlex
-
-```bash
-# Set your OpenAlex API key (get one free at https://openalex.org/)
-export OPENALEX_API_KEY="your-api-key-here"
-
-# Download all PDFs
-python scripts/download_openalex_pdfs.py \
-  --input data/input/eligible_studies.csv \
-  --out-dir data/pdfs
-```
-
-**Optional flags:**
-- `--limit N` — Process only the first N papers
-- `--overwrite` — Re-download existing PDFs
-- `--dry-run` — Preview what would be downloaded without downloading anything
-
-A download manifest is saved to `data/input/openalex_pdf_downloads.csv` with status for each paper.
-
-### Stage 2: Run Feature Extraction
-
-Once PDFs are in place, run the extraction pipeline:
-
-```bash
-# Extract features for all downloaded papers
-python -m refine.run extract-all
-```
-
-**Optional flags:**
-- `--limit N` - Process only the first N papers
-- `--paper-id ID` - Extract a single paper
-
-
----
-
-### Notes
-
-- The script uses DOI lookup first, falling back to title search if DOI is missing.
-- Only downloads **open-access** PDFs (free via OpenAlex). Subscription-only papers will be skipped with `no_pdf` status.
-- A download manifest is written to `data/input/openalex_pdf_downloads.csv`.
-- Use `--overwrite` to re-download existing PDFs.
-- Papers are named using the `REFINE-XXXX` ID scheme expected by the extraction pipeline.
 
 ## Recommended next step
 
