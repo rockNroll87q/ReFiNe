@@ -131,7 +131,8 @@ def get_pdf_url_from_work(work: dict) -> tuple[str | None, str]:
     Priority order:
         1. top_level.pdf_url (direct PDF link from OpenAlex)
         2. best_oa_location.oa_url only if it looks like a direct PDF URL
-        3. any repository PDF URL from locations array
+        3. Publisher-specific constructed PDF URLs for known OA publishers
+        4. any repository PDF URL from locations array
     """
     # Direct PDF URL (may be string or list)
     pdf_url = work.get("pdf_url")
@@ -149,16 +150,20 @@ def get_pdf_url_from_work(work: dict) -> tuple[str | None, str]:
         # Only use OA URL directly if it looks like a PDF endpoint
         if is_pdf_url(oa_url):
             return oa_url, "best_oa_location (PDF)"
-        # For non-PDf OA URLs, check for is_oa_collection or landing_page_url
-        # that point to known OA publishers with PDF support
+        # For non-PDF OA URLs from known publishers, try to construct
+        # a direct PDF URL
+        publisher_name = ""
         publisher = work.get("publisher", {}) or {}
-        if publisher and publisher.get("name", "").lower() in {
-            "frontiers", "mdpi", "plos", "springer nature", "elsevier b.v.",
-            "public library of science", "society for neuroscience",
-        }:
-            # These publishers have reliable PDF endpoints; return the OA URL
-            # and let download_pdf resolve it via redirect following
-            return oa_url, "best_oa_location (publisher)"
+        if publisher:
+            publisher_name = publisher.get("name", "").lower()
+
+        # Try constructing publisher-specific PDF URLs
+        constructed_pdf = _construct_publisher_pdf_url(oa_url, publisher_name, work)
+        if constructed_pdf:
+            return constructed_pdf, "constructed_publisher_pdf"
+
+        # Fallback: return the OA URL for redirect resolution (legacy behavior)
+        return oa_url, "best_oa_location (publisher)"
 
     # Check locations array for direct PDF URLs
     for loc in (work.get("locations") or []):
@@ -168,6 +173,79 @@ def get_pdf_url_from_work(work: dict) -> tuple[str | None, str]:
                 return url.strip(), "location_pdf_url"
 
     return None, "none"
+
+
+def _construct_publisher_pdf_url(oa_url: str, publisher_name: str, work: dict) -> str | None:
+    """Try to construct a direct PDF URL for known OA publishers.
+
+    Many publishers have predictable PDF URL patterns that we can exploit
+    to get direct downloads instead of relying on HTML page redirects.
+    """
+    import re
+
+    if not oa_url:
+        return None
+
+    doi = work.get("doi", {}) or {}
+    doi_id = doi.get("id", "") or ""
+    # Clean DOI (remove https://doi.org/ prefix if present)
+    if doi_id.startswith("https://doi.org/"):
+        doi_id = doi_id[len("https://doi.org/"):]
+
+    # Frontiers: https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fneur.2024.123456/pdf
+    if "frontiers" in publisher_name:
+        # Extract article path from the OA URL
+        match = re.search(r'/articles/([^/]+)/pdf', oa_url)
+        if match:
+            return f"https://www.frontiersin.org/journals/articles/{match.group(1)}/pdf"
+        # Fallback: try to construct from DOI
+        if doi_id:
+            doi_path = doi_id.replace("/", "/")
+            return f"https://www.frontiersin.org/journals/article?doi={doi_path}"
+
+    # MDPI: https://www.mdpi.com/article/10.3390/.../pdf
+    if "mdpi" in publisher_name:
+        match = re.search(r'/article/([^/]+)/pdf', oa_url)
+        if match:
+            return f"https://www.mdpi.com/{match.group(1)}/pdf"
+        # Fallback from DOI
+        if doi_id:
+            parts = doi_id.split("/")
+            return f"https://www.mdpi.com/article/{doi_id}/pdf"
+
+    # PLOS: https://journals.plos.org/plosone/article/file?type=printable&id=...
+    if "plos" in publisher_name or "public library of science" in publisher_name:
+        match = re.search(r'id=([^&]+)', oa_url)
+        if match:
+            return f"https://journals.plos.org/plosone/article/file?type=printable&id={match.group(1)}"
+        # Try PLOS Medicine or PLOS Biology as fallback
+        if "plosmedicine" in oa_url:
+            match = re.search(r'/article\?id=([^&]+)', oa_url)
+            if match:
+                return f"https://journals.plos.org/plosmedicine/article/file?type=printable&id={match.group(1)}"
+        if "plospathogens" in oa_url or "plospathogens" in oa_url:
+            match = re.search(r'/article\?id=([^&]+)', oa_url)
+            if match:
+                return f"https://journals.plos.org/plospathogens/article/file?type=printable&id={match.group(1)}"
+
+    # Springer Nature: often has /content/.../pdf.pdf or /articles/...pdf.pdf
+    if "springer" in publisher_name:
+        match = re.search(r'/content/([^/]+)/pdf\.pdf', oa_url)
+        if match:
+            return f"https://www.springer.com/content/{match.group(1)}/pdf.pdf"
+        match = re.search(r'/articles/[^/]+/[^/]+\.pdf\.pdf', oa_url)
+        if match:
+            return match.group(0)
+
+    # Elsevier: often has /url or /pii patterns
+    if "elsevier" in publisher_name:
+        match = re.search(r'/url\?sid=[^&]+&urlform=extract(&token=\w+)?', oa_url)
+        if match:
+            # Add token for direct download
+            base = oa_url.split("?")[0]
+            return f"{base}?urlform=extract"
+
+    return None
 
 
 def is_pdf_url(url: str) -> bool:
