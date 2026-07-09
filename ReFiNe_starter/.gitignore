@@ -1,0 +1,21 @@
+# API keys
+.env
+
+# Downloaded PDFs (large binary files)
+data/pdfs/*.pdf
+
+# Extracted features/metadata
+data/extracted/*.json
+
+# Logs
+data/logs/*.log
+data/logs/*.txt
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/

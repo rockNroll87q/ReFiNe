@@ -188,6 +188,55 @@ In future versions, the localStorage-based demo could be replaced with a real ba
 
 The current static demo is designed to be a drop-in visual replacement — the frontend code structure makes it straightforward to swap `localStorage` calls for real API calls later.
 
+## PDF Download from OpenAlex
+
+Before running extraction, you need PDFs in `data/pdfs/`. Use the downloader script to fetch them from OpenAlex:
+
+```bash
+# Set your OpenAlex API key (do NOT commit .env)
+export OPENALEX_API_KEY="your-key-here"
+
+# Download PDFs for all eligible studies
+python scripts/download_openalex_pdfs.py \
+  --input data/input/eligible_studies.csv \
+  --out-dir data/pdfs
+
+# Or limit to a subset
+python scripts/download_openalex_pdfs.py \
+  --input data/input/eligible_studies.csv \
+  --out-dir data/pdfs \
+  --limit 10
+
+# Dry run (no downloads)
+python scripts/download_openalex_pdfs.py \
+  --input data/input/eligible_studies.csv \
+  --out-dir data/pdfs \
+  --dry-run --limit 5
+```
+
+### Workflow overview
+
+```bash
+# 1. Set your OpenAlex API key
+export OPENALEX_API_KEY="your-key-here"
+
+# 2. Download PDFs from OpenAlex
+python scripts/download_openalex_pdfs.py \
+  --input data/input/eligible_studies.csv \
+  --out-dir data/pdfs
+
+# 3. Run the extraction pipeline
+python -m refine.run extract-all --limit 10
+```
+
+### Notes
+
+- The script uses DOI lookup first, falling back to title search if DOI is missing.
+- Only downloads **open-access** PDFs (free via OpenAlex). Subscription-only papers will be skipped with `no_pdf` status.
+- A download manifest is written to `data/input/openalex_pdf_downloads.csv`.
+- Use `--overwrite` to re-download existing PDFs.
+- Papers are named using the `REFINE-XXXX` ID scheme expected by the extraction pipeline.
+
 ## Recommended next step
 
 Add this next command later:
@@ -196,10 +245,11 @@ Add this next command later:
 python -m refine.run extract-pdfs --pdf-dir data/pdfs --out data/text
 ```
 
-Then add an LLM/agent step:
+Then add an LLM/agent extraction step:
 
 ```bash
 python -m refine.run extract-features --text-dir data/text --out site/data/papers.json
 ```
 
 The website does not need to change. It only reads `site/data/papers.json`.
+
