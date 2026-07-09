@@ -4,6 +4,10 @@
 # Downloaded PDFs (large binary files)
 data/pdfs/*.pdf
 data/text/*.md
+data/text/*.md
+data/logs/*.txt
+data/extracted/*.json
+
 
 # Extracted features/metadata
 data/extracted/*.json

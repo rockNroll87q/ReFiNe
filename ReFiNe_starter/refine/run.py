@@ -105,8 +105,8 @@ def build_parser() -> argparse.ArgumentParser:
     p_extract_all.add_argument(
         "--limit",
         type=int,
-        default=10,
-        help="Maximum number of papers to process (default: 10)",
+        default=None,
+        help="Maximum number of papers to process (default: all eligible papers)",
     )
     p_extract_all.set_defaults(handler=_cmd_extract_all)
 

@@ -1,15 +1,17 @@
 """LLM client for ReFiNe extraction.
 
-Supports two providers:
-  - ``none``        – no LLM; returns a valid template with all features ``"unclear"``
-  - ``openai_compatible`` – calls any OpenAI-compatible HTTP API
+Supports three providers:
+  - ``none``                          – no LLM; returns a valid template with all features ``"unclear"``
+  - ``openai_compatible``             – calls any OpenAI-compatible HTTP API
 
 Configuration is done entirely through environment variables:
 
-  * ``REFINE_LLM_PROVIDER``      – ``none`` (default) or ``openai_compatible``
-  * ``REFINE_LLM_BASE_URL``      – e.g. ``http://localhost:8000/v1``
-  * ``REFINE_LLM_MODEL``         – e.g. ``qwen/qwen3.6-35b-a3b``
-  * ``REFINE_LLM_API_KEY``       – API key (required for ``openai_compatible``)
+  * ``REFINE_LLM_PROVIDER``           – ``none`` (default), ``openai_compatible``
+  * ``REFINE_LLM_BASE_URL``           – e.g. ``http://localhost:8000/v1``
+  * ``REFINE_LLM_MODEL``              – e.g. ``qwen/qwen3.6-35b-a3b``
+  * ``REFINE_LLM_API_KEY``            – API key (required for ``openai_compatible``)
+  * ``REFINE_MAX_CONTEXT_TOKENS``     – max tokens for context window (default: 131072)
+  * ``REFINE_N_KEEP``                 – number of tokens to keep in context (default: 8192)
 """
 
 import os

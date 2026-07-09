@@ -372,13 +372,16 @@ def extract_paper(paper_id: str) -> None:
 # extract-all
 # ---------------------------------------------------------------------------
 
-def extract_all(limit: int = 10) -> None:
+def extract_all(limit: int | None = None) -> None:
     """Extract broad dataset features for the first N papers that have a local PDF
     and do not already have a completed extraction.
 
     Args:
-        limit: Maximum number of papers to process.
+        limit: Maximum number of papers to process. If None, processes all eligible papers.
     """
+    # Default to processing all eligible papers when no limit specified
+    if limit is None:
+        limit = 10000  # Large default to effectively process all papers
     papers = _load_papers_json()
     processed = 0
     skipped = 0
