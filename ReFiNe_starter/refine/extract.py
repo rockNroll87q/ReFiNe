@@ -12,11 +12,9 @@ import logging
 import os
 from pathlib import Path
 
-class Console:
-    def print(self, *args, **kwargs):
-        print(*args)
+from rich.console import Console as RichConsole
 
-console = Console()
+console = RichConsole()
 
 from .llm_client import call_llm
 from .pdf_to_text import pdf_to_text
@@ -151,6 +149,85 @@ def _repair_and_parse(raw: str, paper_id: str, error: str) -> ExtractedFeatures:
 
 
 # ---------------------------------------------------------------------------
+# Context window truncation helper
+# ---------------------------------------------------------------------------
+
+def _truncate_text_for_context(text: str, max_chars: int) -> str:
+    """Truncate paper text to fit within a context window limit.
+    
+    This function preserves the abstract (beginning) and key sections 
+    from the end of the paper (results/conclusion), which are typically 
+    most important for feature extraction.
+    
+    Args:
+        text: The full paper text
+        max_chars: Maximum number of characters to keep
+        
+    Returns:
+        Truncated text that fits within the character limit
+    """
+    if len(text) <= max_chars:
+        return text
+    
+    # Reserve space for truncation marker
+    marker = "\n\n[... TEXT TRUNCATED DUE TO CONTEXT WINDOW LIMIT ...]\n\n"
+    available_chars = max_chars - len(marker)
+    
+    # Split into sections (typically separated by blank lines or headings)
+    sections = text.split('\n\n')
+    
+    # Keep first ~20% for abstract/intro and last ~80% for results/conclusion
+    split_point = int(len(sections) * 0.25)
+    
+    # Ensure we don't take too many from either end
+    min_from_start = max(3, int(len(sections) * 0.1))  # At least 10% from start
+    min_from_end = max(5, int(len(sections) * 0.2))    # At least 20% from end
+    
+    if split_point < min_from_start:
+        split_point = min_from_start
+    if len(sections) - split_point < min_from_end:
+        split_point = len(sections) - min_from_end
+    
+    start_sections = sections[:split_point]
+    end_sections = sections[split_point:]  # Keep most of the rest
+    
+    # Now try to fit within limit by trimming middle if needed
+    result_parts = []
+    current_len = 0
+    
+    # Add start sections
+    for section in start_sections:
+        section_text = section + '\n\n'
+        if current_len + len(section_text) <= available_chars:
+            result_parts.append(section)
+            current_len += len(section_text)
+        else:
+            break
+    
+    # Add end sections (in reverse to maintain order)
+    for section in reversed(end_sections):
+        section_text = '\n\n' + section
+        if current_len + len(section_text) <= available_chars:
+            result_parts.append(section)
+            current_len += len(section_text)
+        else:
+            break
+    
+    # Join and add marker
+    result = '\n\n'.join(result_parts)
+    
+    # If we still exceed limit, truncate each section more aggressively
+    if len(result) > max_chars:
+        result = result[:max_chars]
+        # Try to cut at word boundary
+        last_space = result.rfind(' ')
+        if last_space > max_chars * 0.5:
+            result = result[:last_space]
+    
+    return result + marker
+
+
+# ---------------------------------------------------------------------------
 # Main extraction function
 # ---------------------------------------------------------------------------
 
@@ -214,9 +291,24 @@ def extract_paper(paper_id: str) -> None:
             _save_papers_json(papers)
             return
 
-    # --- 4. LLM extraction ---
+    # --- 4. LLM extraction with context window truncation ---
     prompt_template = _load_prompt_template()
-    prompt = prompt_template.replace("{{PAPER_ID}}", paper_id).replace("{{PAPER_TEXT}}", text)
+    
+    # Estimate token count: ~4 chars per token for English text
+    MAX_CONTEXT_TOKENS = 128000  # Context window limit (e.g., 128K tokens)
+    TOKEN_CHAR_RATIO = 4.0  # Approximate characters per token
+    
+    max_text_chars = int(MAX_CONTEXT_TOKENS * TOKEN_CHAR_RATIO) - len(prompt_template.replace("{{PAPER_TEXT}}", "").replace("{{PAPER_ID}}", "")) - 1000  # Reserve space for prompt structure
+    max_text_chars = max(max_text_chars, 50000)  # Minimum 50K chars to keep meaningful content
+    
+    if len(text) > max_text_chars:
+        console.print(f"Text exceeds context limit ({len(text)} chars > {max_text_chars} chars). Truncating...")
+        
+        # Keep abstract (beginning) and key sections (end/results)
+        truncated_text = _truncate_text_for_context(text, max_text_chars)
+        prompt = prompt_template.replace("{{PAPER_ID}}", paper_id).replace("{{PAPER_TEXT}}", truncated_text)
+    else:
+        prompt = prompt_template.replace("{{PAPER_ID}}", paper_id).replace("{{PAPER_TEXT}}", text)
 
     raw_response, llm_metadata = call_llm(prompt, SYSTEM_PROMPT, paper_id=paper_id)
 
