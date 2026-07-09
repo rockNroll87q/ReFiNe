@@ -9,6 +9,17 @@ Usage::
     python -m refine.run extract-all --limit 10
 """
 
+# Load .env file from project root so environment variables are available
+import os
+from pathlib import Path as _Path
+_env_path = _Path(__file__).resolve().parent.parent / ".env"
+if _env_path.exists():
+    try:
+        from dotenv import load_dotenv
+        load_dotenv(str(_env_path), override=True)
+    except ImportError:
+        pass  # python-dotenv not installed, skip .env loading
+
 import argparse
 import logging
 import sys
