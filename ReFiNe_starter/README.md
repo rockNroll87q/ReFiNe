@@ -188,46 +188,44 @@ In future versions, the localStorage-based demo could be replaced with a real ba
 
 The current static demo is designed to be a drop-in visual replacement — the frontend code structure makes it straightforward to swap `localStorage` calls for real API calls later.
 
-## PDF Download from OpenAlex
+## Full Pipeline: From Eligible Studies to Extracted Features
 
-Before running extraction, you need PDFs in `data/pdfs/`. Use the downloader script to fetch them from OpenAlex:
+This is a **two-stage workflow**: first download PDFs for your eligible studies, then run feature extraction on each paper.
+
+### Stage 1: Download PDFs from OpenAlex
 
 ```bash
-# Set your OpenAlex API key (do NOT commit .env)
-export OPENALEX_API_KEY="your-key-here"
+# Set your OpenAlex API key (get one free at https://openalex.org/)
+export OPENALEX_API_KEY="your-api-key-here"
 
-# Download PDFs for all eligible studies
+# Download all PDFs
 python scripts/download_openalex_pdfs.py \
   --input data/input/eligible_studies.csv \
   --out-dir data/pdfs
-
-# Or limit to a subset
-python scripts/download_openalex_pdfs.py \
-  --input data/input/eligible_studies.csv \
-  --out-dir data/pdfs \
-  --limit 10
-
-# Dry run (no downloads)
-python scripts/download_openalex_pdfs.py \
-  --input data/input/eligible_studies.csv \
-  --out-dir data/pdfs \
-  --dry-run --limit 5
 ```
 
-### Workflow overview
+**Optional flags:**
+- `--limit N` — Process only the first N papers
+- `--overwrite` — Re-download existing PDFs
+- `--dry-run` — Preview what would be downloaded without downloading anything
+
+A download manifest is saved to `data/input/openalex_pdf_downloads.csv` with status for each paper.
+
+### Stage 2: Run Feature Extraction
+
+Once PDFs are in place, run the extraction pipeline:
 
 ```bash
-# 1. Set your OpenAlex API key
-export OPENALEX_API_KEY="your-key-here"
-
-# 2. Download PDFs from OpenAlex
-python scripts/download_openalex_pdfs.py \
-  --input data/input/eligible_studies.csv \
-  --out-dir data/pdfs
-
-# 3. Run the extraction pipeline
-python -m refine.run extract-all --limit 10
+# Extract features for all downloaded papers
+python -m refine.run extract-all
 ```
+
+**Optional flags:**
+- `--limit N` - Process only the first N papers
+- `--paper-id ID` - Extract a single paper
+
+
+---
 
 ### Notes
 
