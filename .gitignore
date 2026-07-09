@@ -2,3 +2,4 @@ ReFiNe_starter/out.txt
 ReFiNe_starter/refine/__pycache__
 ReFiNe_starter/refine/__pycache__/*
 ReFiNe_starter/refine/__pycache__/*.pyc
+.env

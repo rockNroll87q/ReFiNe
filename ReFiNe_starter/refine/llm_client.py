@@ -82,7 +82,7 @@ def _call_openai_compatible(prompt: str, system_prompt: str, paper_id: str | Non
                 {"role": "user", "content": prompt},
             ],
             temperature=0.0,
-            max_tokens=32768,
+            max_tokens=int(os.environ.get("REFINE_MAX_CONTEXT_TOKENS", "32768")),
         )
 
     raw_content = response.choices[0].message.content
