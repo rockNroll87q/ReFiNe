@@ -3,7 +3,7 @@
 {
   "paper_id": "REFINE-0003",
   "dataset_features_needed": {
-    "t1w_mri": "yes",
+    "t1w_mri": "unclear",
     "vbm_or_voxelwise_morphometry": "yes",
     "mdd_patients": "no",
     "healthy_controls": "yes",
@@ -12,24 +12,20 @@
     "anxiety_scale": "yes",
     "clinical_outcomes": "unclear",
     "longitudinal_data": "no",
-    "medication_status": "yes",
+    "medication_status": "unclear",
     "trauma_or_life_stress": "no",
-    "cognitive_data": "no",
-    "blood_or_biomarker_data": "yes"
+    "cognitive_data": "unclear",
+    "blood_or_biomarker_data": "unclear"
   },
   "website_card": {
     "short_description": null,
     "dataset_features_summary": [
-      "T1-weighted MRI acquisition",
-      "Voxel-based morphometry (VBM) analysis",
-      "FKBP5 SNP genotyping from blood samples",
-      "Beck Depression Inventory (BDI)",
-      "State-Trait Anxiety Inventory (STAI-S/T)",
-      "Profile of Mood States (POMS)",
-      "Healthy control cohort (n=112)",
-      "Cross-sectional design"
+      "Voxel-based morphometry (VBM) analysis of brain structure in 112 healthy controls.",
+      "Genotyping for FKBP5 single nucleotide polymorphisms (SNPs).",
+      "Assessment using Beck Depression Inventory and Spielberger Anxiety Inventory (STAI).",
+      "Cross-sectional design with no longitudinal follow-up or trauma/stress evaluation."
     ]
   },
   "extraction_status": "completed",
-  "extraction_notes": "Features extracted directly from paper text. Study is cross-sectional with 112 healthy controls. T1 MRI and VBM were used. FKBP5 genetic data collected via blood DNA extraction. Depression (BDI) and anxiety (STAI) scales administered. No MDD patients, no longitudinal follow-up, trauma/stress not evaluated in this cohort."
+  "extraction_notes": "Extracted features based on explicit mentions in the abstract, key points, and conclusions. Study focuses on healthy controls, VBM analysis, FKBP5 genetics, and mood/anxiety scales (BDI, STAI). Explicitly notes cross-sectional design and lack of trauma/stress evaluation."
 }
