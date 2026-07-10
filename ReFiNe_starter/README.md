@@ -16,24 +16,37 @@ This starter keeps the system deliberately lightweight:
 
 This is a **two-stage workflow**: first download PDFs for your eligible studies, then run feature extraction on each paper.
 
-### Stage 1: Download PDFs from OpenAlex
+### Stage 1: Download PDFs
 
 ```bash
-# Set your OpenAlex API key (get one free at https://openalex.org/)
+# Set your API keys (get OpenAlex key free at https://openalex.org/)
 export OPENALEX_API_KEY="your-api-key-here"
+# Optional: Semantic Scholar API key (free, but not required)
+export SEMANTIC_SCHOLAR_API_KEY="your-api-key-here"
 
-# Download all PDFs
-python scripts/download_openalex_pdfs.py \
+# Download all PDFs (tries OpenAlex first, then Semantic Scholar as fallback)
+python scripts/download_pdfs.py \
   --input data/input/eligible_studies.csv \
-  --out-dir data/pdfs
+  --out-dir data/pdfs \
+  --manifest data/input/pdf_download_manifest.csv
 ```
 
 **Optional flags:**
 - `--limit N` — Process only the first N papers
 - `--overwrite` — Re-download existing PDFs
 - `--dry-run` — Preview what would be downloaded without downloading anything
+- `--manual-only` — Skip downloads; queue all papers for manual PDF acquisition
 
-A download manifest is saved to `data/input/openalex_pdf_downloads.csv` with status for each paper.
+**Output files:**
+- `data/pdfs/REFINE-XXXX.pdf` — Downloaded PDFs (one per paper)
+- `data/input/pdf_download_manifest.csv` — Full manifest with status, source, URLs for each paper
+- `data/input/manual_pdf_needed.csv` — Papers where no legal open-access PDF was found
+
+**Sources used (in priority order):**
+1. **OpenAlex** — DOI lookup first, then title search fallback
+2. **Semantic Scholar** — Only if OpenAlex fails; DOI lookup first, then title search fallback
+
+> Note: `scripts/download_openalex_pdfs.py` is deprecated. Use `download_pdfs.py` instead.
 
 ### Stage 2: Run Feature Extraction
 
