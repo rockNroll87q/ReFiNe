@@ -1,33 +1,15 @@
 #!/usr/bin/env python3
-"""Enhanced PDF download script with landing-page resolution.
+"""Download PDFs for ReFiNe eligible studies using OpenAlex and Semantic Scholar.
 
-This script:
-1. Reads eligible studies from a CSV
-2. Looks up each paper in OpenAlex and Semantic Scholar
-3. Validates whether returned URLs are actual PDFs or HTML landing pages
-4. Resolves trusted OA/repository landing pages to find real PDF links
-5. Classifies failures into clear categories
-6. Writes results to a manifest CSV
+This script reads `data/input/eligible_studies.csv`, tries to locate legal OA PDFs
+through OpenAlex first and Semantic Scholar second, resolves obvious legal landing
+pages, downloads valid PDFs into `data/pdfs/{paper_id}.pdf`, and maintains a
+manifest plus a deduplicated manual queue.
 
-Failure categories:
-- downloaded: PDF successfully downloaded
-- already_exists: PDF file was already present
-- no_oa_location: No OA PDF found from any source
-- publisher_403: Publisher returned HTTP 403 (blocked)
-- doi_landing_page: DOI landing page returned HTML (not a PDF)
-- pmc_landing_page: PMC/NCBI page resolved (may have full text)
-- europepmc_bad_pdf_url: EuropePMC ?pdf=render returned 404
-- repository_landing_page: Repository page that could/was resolved
-- landing_page_unresolved: Landing page with no discoverable PDF
-- invalid_pdf: Content-Type suggested PDF but %PDF header missing
-- error: General/networking error
-
-Legal/ethical boundaries:
-- Does NOT use Sci-Hub
-- Does NOT bypass paywalls
-- Does NOT add Unpaywall or EuropePMC as broad new discovery sources
-- Only resolves URLs already returned by OpenAlex/Semantic Scholar
+It deliberately does not use Sci-Hub or paywall-bypass sources.
 """
+
+from __future__ import annotations
 
 import argparse
 import csv
@@ -36,21 +18,67 @@ import os
 import re
 import sys
 import time
-from bs4 import BeautifulSoup
-from dataclasses import dataclass, field, asdict
-from datetime import datetime
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
-from urllib.parse import urlparse, quote
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Set, Tuple
+from urllib.parse import quote, urljoin, urlparse
+
+import requests
+
+try:
+    from bs4 import BeautifulSoup  # type: ignore
+except Exception:  # pragma: no cover - regex fallback is used if bs4 is absent
+    BeautifulSoup = None  # type: ignore
+
 
 # ---------------------------------------------------------------------------
-# Configuration
+# Constants
 # ---------------------------------------------------------------------------
 
 OPENALEX_BASE = "https://api.openalex.org"
 SEMANTIC_SCHOLAR_BASE = "https://api.semanticscholar.org/graph/v1"
 
-TRUSTED_OA_DOMAINS = {
+STATUS_DOWNLOADED = "downloaded"
+STATUS_ALREADY_EXISTS = "already_exists"
+STATUS_DRY_RUN = "dry_run"
+STATUS_PUBLISHER_403 = "publisher_403"
+STATUS_INVALID_PDF = "invalid_pdf"
+STATUS_NO_OA_LOCATION = "no_oa_location"
+STATUS_LANDING_PAGE_UNRESOLVED = "landing_page_unresolved"
+STATUS_REPOSITORY_LANDING_PAGE = "repository_landing_page"
+STATUS_PMC_LANDING_PAGE = "pmc_landing_page"
+STATUS_EUROPEPMC_BAD_PDF_URL = "europepmc_bad_pdf_url"
+STATUS_ERROR = "error"
+
+SUCCESS_STATUSES = {STATUS_DOWNLOADED, STATUS_ALREADY_EXISTS, STATUS_DRY_RUN}
+MANUAL_STATUSES = {
+    STATUS_PUBLISHER_403,
+    STATUS_INVALID_PDF,
+    STATUS_NO_OA_LOCATION,
+    STATUS_LANDING_PAGE_UNRESOLVED,
+    STATUS_REPOSITORY_LANDING_PAGE,
+    STATUS_PMC_LANDING_PAGE,
+    STATUS_EUROPEPMC_BAD_PDF_URL,
+    STATUS_ERROR,
+}
+
+MANIFEST_COLUMNS = [
+    "paper_id",
+    "title",
+    "doi",
+    "openalex_id",
+    "semantic_scholar_id",
+    "status",
+    "source_used",
+    "pdf_path",
+    "landing_page_url",
+    "pdf_url",
+    "oa_status",
+    "license",
+    "error_message",
+]
+
+TRUSTED_LANDING_DOMAINS = (
     "ncbi.nlm.nih.gov",
     "pmc.ncbi.nlm.nih.gov",
     "europepmc.org",
@@ -58,1135 +86,852 @@ TRUSTED_OA_DOMAINS = {
     "hal.science",
     "doaj.org",
     "escholarship.org",
+    "hdl.handle.net",
+)
+
+DEFAULT_HEADERS = {
+    "User-Agent": "ReFiNe PDF downloader/0.2 (mailto:refine-project@example.org)",
+    "Accept": "application/pdf,text/html,application/xhtml+xml,*/*;q=0.8",
 }
 
-# Status constants for manifest
-STATUS_DOWNLOADED = "downloaded"
-STATUS_ALREADY_EXISTS = "already_exists"
-STATUS_NO_OA_LOCATION = "no_oa_location"
-STATUS_PUBLISHER_403 = "publisher_403"
-STATUS_DOI_LANDING_PAGE = "doi_landing_page"
-STATUS_PMIC_LANDING_PAGE = "pmc_landing_page"
-STATUS_EUROPEPMC_BAD_PDF = "europepmc_bad_pdf_url"
-STATUS_REPOSITORY_LANDING_PAGE = "repository_landing_page"
-STATUS_LANDING_PAGE_UNRESOLVED = "landing_page_unresolved"
-STATUS_INVALID_PDF = "invalid_pdf"
-STATUS_ERROR = "error"
+MIN_PDF_BYTES = 10_000
+HTML_READ_LIMIT = 512_000
 
-# ---------------------------------------------------------------------------
-# HTML Parser for discovering PDF links in landing pages
-# ---------------------------------------------------------------------------
+logger = logging.getLogger("download_pdfs")
 
-class PDFLinkFinder:
-    """Extract PDF URLs and citation metadata from HTML content."""
 
-    def __init__(self):
-        self.pdf_urls: List[str] = []
-        self.citation_pdf_url: Optional[str] = None
-        self.citation_fulltext_html_url: Optional[str] = None
-        self._meta_name: Optional[str] = None
-        self._meta_content: Optional[str] = None
-
-    def parse(self, html: str):
-        """Parse HTML and extract PDF links."""
-        soup = BeautifulSoup(html, 'html.parser')
-
-        # Look for <meta name="citation_pdf_url">
-        meta_pdf = soup.find('meta', attrs={'name': 'citation_pdf_url'})
-        if meta_pdf and meta_pdf.get('content'):
-            self.citation_pdf_url = meta_pdf['content'].strip()
-
-        # Look for <meta name="citation_fulltext_html_url">
-        meta_html = soup.find('meta', attrs={'name': 'citation_fulltext_html_url'})
-        if meta_html and meta_html.get('content'):
-            self.citation_fulltext_html_url = meta_html['content'].strip()
-
-        # Look for <a> tags with PDF links
-        for a_tag in soup.find_all('a', href=True):
-            href = a_tag['href']
-            if any(p in href.lower() for p in ['.pdf', '/pdf/', '?pdf=']):
-                self.pdf_urls.append(href)
+@dataclass
+class UrlAttempt:
+    url: str
+    source: str
+    kind: str = "pdf_or_landing"
 
 
 # ---------------------------------------------------------------------------
-# API key loading
+# Environment / simple helpers
 # ---------------------------------------------------------------------------
 
-def _get_api_keys() -> Dict[str, str]:
-    """Load API keys from environment."""
-    return {
-        "openalex": os.environ.get("OPENALEX_API_KEY", ""),
-        "semantic_scholar": os.environ.get("SEMANTIC_SCHOLAR_API_KEY", ""),
-    }
 
+def load_dotenv_if_available() -> None:
+    """Load `.env` if python-dotenv is installed; otherwise silently ignore."""
+    try:
+        from dotenv import load_dotenv  # type: ignore
+    except Exception:
+        return
 
-def _load_env():
-    """Load .env file if present."""
-    base = Path(__file__).resolve().parent.parent
-    for candidate in [base / ".env", Path(".env")]:
+    for candidate in (Path(".env"), Path(__file__).resolve().parent.parent / ".env"):
         if candidate.exists():
-            from dotenv import load_dotenv
-            load_dotenv(str(candidate))
-            logging.info("Loaded .env from %s", candidate)
-            break
+            load_dotenv(candidate)
+            logger.info("Loaded environment from %s", candidate)
+            return
+
+
+def clean_doi(value: str) -> str:
+    doi = (value or "").strip()
+    doi = re.sub(r"^https?://(dx\.)?doi\.org/", "", doi, flags=re.I)
+    doi = re.sub(r"^doi:\s*", "", doi, flags=re.I)
+    return doi.strip().lower()
+
+
+def get_first(row: Dict[str, str], names: Sequence[str]) -> str:
+    lower_map = {k.lower(): k for k in row.keys()}
+    for name in names:
+        key = lower_map.get(name.lower())
+        if key is not None and row.get(key) is not None:
+            value = str(row.get(key, "")).strip()
+            if value:
+                return value
+    return ""
+
+
+def get_domain(url: str) -> str:
+    return (urlparse(url).hostname or "").lower()
+
+
+def is_semantic_scholar_page(url: str) -> bool:
+    return "semanticscholar.org" in get_domain(url)
+
+
+def is_probable_landing_domain(url: str) -> bool:
+    domain = get_domain(url)
+    if domain in TRUSTED_LANDING_DOMAINS:
+        return True
+    if domain.endswith(".ncbi.nlm.nih.gov"):
+        return True
+    if domain == "doi.org" or domain.endswith("doi.org"):
+        return True
+    return False
+
+
+def normalize_absolute_url(href: str, base_url: str) -> str:
+    return urljoin(base_url, href.strip())
+
+
+def is_pdfish_link(href: str) -> bool:
+    h = href.lower()
+    return ".pdf" in h or "/pdf/" in h or "?pdf" in h or "pdf=" in h
 
 
 # ---------------------------------------------------------------------------
 # OpenAlex helpers
 # ---------------------------------------------------------------------------
 
-def _openalex_lookup_by_doi(doi: str, api_key: str) -> Optional[Dict[str, Any]]:
-    """Fetch a work record from OpenAlex by DOI."""
-    import requests
+
+def openalex_lookup_by_doi(session: requests.Session, doi: str, api_key: str = "") -> Optional[Dict[str, Any]]:
     url = f"{OPENALEX_BASE}/works/doi:{doi}"
-    headers = {"From": os.environ.get("OPENALEX_EMAIL", "refine-project")}
+    params: Dict[str, str] = {}
     if api_key:
-        headers["Authorization"] = f"Bearer {api_key}"
+        params["api_key"] = api_key
     try:
-        resp = requests.get(url, headers=headers, timeout=60)
+        resp = session.get(url, params=params, timeout=30)
         if resp.status_code == 200:
             return resp.json()
-        logging.debug("[OpenAlex] DOI=%s → HTTP %d", doi, resp.status_code)
+        if resp.status_code != 404:
+            logger.warning("OpenAlex DOI lookup returned HTTP %d for %s", resp.status_code, doi)
     except requests.RequestException as exc:
-        logging.warning("[OpenAlex] DOI lookup failed for %s: %s", doi, exc)
+        logger.warning("OpenAlex DOI lookup failed for %s: %s", doi, exc)
     return None
 
 
-def _openalex_search_by_title(title: str, api_key: str) -> Optional[Dict[str, Any]]:
-    """Search OpenAlex by title and return the first matching work."""
-    import requests
+def openalex_search_by_title(session: requests.Session, title: str, api_key: str = "") -> Optional[Dict[str, Any]]:
     url = f"{OPENALEX_BASE}/works"
-    params = {"search": title, "limit": 1}
-    headers = {"From": os.environ.get("OPENALEX_EMAIL", "refine-project")}
+    params: Dict[str, str] = {
+        "search": title,
+        "per_page": "1",
+        "sort": "cited_by_count:desc",
+    }
     if api_key:
-        headers["Authorization"] = f"Bearer {api_key}"
+        params["api_key"] = api_key
     try:
-        resp = requests.get(url, params=params, headers=headers, timeout=60)
+        resp = session.get(url, params=params, timeout=30)
         if resp.status_code == 200:
             results = resp.json().get("results", [])
             if results:
                 return results[0]
-        logging.debug("[OpenAlex] Title search '%s' → HTTP %d (no results)", title[:50], resp.status_code)
+        else:
+            logger.warning("OpenAlex title search returned HTTP %d", resp.status_code)
     except requests.RequestException as exc:
-        logging.warning("[OpenAlex] Title search failed for '%s': %s", title[:50], exc)
+        logger.warning("OpenAlex title search failed for %s: %s", title[:80], exc)
     return None
 
 
-def _extract_pdf_from_openalex(work: Dict[str, Any]) -> Optional[str]:
-    """Return a downloadable PDF URL from an OpenAlex work record."""
-    oa = work.get("open_access") or {}
-    best_oa = oa.get("best_oa_location") or {}
+def openalex_candidate_urls(work: Dict[str, Any]) -> List[UrlAttempt]:
+    attempts: List[UrlAttempt] = []
 
-    # Check oa_url (legacy)
-    oa_url = oa.get("oa_url")
-    if oa_url and isinstance(oa_url, str) and oa_url.strip():
-        return oa_url.strip()
+    def add(url: Any, kind: str = "pdf_or_landing") -> None:
+        if not isinstance(url, str):
+            return
+        url = url.strip()
+        if not url or is_semantic_scholar_page(url):
+            return
+        if url not in {a.url for a in attempts}:
+            attempts.append(UrlAttempt(url=url, source="openalex", kind=kind))
 
-    # Check best_oa_location fields
-    pdf_url = best_oa.get("pdf_url")
-    if pdf_url and isinstance(pdf_url, str) and pdf_url.strip():
-        return pdf_url.strip()
+    open_access = work.get("open_access") or {}
 
-    url = best_oa.get("url")
-    if url and isinstance(url, str) and url.strip():
-        return url.strip()
+    # OpenAlex currently exposes best_oa_location as a top-level field, but keep
+    # older/alternate shapes too.
+    locations: List[Dict[str, Any]] = []
+    for key in ("best_oa_location", "primary_location"):
+        if isinstance(work.get(key), dict):
+            locations.append(work[key])
+    if isinstance(open_access.get("best_oa_location"), dict):
+        locations.append(open_access["best_oa_location"])
+    for key in ("locations", "oa_locations"):
+        if isinstance(work.get(key), list):
+            locations.extend([loc for loc in work[key] if isinstance(loc, dict)])
+        if isinstance(open_access.get(key), list):
+            locations.extend([loc for loc in open_access[key] if isinstance(loc, dict)])
 
-    # Check primary_location
-    pl = work.get("primary_location") or {}
-    pl_pdf = pl.get("pdf_url")
-    if pl_pdf and isinstance(pl_pdf, str) and pl_pdf.strip():
-        return pl_pdf.strip()
+    for loc in locations:
+        add(loc.get("pdf_url"), "pdf")
+    for loc in locations:
+        add(loc.get("landing_page_url") or loc.get("url"), "landing")
 
-    return None
+    add(open_access.get("oa_url"), "landing")
+    add(work.get("doi"), "landing")
+    return attempts
 
 
 # ---------------------------------------------------------------------------
 # Semantic Scholar helpers
 # ---------------------------------------------------------------------------
 
-def _ss_lookup_by_doi(doi: str, api_key: str) -> Optional[Dict[str, Any]]:
-    """Fetch a paper record from Semantic Scholar by DOI."""
-    import requests
-    url = f"{SEMANTIC_SCHOLAR_BASE}/paper/DOI/{quote(doi, safe='')}"
-    params = {"fields": "title,year,externalIds,openAccessPdf,url"}
-    headers = {}
+
+SS_FIELDS = "title,year,authors,externalIds,openAccessPdf,url,publicationTypes,journal"
+
+
+def ss_lookup_by_doi(session: requests.Session, doi: str, api_key: str = "") -> Optional[Dict[str, Any]]:
+    url = f"{SEMANTIC_SCHOLAR_BASE}/paper/DOI:{quote(doi, safe='')}"
+    headers: Dict[str, str] = {}
     if api_key:
         headers["x-api-key"] = api_key
     try:
-        resp = requests.get(url, params=params, headers=headers, timeout=60)
-        if resp.status_code == 200 and resp.json() is not None:
-            return resp.json()
-        logging.debug("[SS] DOI=%s → HTTP %d", doi, resp.status_code)
+        resp = session.get(url, params={"fields": SS_FIELDS}, headers=headers, timeout=30)
+        if resp.status_code == 200:
+            data = resp.json()
+            returned_doi = clean_doi((data.get("externalIds") or {}).get("DOI", ""))
+            # Some records do not echo a DOI exactly; accept the direct DOI endpoint response.
+            if not returned_doi or returned_doi == doi:
+                return data
+        elif resp.status_code != 404:
+            logger.warning("Semantic Scholar DOI lookup returned HTTP %d for %s", resp.status_code, doi)
     except requests.RequestException as exc:
-        logging.warning("[SS] DOI lookup failed for %s: %s", doi, exc)
+        logger.warning("Semantic Scholar DOI lookup failed for %s: %s", doi, exc)
     return None
 
 
-def _ss_search_by_title(title: str, api_key: str) -> Optional[Dict[str, Any]]:
-    """Search Semantic Scholar by title."""
-    import requests
+def ss_search_by_title(session: requests.Session, title: str, api_key: str = "") -> Optional[Dict[str, Any]]:
     url = f"{SEMANTIC_SCHOLAR_BASE}/paper/search"
-    params = {"query": title, "limit": 1, "fields": "title,year,externalIds,openAccessPdf,url"}
-    headers = {}
+    headers: Dict[str, str] = {}
     if api_key:
         headers["x-api-key"] = api_key
+    params = {"query": title, "limit": "1", "fields": SS_FIELDS}
     try:
-        resp = requests.get(url, params=params, headers=headers, timeout=60)
+        resp = session.get(url, params=params, headers=headers, timeout=30)
         if resp.status_code == 200:
             results = resp.json().get("data", [])
             if results:
                 return results[0]
-        logging.debug("[SS] Title search '%s' → HTTP %d (no results)", title[:50], resp.status_code)
+        elif resp.status_code != 404:
+            logger.warning("Semantic Scholar title search returned HTTP %d", resp.status_code)
     except requests.RequestException as exc:
-        logging.warning("[SS] Title search failed for '%s': %s", title[:50], exc)
+        logger.warning("Semantic Scholar title search failed for %s: %s", title[:80], exc)
     return None
 
 
-def _extract_pdf_from_ss(paper: Dict[str, Any]) -> Optional[str]:
-    """Return a downloadable PDF URL from a Semantic Scholar paper record."""
-    oa = paper.get("openAccessPdf") or {}
-    url = oa.get("url") if isinstance(oa, dict) else None
-    return url
+def ss_candidate_urls(paper: Dict[str, Any]) -> List[UrlAttempt]:
+    attempts: List[UrlAttempt] = []
+    oa_pdf = paper.get("openAccessPdf") or {}
+    if isinstance(oa_pdf, dict):
+        pdf_url = (oa_pdf.get("url") or "").strip()
+        # Do not use normal Semantic Scholar paper pages as PDF URLs.
+        if pdf_url and not is_semantic_scholar_page(pdf_url):
+            attempts.append(UrlAttempt(url=pdf_url, source="semantic_scholar", kind="pdf"))
+    return attempts
 
 
 # ---------------------------------------------------------------------------
-# URL validation helpers
+# PDF validation / download
 # ---------------------------------------------------------------------------
 
-def _get_domain(url: str) -> str:
-    """Extract the domain from a URL."""
-    parsed = urlparse(url)
-    return parsed.hostname or ""
+
+def read_limited_response(resp: requests.Response, limit: int = HTML_READ_LIMIT) -> bytes:
+    content = bytearray()
+    for chunk in resp.iter_content(chunk_size=8192):
+        if not chunk:
+            continue
+        remaining = limit - len(content)
+        content.extend(chunk[:remaining])
+        if len(content) >= limit:
+            break
+    return bytes(content)
 
 
-def _validate_pdf_url(url: str, max_retries: int = 2) -> Tuple[str, Optional[str], Optional[bytes]]:
-    """Validate whether a URL returns a valid PDF.
+def validate_pdf_or_landing(session: requests.Session, url: str) -> Tuple[str, str, bytes]:
+    """Return `(status, error, content)` for a URL.
 
-    Returns (status, error_message, content).
-    status is one of: 'pdf', 'html_landing_page', '403', 'error'
+    Status values: `pdf`, `html_landing_page`, `403`, `error`.
+    For HTML pages, `content` contains a bounded HTML body for parsing.
     """
-    import requests
-    for attempt in range(max_retries):
+    try:
+        # HEAD is only a hint; many sites block it or lie. Always use GET for the
+        # actual decision.
         try:
-            resp = requests.head(url, timeout=30, allow_redirects=True)
+            head = session.head(url, timeout=20, allow_redirects=True)
+            if head.status_code == 403:
+                return "403", "HTTP 403", b""
+        except requests.RequestException:
+            pass
 
-            # If head fails or returns unusual codes, try GET with stream
-            if resp.status_code not in (200, 301, 302, 403, 404):
-                resp = requests.get(url, stream=True, timeout=60)
+        resp = session.get(url, timeout=60, stream=True, allow_redirects=True)
+        if resp.status_code == 403:
+            return "403", "HTTP 403", b""
+        if resp.status_code == 404:
+            return "error", "HTTP 404", b""
+        if resp.status_code != 200:
+            return "error", f"HTTP {resp.status_code}", b""
 
-            ct = resp.headers.get("Content-Type", "").lower()
+        prefix = read_limited_response(resp, limit=HTML_READ_LIMIT)
+        if len(prefix) < 5:
+            return "error", "Empty response", b""
 
-            # 403 = publisher blocked
-            if resp.status_code == 403:
-                return "403", f"Publisher returned HTTP 403 for {url}", None
+        if prefix.startswith(b"%PDF"):
+            return "pdf", "", b""
 
-            # 404 = not found
-            if resp.status_code == 404:
-                return "error", f"HTTP 404 for {url}", None
+        preview = prefix[:4096].decode("utf-8", errors="replace").lower()
+        content_type = resp.headers.get("Content-Type", "").lower()
+        if "html" in content_type or "<!doctype" in preview or "<html" in preview:
+            return "html_landing_page", "", prefix
 
-            # Check content type
-            if "pdf" in ct or "application/octet-stream" in ct:
-                content = resp.content
-                if content and len(content) >= 5 and content[:5].startswith(b"%PDF-"):
-                    return "pdf", None, content
-                # Try full download for validation
-                resp_full = requests.get(url, timeout=120)
-                content = resp_full.content
-                if content and len(content) >= 5 and content[:5].startswith(b"%PDF-"):
-                    return "pdf", None, content
-                return "error", f"Content-Type suggests PDF but no %PDF header: {ct}", None
+        if "pdf" in content_type:
+            return "error", "Content-Type suggested PDF but no %PDF header", b""
 
-            # HTML content = landing page
-            if "html" in ct or resp.text.lower().strip().startswith(("<!doctype", "<html")):
-                return "html_landing_page", None, resp.content[:50000]  # Limit content size
+        if any(token in preview for token in ("captcha", "access denied", "login", "<script")):
+            return "error", "Non-PDF blocker/login page detected", b""
 
-            # Default: treat as potential PDF if not HTML and status is OK
-            if resp.status_code == 200:
-                content = resp.content
-                if content and len(content) >= 5:
-                    if content[:5].startswith(b"%PDF-"):
-                        return "pdf", None, content
-                    # Might still be a valid PDF with wrong Content-Type
-                    return "pdf", None, content
-
-            return "error", f"Unexpected response: HTTP {resp.status_code}, Content-Type: {ct}", None
-
-        except requests.RequestException as exc:
-            logging.warning("Validation attempt %d failed for %s: %s", attempt + 1, url[:80], exc)
-            if attempt < max_retries - 1:
-                time.sleep(2 ** attempt)
-
-    return "error", f"Failed to validate {url} after {max_retries} attempts", None
+        return "error", f"Unknown non-PDF response; first bytes={prefix[:32]!r}", b""
+    except requests.RequestException as exc:
+        return "error", str(exc), b""
 
 
-# ---------------------------------------------------------------------------
-# Status constants for manifest categorization
-# ---------------------------------------------------------------------------
+def download_pdf(session: requests.Session, url: str, dest_path: Path, min_bytes: int = MIN_PDF_BYTES) -> Tuple[str, str]:
+    """Download a complete PDF to disk.
 
-STATUS_DOWNLOADED = "downloaded"
-STATUS_ALREADY_EXISTS = "already_exists"
-STATUS_NO_OA_LOCATION = "no_oa_location"
-STATUS_PUBLISHER_403 = "publisher_403"
-STATUS_DOI_LANDING_PAGE = "doi_landing_page"
-STATUS_PMC_LANDING_PAGE = "pmc_landing_page"
-STATUS_EUROPEPMC_BAD_PDF_URL = "europepmc_bad_pdf_url"
-STATUS_REPOSITORY_LANDING_PAGE = "repository_landing_page"
-STATUS_LANDING_PAGE_UNRESOLVED = "landing_page_unresolved"
-STATUS_INVALID_PDF = "invalid_pdf"
-STATUS_ERROR = "error"
-STATUS_PMC_FULLTEXT_AVAILABLE = "pmc_fulltext_available"
-
-# ---------------------------------------------------------------------------
-# Landing page resolvers for trusted OA domains
-# ---------------------------------------------------------------------------
-
-def _resolve_html_landing_page(content: bytes, base_url: str) -> Optional[str]:
-    """Extract PDF URL from HTML landing page content."""
-    try:
-        html = content.decode("utf-8", errors="replace")
-    except Exception:
-        return None
-
-    finder = PDFLinkFinder()
-    finder.parse(html)
-
-    # Priority 1: citation_pdf_url meta tag
-    if finder.citation_pdf_url:
-        pdf_url = finder.citation_pdf_url
-        if not pdf_url.startswith(("http://", "https://")):
-            parsed = urlparse(base_url)
-            if pdf_url.startswith('/'):
-                pdf_url = f"{parsed.scheme}://{parsed.netloc}{pdf_url}"
-            else:
-                pdf_url = f"{base_url.rsplit('/', 1)[0]}/{pdf_url}"
-        logging.info("Found citation_pdf_url from %s: %s", base_url[:60], pdf_url[:120])
-        return pdf_url
-
-    # Priority 2: direct PDF links in <a> tags
-    if finder.pdf_urls:
-        link = finder.pdf_urls[0]
-        if not link.startswith(("http://", "https://")):
-            parsed = urlparse(base_url)
-            if link.startswith('/'):
-                link = f"{parsed.scheme}://{parsed.netloc}{link}"
-            else:
-                link = f"{base_url.rsplit('/', 1)[0]}/{link}"
-        return link
-
-    return None
-
-
-def _resolve_pmc_page(content: bytes, base_url: str) -> Dict[str, Any]:
-    """Resolve a PMC/NCBI landing page to find PDF or full text info."""
-    try:
-        html = content.decode("utf-8", errors="replace")
-    except Exception:
-        return {"status": "pmc_unresolved", "error": "Failed to decode HTML"}
-
-    finder = PDFLinkFinder()
-    finder.parse(html)
-
-    # Extract PMCID from URL or page
-    pmcid_match = re.search(r'/pmc/articles/(\w+)', base_url, re.IGNORECASE)
-    if not pmcid_match:
-        pmcid_match = re.search(r'pmcid[":\s]+(PMC\d+)', html, re.IGNORECASE)
-
-    pmcid = pmcid_match.group(1) if pmcid_match else "unknown"
-
-    # Check for PDF link
-    pdf_url = finder.citation_pdf_url
-    if not pdf_url:
-        # Try EuropePMC API pattern
-        europepmc_api = f"https://www.europepmc.org/backend/ptpmcrender.fcgi?pullid=1&repo=PMC&id={pmcid}&blobtype=pdf"
-        logging.info("PMC page for %s (PMCID: %s). Suggested EuropePMC API: %s", base_url[:60], pmcid, europepmc_api[:100])
-
-    # Check if full text is available
-    has_fulltext = "full text" in html.lower() or "open access article" in html.lower()
-
-    return {
-        "status": "pmc_found" if pdf_url else ("pmc_fulltext_available" if has_fulltext else "pmc_no_pdf"),
-        "pmcid": pmcid,
-        "pdf_url": pdf_url or "",
-        "has_fulltext": has_fulltext,
-    }
-
-
-def _resolve_europepmc_page(content: bytes, base_url: str) -> Dict[str, Any]:
-    """Resolve a EuropePMC landing page."""
-    try:
-        html = content.decode("utf-8", errors="replace")
-    except Exception:
-        return {"status": "europepmc_unresolved", "error": "Failed to decode HTML"}
-
-    finder = PDFLinkFinder()
-    finder.parse(html)
-
-    # Extract article ID
-    article_match = re.search(r'/articles/(\w+)', base_url)
-    article_id = article_match.group(1) if article_match else "unknown"
-
-    pdf_url = finder.citation_pdf_url
-    if not pdf_url:
-        # Try PDF render endpoint
-        pdf_render_url = f"{base_url.split('?')[0]}?pdf=render"
-        logging.info("EuropePMC page for %s. Try PDF render: %s", base_url[:60], pdf_render_url[:100])
-
-    return {
-        "status": "europepmc_found" if pdf_url else "europepmc_no_pdf",
-        "article_id": article_id,
-        "pdf_url": pdf_url or "",
-    }
-
-
-def _resolve_repository_page(content: bytes, base_url: str) -> Optional[str]:
-    """Resolve a repository landing page (HAL, DOAJ, eScholarship)."""
-    domain = _get_domain(base_url)
-
-    try:
-        html = content.decode("utf-8", errors="replace")
-    except Exception:
-        return None
-
-    finder = PDFLinkFinder()
-    finder.parse(html)
-
-    # HAL-specific: look for "pdf" link in download section
-    if domain == "hal.science":
-        hal_pdf_match = re.search(r'"(https?://[^"]+pdf[^"]+)"', html)
-        if not hal_pdf_match:
-            hal_pdf_match = re.search(r'href="(https?://[^"]+/pdf[^"]+)"', html)
-        if hal_pdf_match:
-            return hal_pdf_match.group(1)
-
-    # DOAJ-specific: look for PDF link in article metadata
-    if domain == "doaj.org":
-        if finder.citation_pdf_url:
-            return finder.citation_pdf_url
-        doaj_pdf_match = re.search(r'"pdfUrl"\s*:\s*"([^"]+)"', html)
-        if doaj_pdf_match:
-            return doaj_pdf_match.group(1)
-
-    # eScholarship-specific
-    if domain == "escholarship.org":
-        eschol_pdf_match = re.search(r'content="([^"]+)".*name="citation_pdf_url"', html, re.DOTALL)
-        if not eschol_pdf_match:
-            eschol_pdf_match = re.search(r'"(https?://[^"]+.*\.pdf[^"]*)"', html)
-        if eschol_pdf_match:
-            return eschol_pdf_match.group(1)
-
-    # Generic fallback
-    if finder.citation_pdf_url:
-        return finder.citation_pdf_url
-    if finder.pdf_urls:
-        return finder.pdf_urls[0]
-
-    return None
-
-
-# ---------------------------------------------------------------------------
-# Landing page resolution dispatcher
-# ---------------------------------------------------------------------------
-
-def resolve_landing_page(url: str, content: bytes) -> Dict[str, Any]:
-    """Resolve a landing page URL and attempt to find the PDF.
-
-    Returns a dict with resolution results.
+    This streams the full response. It validates the first non-empty chunk before
+    writing and then writes that chunk plus every remaining chunk. It never writes
+    only the first 512 bytes.
     """
-    domain = _get_domain(url)
-
-    # PMC/NCBI pages
-    if "ncbi.nlm.nih.gov/pmc" in url or "pmc.ncbi.nlm.nih.gov" in url:
-        result = _resolve_pmc_page(content, url)
-        logging.info("[PMC] Resolved %s → %s (PMCID: %s)", url[:60], result["status"], result.get("pmcid", ""))
-        return result
-
-    # EuropePMC pages
-    if "europepmc.org" in domain:
-        result = _resolve_europepmc_page(content, url)
-        logging.info("[EuropePMC] Resolved %s → %s", url[:60], result["status"])
-        return result
-
-    # Trusted repository pages
-    if domain in TRUSTED_OA_DOMAINS:
-        pdf_url = _resolve_repository_page(content, url)
-        if pdf_url:
-            logging.info("[Repository] Found PDF from %s: %s", domain, pdf_url[:120])
-            return {"status": "repository_pdf_found", "pdf_url": pdf_url}
-        logging.warning("[Repository] No PDF found from %s", url[:60])
-        return {"status": "repository_unresolved", "url": url}
-
-    # Generic landing page
-    pdf_url = _resolve_html_landing_page(content, url)
-    if pdf_url:
-        logging.info("[Generic] Found PDF from landing page: %s", pdf_url[:120])
-        return {"status": "landing_page_pdf_found", "pdf_url": pdf_url}
-
-    logging.warning("[Generic] No PDF found from landing page: %s", url[:60])
-    return {"status": "landing_page_unresolved", "url": url}
-
-
-# ---------------------------------------------------------------------------
-# Download & validation
-# ---------------------------------------------------------------------------
-
-def download_pdf(url: str, dest_path: Path, max_retries: int = 3) -> Tuple[str, Optional[str]]:
-    """Download a PDF from *url* to *dest_path*.
-
-    Returns (status, error_message).
-    status is one of: 'downloaded', 'invalid_pdf', 'error'
-    """
-    import requests
+    tmp_path = dest_path.with_suffix(dest_path.suffix + ".part")
     dest_path.parent.mkdir(parents=True, exist_ok=True)
 
-    for attempt in range(max_retries):
-        try:
-            resp = requests.get(url, stream=True, timeout=120)
-            if resp.status_code == 429:
-                wait = min(60, 10 * (2 ** attempt))
-                logging.warning("Rate limited (429). Waiting %ds before retry.", wait)
-                time.sleep(wait)
-                continue
+    try:
+        resp = session.get(url, timeout=120, stream=True, allow_redirects=True)
+        if resp.status_code == 403:
+            return STATUS_PUBLISHER_403, f"Publisher HTTP 403: {get_domain(url)}"
+        if resp.status_code != 200:
+            return STATUS_ERROR, f"HTTP {resp.status_code} from {url}"
 
-            if resp.status_code != 200:
-                return "error", f"HTTP {resp.status_code} from {url}"
+        iterator = resp.iter_content(chunk_size=8192)
+        first_chunk = b""
+        for chunk in iterator:
+            if chunk:
+                first_chunk = chunk
+                break
 
-            # Validate content type
-            ct = resp.headers.get("Content-Type", "")
+        if len(first_chunk) < 5:
+            return STATUS_ERROR, "Empty response"
 
-            # Read content and validate %PDF header
-            content = resp.content
-            if not content or len(content) < 5:
-                return "error", "Empty response"
+        if not first_chunk.startswith(b"%PDF"):
+            preview = first_chunk[:2048].decode("utf-8", errors="replace").lower()
+            if "<!doctype" in preview or "<html" in preview:
+                return STATUS_INVALID_PDF, "URL returned HTML, not PDF"
+            return STATUS_INVALID_PDF, f"No %PDF header; first bytes={first_chunk[:32]!r}"
 
-            if not content[:5].startswith(b"%PDF-"):
-                logging.warning("[PDF] No %%PDF header. First bytes: %s", content[:20])
-                # Some servers still serve valid PDFs without the right header;
-                # try to validate further by checking for common PDF structures
-                if b"/Type" not in content and b"/Catalog" not in content and b"/Pages" not in content:
-                    return "invalid_pdf", f"File does not appear to be a valid PDF (no %%PDF header)"
+        with tmp_path.open("wb") as f:
+            f.write(first_chunk)
+            for chunk in iterator:
+                if chunk:
+                    f.write(chunk)
 
-            dest_path.write_bytes(content)
-            size = dest_path.stat().st_size
-            logging.info("[PDF] Downloaded %d bytes from source: %s", size, url[:100])
-            return "downloaded", None
+        size = tmp_path.stat().st_size
+        if size < min_bytes:
+            tmp_path.unlink(missing_ok=True)
+            return STATUS_INVALID_PDF, f"Downloaded PDF is suspiciously small ({size} bytes)"
 
-        except requests.RequestException as exc:
-            wait = min(30, 5 * (2 ** attempt))
-            logging.warning("Download attempt %d failed for %s: %s. Retrying in %ds.",
-                            attempt + 1, url[:80], exc, wait)
-            time.sleep(wait)
-
-    return "error", f"Failed after {max_retries} retries"
+        tmp_path.replace(dest_path)
+        logger.info("Downloaded %d bytes to %s", size, dest_path)
+        return STATUS_DOWNLOADED, ""
+    except requests.RequestException as exc:
+        tmp_path.unlink(missing_ok=True)
+        return STATUS_ERROR, str(exc)
+    except OSError as exc:
+        tmp_path.unlink(missing_ok=True)
+        return STATUS_ERROR, str(exc)
 
 
 # ---------------------------------------------------------------------------
-# Manifest helpers
+# Landing-page resolution
 # ---------------------------------------------------------------------------
 
-MANIFEST_COLUMNS = [
-    "paper_id", "title", "doi", "openalex_id", "semantic_scholar_id",
-    "status", "source_used", "pdf_path", "landing_page_url",
-    "pdf_url", "oa_status", "license", "error_message",
-]
+
+def extract_pdf_links_from_html(html: str, base_url: str) -> List[str]:
+    links: List[str] = []
+
+    def add(href: Optional[str]) -> None:
+        if not href:
+            return
+        absolute = normalize_absolute_url(href, base_url)
+        if is_pdfish_link(absolute) and absolute not in links:
+            links.append(absolute)
+
+    if BeautifulSoup is not None:
+        soup = BeautifulSoup(html, "html.parser")
+
+        # High-value scholarly metadata.
+        for attrs in (
+            {"name": "citation_pdf_url"},
+            {"name": "dc.identifier"},
+            {"property": "citation_pdf_url"},
+        ):
+            tag = soup.find("meta", attrs=attrs)
+            if tag is not None:
+                content = tag.get("content")
+                if content and is_pdfish_link(content):
+                    add(content)
+
+        # Some pages provide full text HTML metadata. Keep only if it is PDF-ish.
+        tag = soup.find("meta", attrs={"name": "citation_fulltext_html_url"})
+        if tag is not None:
+            content = tag.get("content")
+            if content and is_pdfish_link(content):
+                add(content)
+
+        for a in soup.find_all("a", href=True):
+            href = str(a.get("href", ""))
+            if is_pdfish_link(href):
+                add(href)
+    else:
+        # Regex fallback if bs4 is unavailable.
+        for match in re.finditer(r'<meta[^>]+name=["\']citation_pdf_url["\'][^>]+content=["\']([^"\']+)["\']', html, re.I):
+            add(match.group(1))
+        for match in re.finditer(r'href=["\']([^"\']*(?:\.pdf|/pdf/|\?pdf)[^"\']*)["\']', html, re.I):
+            add(match.group(1))
+
+    return links
 
 
-def _write_manifest_rows(rows: List[Dict[str, str]], manifest_path: Path):
-    """Append *rows* to the CSV manifest."""
-    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+def resolve_landing_page(session: requests.Session, url: str, content: bytes) -> Tuple[str, str, str]:
+    """Resolve a known landing page to a real PDF URL.
 
-    # Check if file has a proper header already
-    write_header = True
-    if manifest_path.exists() and manifest_path.stat().st_size > 0:
-        with open(manifest_path, "r", encoding="utf-8") as f:
-            first_line = f.readline().strip()
-            # If the first line looks like our header, don't write it again
-            if first_line.startswith("paper_id"):
-                write_header = False
+    Returns `(status, pdf_url, error)`.
+    """
+    html = content.decode("utf-8", errors="replace")
+    domain = get_domain(url)
 
-    with open(manifest_path, "a", newline="", encoding="utf-8") as mf:
-        writer = csv.DictWriter(mf, fieldnames=MANIFEST_COLUMNS, extrasaction="ignore")
-        if write_header:
-            writer.writeheader()
-        for row in rows:
-            # Ensure all values are strings or empty
-            cleaned = {k: (str(v) if v is not None else "") for k, v in row.items()}
-            writer.writerow(cleaned)
+    links = extract_pdf_links_from_html(html, url)
+    for candidate in links:
+        status, error, _ = validate_pdf_or_landing(session, candidate)
+        if status == "pdf":
+            return STATUS_DOWNLOADED, candidate, ""
+        if status == "403":
+            # Keep trying other links; one blocked link does not prove all are blocked.
+            continue
+
+    # PMC pages often expose a PDF link in the page HTML. If not, classify clearly.
+    if "pmc.ncbi.nlm.nih.gov" in domain or "ncbi.nlm.nih.gov" in domain:
+        return STATUS_PMC_LANDING_PAGE, "", "PMC/NCBI landing page found but no valid direct PDF link discovered"
+
+    if "europepmc.org" in domain:
+        render_url = f"{url.split('?')[0]}?pdf=render"
+        status, error, _ = validate_pdf_or_landing(session, render_url)
+        if status == "pdf":
+            return STATUS_DOWNLOADED, render_url, ""
+        return STATUS_EUROPEPMC_BAD_PDF_URL, "", error or "EuropePMC PDF render URL did not return a PDF"
+
+    if any(domain == d or domain.endswith("." + d) for d in TRUSTED_LANDING_DOMAINS):
+        return STATUS_REPOSITORY_LANDING_PAGE, "", "Repository landing page unresolved"
+
+    if domain.endswith("doi.org") or domain == "doi.org":
+        return STATUS_LANDING_PAGE_UNRESOLVED, "", "DOI landing page unresolved"
+
+    return STATUS_LANDING_PAGE_UNRESOLVED, "", "Landing page unresolved"
 
 
-def _append_manual_needed(papers: List[Dict[str, str]], path: Path):
-    """Append papers needing manual PDF acquisition."""
+def try_url_attempt(
+    session: requests.Session,
+    attempt: UrlAttempt,
+    paper_id: str,
+    pdf_path: Path,
+    dry_run: bool,
+) -> Tuple[Optional[Dict[str, str]], Optional[Tuple[str, str, str]]]:
+    """Try one URL attempt.
+
+    Returns `(manifest_result_if_success, failure_tuple)`.
+    Failure tuple is `(status, url, error)`.
+    """
+    url = attempt.url
+    if not url:
+        return None, None
+
+    logger.info("[%s] Trying %s URL: %s", paper_id, attempt.source, url[:120])
+    status, error, content = validate_pdf_or_landing(session, url)
+
+    if status == "pdf":
+        if dry_run:
+            return {
+                "status": STATUS_DRY_RUN,
+                "source_used": attempt.source,
+                "pdf_url": url,
+                "landing_page_url": "",
+                "error_message": "",
+            }, None
+        dl_status, dl_error = download_pdf(session, url, pdf_path)
+        if dl_status == STATUS_DOWNLOADED:
+            return {
+                "status": STATUS_DOWNLOADED,
+                "source_used": attempt.source,
+                "pdf_url": url,
+                "landing_page_url": "",
+                "error_message": "",
+            }, None
+        return None, (dl_status, url, dl_error)
+
+    if status == "html_landing_page":
+        # Only resolve known OA/repository/DOI landing pages. Do not crawl broadly.
+        if is_probable_landing_domain(url):
+            resolved_status, pdf_url, resolved_error = resolve_landing_page(session, url, content)
+            if resolved_status == STATUS_DOWNLOADED and pdf_url:
+                if dry_run:
+                    return {
+                        "status": STATUS_DRY_RUN,
+                        "source_used": f"{attempt.source}_landing_page",
+                        "pdf_url": pdf_url,
+                        "landing_page_url": url,
+                        "error_message": "",
+                    }, None
+                dl_status, dl_error = download_pdf(session, pdf_url, pdf_path)
+                if dl_status == STATUS_DOWNLOADED:
+                    return {
+                        "status": STATUS_DOWNLOADED,
+                        "source_used": f"{attempt.source}_landing_page",
+                        "pdf_url": pdf_url,
+                        "landing_page_url": url,
+                        "error_message": "",
+                    }, None
+                return None, (dl_status, pdf_url, dl_error)
+            return None, (resolved_status, url, resolved_error)
+        return None, (STATUS_LANDING_PAGE_UNRESOLVED, url, "HTML landing page on untrusted/non-OA domain")
+
+    if status == "403":
+        return None, (STATUS_PUBLISHER_403, url, f"Publisher HTTP 403: {get_domain(url)}")
+
+    return None, (STATUS_INVALID_PDF if "no %pdf" in error.lower() else STATUS_ERROR, url, error)
+
+
+# ---------------------------------------------------------------------------
+# Manifest / manual queue helpers
+# ---------------------------------------------------------------------------
+
+
+def load_csv_rows(path: Path) -> List[Dict[str, str]]:
+    with path.open("r", encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+def load_manifest_rows(path: Path) -> Dict[str, Dict[str, str]]:
+    if not path.exists() or path.stat().st_size == 0:
+        return {}
+    rows = load_csv_rows(path)
+    out: Dict[str, Dict[str, str]] = {}
+    for row in rows:
+        pid = row.get("paper_id", "").strip()
+        if pid:
+            out[pid] = {k: row.get(k, "") for k in MANIFEST_COLUMNS}
+    return out
+
+
+def write_manifest(rows_by_id: Dict[str, Dict[str, str]], paper_order: Sequence[str], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    ordered: List[str] = []
+    seen: Set[str] = set()
+    for pid in paper_order:
+        if pid in rows_by_id and pid not in seen:
+            ordered.append(pid)
+            seen.add(pid)
+    for pid in rows_by_id:
+        if pid not in seen:
+            ordered.append(pid)
 
-    # Check if header already exists
-    write_header = not path.exists() or path.stat().st_size == 0
-    if path.exists():
-        with open(path, "r", encoding="utf-8") as f:
-            first_line = f.readline().strip()
-            if first_line.startswith("paper_id"):
-                write_header = False
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=MANIFEST_COLUMNS, extrasaction="ignore")
+        writer.writeheader()
+        for pid in ordered:
+            row = rows_by_id[pid]
+            writer.writerow({col: row.get(col, "") for col in MANIFEST_COLUMNS})
 
-    with open(path, "a", newline="", encoding="utf-8") as mf:
-        writer = csv.writer(mf)
-        if write_header:
-            writer.writerow(["paper_id", "title", "doi", "reason"])
-        for p in papers:
-            writer.writerow([p["paper_id"], p.get("title", ""), p.get("doi", ""), p.get("reason", "")])
+
+def load_manual_ids(path: Path) -> Set[str]:
+    if not path.exists() or path.stat().st_size == 0:
+        return set()
+    return {row.get("paper_id", "").strip() for row in load_csv_rows(path) if row.get("paper_id", "").strip()}
+
+
+def write_manual_queue(rows_by_id: Dict[str, Dict[str, str]], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["paper_id", "title", "doi", "reason"])
+        writer.writeheader()
+        for pid, row in sorted(rows_by_id.items()):
+            if row.get("status") in MANUAL_STATUSES:
+                writer.writerow(
+                    {
+                        "paper_id": pid,
+                        "title": row.get("title", ""),
+                        "doi": row.get("doi", ""),
+                        "reason": row.get("error_message", row.get("status", "")),
+                    }
+                )
+
+
+def existing_pdf_ids(out_dir: Path) -> Set[str]:
+    if not out_dir.exists():
+        return set()
+    return {p.stem for p in out_dir.glob("*.pdf") if p.is_file()}
 
 
 # ---------------------------------------------------------------------------
-# Core download logic with landing-page resolution
+# Core paper processing
 # ---------------------------------------------------------------------------
 
-def _sanitize_filename(name: str) -> str:
-    """Ensure a safe filename component."""
-    return name.replace("/", "_").replace("\\", "_").replace(":", "_")
+
+def build_manifest_row(
+    base: Dict[str, str],
+    *,
+    status: str,
+    source_used: str,
+    pdf_path: Path,
+    openalex_id: str = "",
+    semantic_scholar_id: str = "",
+    landing_page_url: str = "",
+    pdf_url: str = "",
+    oa_status: str = "",
+    license_value: str = "",
+    error_message: str = "",
+) -> Dict[str, str]:
+    return {
+        "paper_id": base["paper_id"],
+        "title": base["title"],
+        "doi": base["doi"],
+        "openalex_id": openalex_id,
+        "semantic_scholar_id": semantic_scholar_id,
+        "status": status,
+        "source_used": source_used,
+        "pdf_path": str(pdf_path),
+        "landing_page_url": landing_page_url,
+        "pdf_url": pdf_url,
+        "oa_status": oa_status,
+        "license": license_value,
+        "error_message": error_message,
+    }
+
+
+def normalized_input_row(row: Dict[str, str], index: int) -> Dict[str, str]:
+    paper_id = get_first(row, ["paper_id", "id", "ID", "refine_id"])
+    if not paper_id:
+        paper_id = f"REFINE-{index:04d}"
+    title = get_first(row, ["title", "Title", "display_name", "paper_title"])
+    doi = clean_doi(get_first(row, ["doi", "DOI", "paper_doi"] ))
+    return {"paper_id": paper_id, "title": title, "doi": doi}
 
 
 def process_paper(
+    session: requests.Session,
     row: Dict[str, str],
     out_dir: Path,
-    keys: Dict[str, str],
-    overwrite: bool = False,
-    dry_run: bool = False,
+    openalex_key: str,
+    ss_key: str,
+    overwrite: bool,
+    dry_run: bool,
 ) -> Dict[str, str]:
-    """Process a single paper row. Returns the manifest row dict."""
-
-    paper_id = row.get("paper_id", "").strip()
-    doi = (row.get("doi") or "").strip().lower() if row.get("doi") else ""
-    title_raw = (row.get("title") or "").strip()
-    # Truncate title for display in manifest
-    title_display = title_raw[:200] if title_raw else ""
-
+    paper_id = row["paper_id"]
+    title = row["title"]
+    doi = row["doi"]
     pdf_path = out_dir / f"{paper_id}.pdf"
 
-    # --- Check already exists ---
     if pdf_path.exists() and not overwrite:
-        return {
-            "paper_id": paper_id,
-            "title": title_display,
-            "doi": doi,
-            "openalex_id": "",
-            "semantic_scholar_id": "",
-            "status": STATUS_ALREADY_EXISTS,
-            "source_used": "already_exists",
-            "pdf_path": str(pdf_path),
-            "landing_page_url": row.get("doi_url") or "",
-            "pdf_url": "",
-            "oa_status": "",
-            "license": "",
-            "error_message": "",
-        }
+        return build_manifest_row(row, status=STATUS_ALREADY_EXISTS, source_used="already_exists", pdf_path=pdf_path)
 
-    # --- 1. Try OpenAlex ---
-    oa_work = None
-    work_id = ""
-    landing_url = ""
+    failures: List[Tuple[str, str, str]] = []
+
+    openalex_id = ""
     oa_status = ""
-    license_val = ""
+    license_value = ""
 
+    # 1. OpenAlex
+    oa_work: Optional[Dict[str, Any]] = None
     if doi:
-        logging.info("[%s] OpenAlex DOI lookup: %s", paper_id, doi)
-        oa_work = _openalex_lookup_by_doi(doi, keys["openalex"])
-        # Retry with backoff for rate limiting
-        if not oa_work:
-            time.sleep(2)
-            oa_work = _openalex_lookup_by_doi(doi, keys["openalex"])
+        logger.info("[%s] OpenAlex DOI lookup: %s", paper_id, doi)
+        oa_work = openalex_lookup_by_doi(session, doi, openalex_key)
+    if oa_work is None and title:
+        logger.info("[%s] OpenAlex title search: %s", paper_id, title[:80])
+        oa_work = openalex_search_by_title(session, title, openalex_key)
 
-    if not oa_work and title_raw:
-        logging.info("[%s] OpenAlex title search: %s", paper_id, title_display[:60])
-        oa_work = _openalex_search_by_title(title_raw, keys["openalex"])
-        if not oa_work:
-            time.sleep(2)
-            oa_work = _openalex_search_by_title(title_raw, keys["openalex"])
-
-    if oa_work:
-        work_id = oa_work.get("id", "") or ""
+    if oa_work is not None:
+        openalex_id = str(oa_work.get("id", "") or "")
         oa_info = oa_work.get("open_access") or {}
-        oa_status = oa_info.get("oa_status", "")
-        best_oa = oa_info.get("best_oa_location") or {}
-        license_val = best_oa.get("license") or ""
+        oa_status = str(oa_info.get("oa_status", "") or "")
+        best_oa = oa_work.get("best_oa_location") or oa_info.get("best_oa_location") or {}
+        if isinstance(best_oa, dict):
+            license_value = str(best_oa.get("license", "") or "")
 
-        pdf_url = _extract_pdf_from_openalex(oa_work)
-        landing_url = oa_work.get("oai_url") or oa_work.get("doi_url") or oa_work.get("url", "")
+        attempts = openalex_candidate_urls(oa_work)
+        if not attempts:
+            failures.append((STATUS_NO_OA_LOCATION, "", "OpenAlex returned no OA PDF/location URL"))
+        for attempt in attempts:
+            result, failure = try_url_attempt(session, attempt, paper_id, pdf_path, dry_run)
+            if result is not None:
+                return build_manifest_row(
+                    row,
+                    status=result["status"],
+                    source_used=result["source_used"],
+                    pdf_path=pdf_path,
+                    openalex_id=openalex_id,
+                    landing_page_url=result.get("landing_page_url", ""),
+                    pdf_url=result.get("pdf_url", ""),
+                    oa_status=oa_status,
+                    license_value=license_value,
+                    error_message=result.get("error_message", ""),
+                )
+            if failure:
+                failures.append(failure)
 
-        if pdf_url:
-            logging.info("[%s] OpenAlex PDF URL found: %s", paper_id, pdf_url[:100])
-
-            # Validate the PDF URL before downloading
-            validation_status, val_error, val_content = _validate_pdf_url(pdf_url)
-
-            if validation_status == "403":
-                domain = _get_domain(pdf_url)
-                logging.warning("[%s] Publisher 403 for %s", paper_id, pdf_url[:80])
-                # Try landing page resolution as fallback
-                if landing_url:
-                    result = _try_landing_page_resolution(paper_id, landing_url, out_dir, pdf_path)
-                    if result["status"] == STATUS_DOWNLOADED:
-                        return result
-                return {
-                    "paper_id": paper_id,
-                    "title": title_display,
-                    "doi": doi,
-                    "openalex_id": work_id,
-                    "semantic_scholar_id": "",
-                    "status": STATUS_PUBLISHER_403,
-                    "source_used": "openalex",
-                    "pdf_path": str(pdf_path),
-                    "landing_page_url": landing_url or "",
-                    "pdf_url": pdf_url,
-                    "oa_status": oa_status,
-                    "license": license_val or "",
-                    "error_message": f"Publisher HTTP 403: {domain}",
-                }
-
-            elif validation_status == "html_landing_page":
-                logging.info("[%s] OpenAlex URL returned HTML. Resolving landing page...", paper_id)
-                result = _try_landing_page_resolution(paper_id, pdf_url, out_dir, pdf_path, content=val_content)
-                if result["status"] in (STATUS_DOWNLOADED, STATUS_PMIC_LANDING_PAGE):
-                    return result
-                # Also try the landing URL
-                if landing_url and landing_url != pdf_url:
-                    result = _try_landing_page_resolution(paper_id, landing_url, out_dir, pdf_path)
-                    if result["status"] in (STATUS_DOWNLOADED, STATUS_PMIC_LANDING_PAGE):
-                        return result
-
-            elif validation_status == "error":
-                logging.warning("[%s] PDF URL validation failed: %s", paper_id, val_error)
-
-            else:  # validation_status == "pdf" - valid PDF
-                if dry_run:
-                    return {
-                        "paper_id": paper_id,
-                        "title": title_display,
-                        "doi": doi,
-                        "openalex_id": work_id,
-                        "semantic_scholar_id": "",
-                        "status": "dry_run",
-                        "source_used": "openalex",
-                        "pdf_path": str(pdf_path),
-                        "landing_page_url": landing_url or "",
-                        "pdf_url": pdf_url,
-                        "oa_status": oa_status,
-                        "license": license_val or "",
-                        "error_message": "",
-                    }
-                status, err = download_pdf(pdf_url, pdf_path)
-                if status == "downloaded":
-                    return {
-                        "paper_id": paper_id,
-                        "title": title_display,
-                        "doi": doi,
-                        "openalex_id": work_id,
-                        "semantic_scholar_id": "",
-                        "status": STATUS_DOWNLOADED,
-                        "source_used": "openalex",
-                        "pdf_path": str(pdf_path),
-                        "landing_page_url": landing_url or "",
-                        "pdf_url": pdf_url,
-                        "oa_status": oa_status,
-                        "license": license_val or "",
-                        "error_message": "",
-                    }
-                if status == "invalid_pdf":
-                    return {
-                        "paper_id": paper_id,
-                        "title": title_display,
-                        "doi": doi,
-                        "openalex_id": work_id,
-                        "semantic_scholar_id": "",
-                        "status": STATUS_INVALID_PDF,
-                        "source_used": "openalex",
-                        "pdf_path": str(pdf_path),
-                        "landing_page_url": landing_url or "",
-                        "pdf_url": pdf_url,
-                        "oa_status": oa_status,
-                        "license": license_val or "",
-                        "error_message": err or "Invalid PDF content",
-                    }
-                logging.warning("[%s] OpenAlex download failed: %s", paper_id, err)
-
-    # --- 2. Try Semantic Scholar (only if OpenAlex had no PDF) ---
-    ss_paper = None
+    # 2. Semantic Scholar fallback
+    ss_paper: Optional[Dict[str, Any]] = None
     ss_id = ""
-
     if doi:
-        logging.info("[%s] Semantic Scholar DOI lookup: %s", paper_id, doi)
-        ss_paper = _ss_lookup_by_doi(doi, keys["semantic_scholar"])
+        logger.info("[%s] Semantic Scholar DOI lookup: %s", paper_id, doi)
+        ss_paper = ss_lookup_by_doi(session, doi, ss_key)
+    if ss_paper is None and title:
+        logger.info("[%s] Semantic Scholar title search: %s", paper_id, title[:80])
+        ss_paper = ss_search_by_title(session, title, ss_key)
 
-    if not ss_paper and title_raw:
-        logging.info("[%s] Semantic Scholar title search: %s", paper_id, title_display[:60])
-        ss_paper = _ss_search_by_title(title_raw, keys["semantic_scholar"])
+    if ss_paper is not None:
+        ss_id = str(ss_paper.get("paperId", "") or "")
+        attempts = ss_candidate_urls(ss_paper)
+        if not attempts:
+            failures.append((STATUS_NO_OA_LOCATION, "", "Semantic Scholar returned no openAccessPdf.url"))
+        for attempt in attempts:
+            result, failure = try_url_attempt(session, attempt, paper_id, pdf_path, dry_run)
+            if result is not None:
+                return build_manifest_row(
+                    row,
+                    status=result["status"],
+                    source_used=result["source_used"],
+                    pdf_path=pdf_path,
+                    openalex_id=openalex_id,
+                    semantic_scholar_id=ss_id,
+                    landing_page_url=result.get("landing_page_url", ""),
+                    pdf_url=result.get("pdf_url", ""),
+                    oa_status=oa_status,
+                    license_value=license_value,
+                    error_message=result.get("error_message", ""),
+                )
+            if failure:
+                failures.append(failure)
 
-    if ss_paper:
-        ss_id = ss_paper.get("paperId") or ""
-        pdf_url = _extract_pdf_from_ss(ss_paper)
-        landing_url = ss_paper.get("url", "")
+    # Choose the most informative final failure.
+    priority = [
+        STATUS_PUBLISHER_403,
+        STATUS_PMC_LANDING_PAGE,
+        STATUS_EUROPEPMC_BAD_PDF_URL,
+        STATUS_REPOSITORY_LANDING_PAGE,
+        STATUS_LANDING_PAGE_UNRESOLVED,
+        STATUS_INVALID_PDF,
+        STATUS_ERROR,
+        STATUS_NO_OA_LOCATION,
+    ]
+    final_status, final_url, final_error = STATUS_NO_OA_LOCATION, "", "No OA PDF location found from OpenAlex or Semantic Scholar"
+    for status in priority:
+        match = next((f for f in failures if f[0] == status), None)
+        if match:
+            final_status, final_url, final_error = match
+            break
 
-        if pdf_url:
-            logging.info("[%s] Semantic Scholar PDF URL found: %s", paper_id, pdf_url[:100])
-
-            # Validate the PDF URL before downloading
-            validation_status, val_error, val_content = _validate_pdf_url(pdf_url)
-
-            if validation_status == "403":
-                domain = _get_domain(pdf_url)
-                logging.warning("[%s] Publisher 403 for %s", paper_id, pdf_url[:80])
-                # Try landing page resolution as fallback
-                if landing_url:
-                    result = _try_landing_page_resolution(paper_id, landing_url, out_dir, pdf_path)
-                    if result["status"] == STATUS_DOWNLOADED:
-                        return result
-                return {
-                    "paper_id": paper_id,
-                    "title": title_display,
-                    "doi": doi,
-                    "openalex_id": work_id,
-                    "semantic_scholar_id": ss_id,
-                    "status": STATUS_PUBLISHER_403,
-                    "source_used": "semantic_scholar",
-                    "pdf_path": str(pdf_path),
-                    "landing_page_url": landing_url or "",
-                    "pdf_url": pdf_url,
-                    "oa_status": "",
-                    "license": "",
-                    "error_message": f"Publisher HTTP 403: {domain}",
-                }
-
-            elif validation_status == "html_landing_page":
-                logging.info("[%s] Semantic Scholar URL returned HTML. Resolving landing page...", paper_id)
-                result = _try_landing_page_resolution(paper_id, pdf_url, out_dir, pdf_path, content=val_content)
-                if result["status"] in (STATUS_DOWNLOADED, STATUS_PMIC_LANDING_PAGE):
-                    return result
-
-            elif validation_status == "error":
-                logging.warning("[%s] PDF URL validation failed: %s", paper_id, val_error)
-
-            else:  # valid PDF
-                if dry_run:
-                    return {
-                        "paper_id": paper_id,
-                        "title": title_display,
-                        "doi": doi,
-                        "openalex_id": work_id,
-                        "semantic_scholar_id": ss_id,
-                        "status": "dry_run",
-                        "source_used": "semantic_scholar",
-                        "pdf_path": str(pdf_path),
-                        "landing_page_url": landing_url or "",
-                        "pdf_url": pdf_url,
-                        "oa_status": "",
-                        "license": "",
-                        "error_message": "",
-                    }
-                status, err = download_pdf(pdf_url, pdf_path)
-                if status == "downloaded":
-                    return {
-                        "paper_id": paper_id,
-                        "title": title_display,
-                        "doi": doi,
-                        "openalex_id": work_id,
-                        "semantic_scholar_id": ss_id,
-                        "status": STATUS_DOWNLOADED,
-                        "source_used": "semantic_scholar",
-                        "pdf_path": str(pdf_path),
-                        "landing_page_url": landing_url or "",
-                        "pdf_url": pdf_url,
-                        "oa_status": "",
-                        "license": "",
-                        "error_message": "",
-                    }
-                if status == "invalid_pdf":
-                    return {
-                        "paper_id": paper_id,
-                        "title": title_display,
-                        "doi": doi,
-                        "openalex_id": work_id,
-                        "semantic_scholar_id": ss_id,
-                        "status": STATUS_INVALID_PDF,
-                        "source_used": "semantic_scholar",
-                        "pdf_path": str(pdf_path),
-                        "landing_page_url": landing_url or "",
-                        "pdf_url": pdf_url,
-                        "oa_status": "",
-                        "license": "",
-                        "error_message": err or "Invalid PDF content",
-                    }
-                logging.warning("[%s] Semantic Scholar download failed: %s", paper_id, err)
-
-    # --- 3. No legal PDF found ---
-    return {
-        "paper_id": paper_id,
-        "title": title_display,
-        "doi": doi,
-        "openalex_id": work_id,
-        "semantic_scholar_id": ss_id if ss_paper else "",
-        "status": STATUS_NO_OA_LOCATION,
-        "source_used": "none",
-        "pdf_path": str(pdf_path),
-        "landing_page_url": landing_url or (row.get("doi_url") or ""),
-        "pdf_url": "",
-        "oa_status": oa_status if oa_work else "",
-        "license": license_val if oa_work else "",
-        "error_message": "No OA PDF location found from OpenAlex or Semantic Scholar",
-    }
+    return build_manifest_row(
+        row,
+        status=final_status,
+        source_used="none",
+        pdf_path=pdf_path,
+        openalex_id=openalex_id,
+        semantic_scholar_id=ss_id,
+        landing_page_url=final_url if final_status != STATUS_PUBLISHER_403 else "",
+        pdf_url=final_url if final_status == STATUS_PUBLISHER_403 else "",
+        oa_status=oa_status,
+        license_value=license_value,
+        error_message=final_error,
+    )
 
 
-def _try_landing_page_resolution(
-    paper_id: str,
-    url: str,
-    out_dir: Path,
-    pdf_path: Path,
-    content: Optional[bytes] = None,
-) -> Dict[str, str]:
-    """Try to resolve a landing page URL and download the PDF."""
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
 
-    # Fetch content if not provided
-    if content is None:
-        try:
-            import requests
-            resp = requests.get(url, timeout=60)
-            if resp.status_code == 403:
-                domain = _get_domain(url)
-                return {
-                    "paper_id": paper_id,
-                    "title": "",
-                    "doi": "",
-                    "openalex_id": "",
-                    "semantic_scholar_id": "",
-                    "status": STATUS_PUBLISHER_403,
-                    "source_used": "landing_page",
-                    "pdf_path": str(pdf_path),
-                    "landing_page_url": url,
-                    "pdf_url": "",
-                    "oa_status": "",
-                    "license": "",
-                    "error_message": f"Publisher HTTP 403: {domain}",
-                }
-            if resp.status_code != 200:
-                return {
-                    "paper_id": paper_id,
-                    "title": "",
-                    "doi": "",
-                    "openalex_id": "",
-                    "semantic_scholar_id": "",
-                    "status": STATUS_LANDING_PAGE_UNRESOLVED,
-                    "source_used": "landing_page",
-                    "pdf_path": str(pdf_path),
-                    "landing_page_url": url,
-                    "pdf_url": "",
-                    "oa_status": "",
-                    "license": "",
-                    "error_message": f"HTTP {resp.status_code} from landing page",
-                }
-            content = resp.content
-        except requests.RequestException as exc:
-            return {
-                "paper_id": paper_id,
-                "title": "",
-                "doi": "",
-                "openalex_id": "",
-                "semantic_scholar_id": "",
-                "status": STATUS_ERROR,
-                "source_used": "landing_page",
-                "pdf_path": str(pdf_path),
-                "landing_page_url": url,
-                "pdf_url": "",
-                "oa_status": "",
-                "license": "",
-                "error_message": f"Failed to fetch landing page: {exc}",
-            }
 
-    # Resolve the landing page
-    result = resolve_landing_page(url, content)
-    status = result.get("status", "")
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Download legal OA PDFs for ReFiNe eligible studies.")
+    parser.add_argument("--input", type=Path, default=Path("data/input/eligible_studies.csv"))
+    parser.add_argument("--out-dir", type=Path, default=Path("data/pdfs"))
+    parser.add_argument("--manifest", type=Path, default=Path("data/input/pdf_download_manifest.csv"))
+    parser.add_argument("--manual-queue", type=Path, default=None)
+    parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--manual-only", action="store_true")
+    parser.add_argument("--api-key", default=None, help="OpenAlex API key; overrides OPENALEX_API_KEY")
+    parser.add_argument("--ss-api-key", default=None, help="Semantic Scholar API key; overrides SEMANTIC_SCHOLAR_API_KEY")
+    parser.add_argument("--sleep", type=float, default=1.0, help="Seconds between papers; default 1.0")
+    parser.add_argument("-v", "--verbose", action="store_true")
+    return parser
 
-    if status in ("pmc_found", "repository_pdf_found", "landing_page_pdf_found"):
-        pdf_url = result.get("pdf_url", "")
-        if pdf_url:
-            logging.info("[%s] Found PDF from landing page: %s", paper_id, pdf_url[:100])
-            # Validate before downloading
-            val_status, val_err, _ = _validate_pdf_url(pdf_url)
-            if val_status == "403":
-                domain = _get_domain(pdf_url)
-                return {
-                    "paper_id": paper_id,
-                    "title": "",
-                    "doi": "",
-                    "openalex_id": "",
-                    "semantic_scholar_id": "",
-                    "status": STATUS_PUBLISHER_403,
-                    "source_used": "landing_page",
-                    "pdf_path": str(pdf_path),
-                    "landing_page_url": url,
-                    "pdf_url": pdf_url,
-                    "oa_status": "",
-                    "license": "",
-                    "error_message": f"Publisher HTTP 403: {domain}",
-                }
-            if val_status == "pdf":
-                # Valid PDF - download it
-                status_dl, err = download_pdf(pdf_url, pdf_path)
-                if status_dl == "downloaded":
-                    return {
-                        "paper_id": paper_id,
-                        "title": "",
-                        "doi": "",
-                        "openalex_id": "",
-                        "semantic_scholar_id": "",
-                        "status": STATUS_DOWNLOADED,
-                        "source_used": "landing_page",
-                        "pdf_path": str(pdf_path),
-                        "landing_page_url": url,
-                        "pdf_url": pdf_url,
-                        "oa_status": "",
-                        "license": "",
-                        "error_message": "",
-                    }
-                logging.warning("[%s] Download failed from landing page: %s", paper_id, err)
 
-        elif status == "pmc_fulltext_available":
-            pmcid = result.get("pmcid", "")
-            has_ft = result.get("has_fulltext", False)
-            return {
-                "paper_id": paper_id,
-                "title": "",
-                "doi": "",
-                "openalex_id": "",
-                "semantic_scholar_id": "",
-                "status": STATUS_PMIC_LANDING_PAGE,
-                "source_used": "landing_page",
-                "pdf_path": str(pdf_path),
-                "landing_page_url": url,
-                "pdf_url": result.get("pdf_url", ""),
-                "oa_status": "",
-                "license": "",
-                "error_message": f"PMC full text available (PMCID: {pmcid}), no direct PDF download",
-            }
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[logging.StreamHandler(sys.stdout)],
+    )
+    args = build_parser().parse_args(argv)
+    if args.verbose:
+        logging.getLogger().setLevel(logging.DEBUG)
 
-        elif status == "pmc_no_pdf":
-            pmcid = result.get("pmcid", "")
-            return {
-                "paper_id": paper_id,
-                "title": "",
-                "doi": "",
-                "openalex_id": "",
-                "semantic_scholar_id": "",
-                "status": STATUS_PMIC_LANDING_PAGE,
-                "source_used": "landing_page",
-                "pdf_path": str(pdf_path),
-                "landing_page_url": url,
-                "pdf_url": "",
-                "oa_status": "",
-                "license": "",
-                "error_message": f"PMC article available but no PDF (PMCID: {pmcid})",
-            }
+    load_dotenv_if_available()
 
-        elif status == "europepmc_found":
-            pdf_url = result.get("pdf_url", "")
-            if pdf_url:
-                # Try the EuropePMC PDF render endpoint
-                pdf_render_url = f"{url.split('?')[0]}?pdf=render"
-                logging.info("[%s] Trying EuropePMC PDF render: %s", paper_id, pdf_render_url[:100])
-                val_status2, val_err2, _ = _validate_pdf_url(pdf_render_url)
-                if val_status2 == "403":
-                    return {
-                        "paper_id": paper_id,
-                        "title": "",
-                        "doi": "",
-                        "openalex_id": "",
-                        "semantic_scholar_id": "",
-                        "status": STATUS_EUROPEPMC_BAD_PDF_URL,
-                        "source_used": "landing_page",
-                        "pdf_path": str(pdf_path),
-                        "landing_page_url": url,
-                        "pdf_url": pdf_render_url,
-                        "oa_status": "",
-                        "license": "",
-                        "error_message": "EuropePMC PDF render returned 403",
-                    }
-                if val_status2 == "pdf":
-                    status_dl, err = download_pdf(pdf_render_url, pdf_path)
-                    if status_dl == "downloaded":
-                        return {
-                            "paper_id": paper_id,
-                            "title": "",
-                            "doi": "",
-                            "openalex_id": "",
-                            "semantic_scholar_id": "",
-                            "status": STATUS_DOWNLOADED,
-                            "source_used": "europepmc",
-                            "pdf_path": str(pdf_path),
-                            "landing_page_url": url,
-                            "pdf_url": pdf_render_url,
-                            "oa_status": "",
-                            "license": "",
-                            "error_message": "",
-                        }
+    if not args.input.exists():
+        logger.error("Input CSV not found: %s", args.input)
+        return 1
 
-        elif status == "europepmc_no_pdf":
-            return {
-                "paper_id": paper_id,
-                "title": "",
-                "doi": "",
-                "openalex_id": "",
-                "semantic_scholar_id": "",
-                "status": STATUS_EUROPEPMC_BAD_PDF_URL,
-                "source_used": "landing_page",
-                "pdf_path": str(pdf_path),
-                "landing_page_url": url,
-                "pdf_url": "",
-                "oa_status": "",
-                "license": "",
-                "error_message": "EuropePMC article found but no PDF available",
-            }
+    args.out_dir.mkdir(parents=True, exist_ok=True)
+    args.manifest.parent.mkdir(parents=True, exist_ok=True)
+    manual_queue = args.manual_queue or (args.input.parent / "manual_pdf_needed.csv")
 
-        elif status == "repository_unresolved":
-            return {
-                "paper_id": paper_id,
-                "title": "",
-                "doi": "",
-                "openalex_id": "",
-                "semantic_scholar_id": "",
-                "status": STATUS_REPOSITORY_LANDING_PAGE,
-                "source_used": "landing_page",
-                "pdf_path": str(pdf_path),
-                "landing_page_url": url,
-                "pdf_url": "",
-                "oa_status": "",
-                "license": "",
-                "error_message": f"Repository landing page unresolved: {url[:80]}",
-            }
+    openalex_key = args.api_key or os.environ.get("OPENALEX_API_KEY", "")
+    ss_key = args.ss_api_key or os.environ.get("SEMANTIC_SCHOLAR_API_KEY", "")
 
-        else:  # landing_page_unresolved or unknown
-            return {
-                "paper_id": paper_id,
-                "title": "",
-                "doi": "",
-                "openalex_id": "",
-                "semantic_scholar_id": "",
-                "status": STATUS_LANDING_PAGE_UNRESOLVED,
-                "source_used": "landing_page",
-                "pdf_path": str(pdf_path),
-                "landing_page_url": url,
-                "pdf_url": "",
-                "oa_status": "",
-                "license": "",
-                "error_message": f"Landing page unresolved: {url[:80]}",
-            }
+    raw_rows = load_csv_rows(args.input)
+    papers = [normalized_input_row(row, idx + 1) for idx, row in enumerate(raw_rows)]
+    paper_order = [p["paper_id"] for p in papers]
+    logger.info("Loaded %d papers from %s", len(papers), args.input)
 
-    # No PDF found from landing page resolution
-    return {
-        "paper_id": paper_id,
-        "title": "",
-        "doi": "",
-        "openalex_id": "",
-        "semantic_scholar_id": "",
-        "status": STATUS_LANDING_PAGE_UNRESOLVED,
-        "source_used": "landing_page",
-        "pdf_path": str(pdf_path),
-        "landing_page_url": url,
-        "pdf_url": "",
-        "oa_status": "",
-        "license": "",
-        "error_message": f"Failed to resolve PDF from landing page: {url[:80]}",
-    }
+    manifest_by_id = load_manifest_rows(args.manifest)
+    manual_ids = load_manual_ids(manual_queue)
+    pdf_ids = existing_pdf_ids(args.out_dir)
+
+    if args.manual_only:
+        papers = [p for p in papers if p["paper_id"] in manual_ids or p["paper_id"] not in pdf_ids]
+        logger.info("manual-only mode: %d papers selected", len(papers))
+
+    if args.limit is not None and args.limit > 0:
+        papers = papers[: args.limit]
+        logger.info("Limiting to %d papers", len(papers))
+
+    session = requests.Session()
+    session.headers.update(DEFAULT_HEADERS)
+
+    stats: Dict[str, int] = {}
+    for idx, row in enumerate(papers, start=1):
+        paper_id = row["paper_id"]
+        logger.info("[%d/%d] Processing %s", idx, len(papers), paper_id)
+        result = process_paper(
+            session=session,
+            row=row,
+            out_dir=args.out_dir,
+            openalex_key=openalex_key,
+            ss_key=ss_key,
+            overwrite=args.overwrite,
+            dry_run=args.dry_run,
+        )
+        manifest_by_id[paper_id] = result
+        stats[result["status"]] = stats.get(result["status"], 0) + 1
+        if args.sleep and idx < len(papers):
+            time.sleep(args.sleep)
+
+    write_manifest(manifest_by_id, paper_order, args.manifest)
+    write_manual_queue(manifest_by_id, manual_queue)
+
+    print("\n" + "=" * 60)
+    print("PDF Download Summary")
+    print("=" * 60)
+    for key in sorted(stats):
+        print(f"  {key}: {stats[key]}")
+    print("-" * 60)
+    print(f"  processed_this_run: {sum(stats.values())}")
+    print(f"  manifest_rows_total: {len(manifest_by_id)}")
+    print(f"  manual_queue: {manual_queue}")
+    print("=" * 60)
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
