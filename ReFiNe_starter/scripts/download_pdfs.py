@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
-"""Download PDFs for ReFiNe eligible studies using OpenAlex and Semantic Scholar.
+"""Download PDFs for ReFiNe eligible studies.
 
-This script reads `data/input/eligible_studies.csv`, tries to locate legal OA PDFs
-through OpenAlex first and Semantic Scholar second, resolves obvious legal landing
-pages, downloads valid PDFs into `data/pdfs/{paper_id}.pdf`, and maintains a
-manifest plus a deduplicated manual queue.
+Source order:
+1. OpenAlex
+2. Semantic Scholar
+3. PubMed / PubMed Central (PMC)
+4. manual queue
+
+This script reads `data/input/eligible_studies.csv`, tries to locate legal OA PDFs,
+resolves obvious legal landing pages, downloads valid PDFs into
+`data/pdfs/{paper_id}.pdf`, and maintains a manifest plus a deduplicated manual
+queue.
 
 It deliberately does not use Sci-Hub or paywall-bypass sources.
 """
@@ -37,6 +43,9 @@ except Exception:  # pragma: no cover - regex fallback is used if bs4 is absent
 
 OPENALEX_BASE = "https://api.openalex.org"
 SEMANTIC_SCHOLAR_BASE = "https://api.semanticscholar.org/graph/v1"
+NCBI_EUTILS_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
+PMC_IDCONV_BASE = "https://pmc.ncbi.nlm.nih.gov/tools/idconv/api/v1/articles/"
+PMC_OA_BASE = "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi"
 
 STATUS_DOWNLOADED = "downloaded"
 STATUS_ALREADY_EXISTS = "already_exists"
@@ -49,8 +58,14 @@ STATUS_REPOSITORY_LANDING_PAGE = "repository_landing_page"
 STATUS_PMC_LANDING_PAGE = "pmc_landing_page"
 STATUS_EUROPEPMC_BAD_PDF_URL = "europepmc_bad_pdf_url"
 STATUS_ERROR = "error"
+STATUS_PMC_PDF_DOWNLOADED = "pmc_pdf_downloaded"
+STATUS_PMC_FULLTEXT_NO_PDF = "pmc_fulltext_no_pdf"
+STATUS_PUBMED_METADATA_ONLY = "pubmed_metadata_only"
+STATUS_PMC_NOT_AVAILABLE = "pmc_not_available"
+STATUS_PMC_PDF_NOT_FOUND = "pmc_pdf_not_found"
+STATUS_PUBMED_NOT_FOUND = "pubmed_not_found"
 
-SUCCESS_STATUSES = {STATUS_DOWNLOADED, STATUS_ALREADY_EXISTS, STATUS_DRY_RUN}
+SUCCESS_STATUSES = {STATUS_DOWNLOADED, STATUS_PMC_PDF_DOWNLOADED, STATUS_ALREADY_EXISTS, STATUS_DRY_RUN}
 MANUAL_STATUSES = {
     STATUS_PUBLISHER_403,
     STATUS_INVALID_PDF,
@@ -60,6 +75,11 @@ MANUAL_STATUSES = {
     STATUS_PMC_LANDING_PAGE,
     STATUS_EUROPEPMC_BAD_PDF_URL,
     STATUS_ERROR,
+    STATUS_PMC_FULLTEXT_NO_PDF,
+    STATUS_PUBMED_METADATA_ONLY,
+    STATUS_PMC_NOT_AVAILABLE,
+    STATUS_PMC_PDF_NOT_FOUND,
+    STATUS_PUBMED_NOT_FOUND,
 }
 
 MANIFEST_COLUMNS = [
@@ -68,6 +88,10 @@ MANIFEST_COLUMNS = [
     "doi",
     "openalex_id",
     "semantic_scholar_id",
+    "pmid",
+    "pmcid",
+    "pubmed_url",
+    "pmc_url",
     "status",
     "source_used",
     "pdf_path",
@@ -589,6 +613,219 @@ def try_url_attempt(
     return None, (STATUS_INVALID_PDF if "no %pdf" in error.lower() else STATUS_ERROR, url, error)
 
 
+
+# ---------------------------------------------------------------------------
+# PubMed / PMC helpers
+# ---------------------------------------------------------------------------
+
+
+def normalize_pmid(value: str) -> str:
+    """Return only the numeric PMID, or an empty string."""
+    value = (value or "").strip()
+    match = re.search(r"(\d{4,})", value)
+    return match.group(1) if match else ""
+
+
+def normalize_pmcid(value: str) -> str:
+    """Normalize PMCID values to the canonical `PMC1234567` form."""
+    value = (value or "").strip()
+    if not value:
+        return ""
+    match = re.search(r"PMC\s*(\d+)", value, flags=re.I)
+    if match:
+        return f"PMC{match.group(1)}"
+    match = re.search(r"\b(\d{5,})\b", value)
+    if match:
+        return f"PMC{match.group(1)}"
+    return ""
+
+
+def ncbi_common_params(ncbi_email: str, ncbi_api_key: str = "") -> Dict[str, str]:
+    params = {"tool": "refine_pdf_downloader"}
+    if ncbi_email:
+        params["email"] = ncbi_email
+    if ncbi_api_key:
+        params["api_key"] = ncbi_api_key
+    return params
+
+
+def pmc_id_converter(
+    session: requests.Session,
+    identifier: str,
+    ncbi_email: str,
+    ncbi_api_key: str = "",
+) -> Dict[str, str]:
+    """Convert DOI/PMID/PMCID to available PMC identifiers using the PMC ID Converter.
+
+    Returns a dict with possible keys: doi, pmid, pmcid.
+    """
+    identifier = (identifier or "").strip()
+    if not identifier:
+        return {}
+    params = ncbi_common_params(ncbi_email, ncbi_api_key)
+    params.update({"ids": identifier, "format": "json"})
+    try:
+        resp = session.get(PMC_IDCONV_BASE, params=params, timeout=30)
+        if resp.status_code != 200:
+            logger.debug("PMC ID converter returned HTTP %d for %s", resp.status_code, identifier)
+            return {}
+        records = resp.json().get("records", [])
+        if not records:
+            return {}
+        rec = records[0]
+        return {
+            "doi": clean_doi(str(rec.get("doi", "") or "")),
+            "pmid": normalize_pmid(str(rec.get("pmid", "") or "")),
+            "pmcid": normalize_pmcid(str(rec.get("pmcid", "") or "")),
+        }
+    except (requests.RequestException, ValueError) as exc:
+        logger.debug("PMC ID converter failed for %s: %s", identifier, exc)
+        return {}
+
+
+def pubmed_search_by_title(
+    session: requests.Session,
+    title: str,
+    ncbi_email: str,
+    ncbi_api_key: str = "",
+) -> str:
+    """Find a PMID by exact-ish title search in PubMed."""
+    title = (title or "").strip()
+    if not title:
+        return ""
+    params = ncbi_common_params(ncbi_email, ncbi_api_key)
+    params.update(
+        {
+            "db": "pubmed",
+            "term": f'"{title}"[Title]',
+            "retmode": "json",
+            "retmax": "1",
+            "sort": "relevance",
+        }
+    )
+    try:
+        resp = session.get(f"{NCBI_EUTILS_BASE}/esearch.fcgi", params=params, timeout=30)
+        if resp.status_code != 200:
+            logger.debug("PubMed title search returned HTTP %d", resp.status_code)
+            return ""
+        ids = resp.json().get("esearchresult", {}).get("idlist", [])
+        return normalize_pmid(ids[0]) if ids else ""
+    except (requests.RequestException, ValueError, IndexError) as exc:
+        logger.debug("PubMed title search failed for %s: %s", title[:80], exc)
+        return ""
+
+
+def pmc_oa_pdf_urls(
+    session: requests.Session,
+    pmcid: str,
+    ncbi_email: str,
+    ncbi_api_key: str = "",
+) -> List[str]:
+    """Return PDF URLs from the official PMC OA Web Service, if available."""
+    import xml.etree.ElementTree as ET
+
+    urls: List[str] = []
+    pmcid = normalize_pmcid(pmcid)
+    if not pmcid:
+        return urls
+    params = ncbi_common_params(ncbi_email, ncbi_api_key)
+    params.update({"id": pmcid})
+    try:
+        resp = session.get(PMC_OA_BASE, params=params, timeout=30)
+        if resp.status_code != 200:
+            return urls
+        root = ET.fromstring(resp.content)
+        for link in root.findall(".//link"):
+            href = link.attrib.get("href", "").strip()
+            fmt = link.attrib.get("format", "").lower()
+            if href and (fmt == "pdf" or href.lower().endswith(".pdf") or ".pdf" in href.lower()):
+                urls.append(href)
+    except Exception as exc:
+        logger.debug("PMC OA service failed for %s: %s", pmcid, exc)
+    return urls
+
+
+def pmc_page_pdf_urls(session: requests.Session, pmcid: str) -> Tuple[List[str], str]:
+    """Fetch a known PMC article page and extract direct PDF links from its HTML."""
+    pmcid = normalize_pmcid(pmcid)
+    if not pmcid:
+        return [], ""
+    pmc_url = f"https://pmc.ncbi.nlm.nih.gov/articles/{pmcid}/"
+    try:
+        resp = session.get(pmc_url, timeout=60, stream=True, allow_redirects=True)
+        if resp.status_code != 200:
+            return [], pmc_url
+        html = read_limited_response(resp, limit=HTML_READ_LIMIT).decode("utf-8", errors="replace")
+        links = extract_pdf_links_from_html(html, pmc_url)
+        # Some PMC pages use article-relative PDF URLs. Keep an explicit conservative fallback pattern.
+        for match in re.finditer(r'href=["\']([^"\']*/articles/' + re.escape(pmcid) + r'/pdf/[^"\']+\.pdf[^"\']*)["\']', html, re.I):
+            url = normalize_absolute_url(match.group(1), pmc_url)
+            if url not in links:
+                links.append(url)
+        return links, pmc_url
+    except requests.RequestException as exc:
+        logger.debug("PMC page fetch failed for %s: %s", pmcid, exc)
+        return [], pmc_url
+
+
+def pubmed_pmc_candidate_urls(
+    session: requests.Session,
+    row: Dict[str, str],
+    ncbi_email: str,
+    ncbi_api_key: str = "",
+) -> Tuple[List[UrlAttempt], Dict[str, str], str]:
+    """Find PMC PDF candidates for one already-known paper.
+
+    This is a fallback source, not new paper discovery: it uses DOI/PMID/PMCID/title
+    from the existing CSV row.
+    """
+    doi = row.get("doi", "")
+    title = row.get("title", "")
+    pmid = normalize_pmid(row.get("pmid", ""))
+    pmcid = normalize_pmcid(row.get("pmcid", ""))
+
+    meta: Dict[str, str] = {"pmid": pmid, "pmcid": pmcid, "pubmed_url": "", "pmc_url": ""}
+
+    if not pmcid and doi:
+        converted = pmc_id_converter(session, doi, ncbi_email, ncbi_api_key)
+        pmid = pmid or converted.get("pmid", "")
+        pmcid = pmcid or converted.get("pmcid", "")
+
+    if not pmid and title:
+        pmid = pubmed_search_by_title(session, title, ncbi_email, ncbi_api_key)
+
+    if pmid and not pmcid:
+        converted = pmc_id_converter(session, pmid, ncbi_email, ncbi_api_key)
+        pmcid = pmcid or converted.get("pmcid", "")
+
+    meta["pmid"] = pmid
+    meta["pmcid"] = normalize_pmcid(pmcid)
+    if pmid:
+        meta["pubmed_url"] = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
+    if meta["pmcid"]:
+        meta["pmc_url"] = f"https://pmc.ncbi.nlm.nih.gov/articles/{meta['pmcid']}/"
+
+    if not pmid and not meta["pmcid"]:
+        return [], meta, "pubmed_not_found"
+    if pmid and not meta["pmcid"]:
+        return [], meta, "pubmed_metadata_only"
+
+    urls: List[str] = []
+    for url in pmc_oa_pdf_urls(session, meta["pmcid"], ncbi_email, ncbi_api_key):
+        if url not in urls:
+            urls.append(url)
+    page_urls, pmc_url = pmc_page_pdf_urls(session, meta["pmcid"])
+    if pmc_url:
+        meta["pmc_url"] = pmc_url
+    for url in page_urls:
+        if url not in urls:
+            urls.append(url)
+
+    attempts = [UrlAttempt(url=url, source="pubmed_pmc", kind="pdf") for url in urls if url]
+    if not attempts:
+        return [], meta, "pmc_fulltext_no_pdf"
+    return attempts, meta, ""
+
 # ---------------------------------------------------------------------------
 # Manifest / manual queue helpers
 # ---------------------------------------------------------------------------
@@ -673,6 +910,10 @@ def build_manifest_row(
     pdf_path: Path,
     openalex_id: str = "",
     semantic_scholar_id: str = "",
+    pmid: str = "",
+    pmcid: str = "",
+    pubmed_url: str = "",
+    pmc_url: str = "",
     landing_page_url: str = "",
     pdf_url: str = "",
     oa_status: str = "",
@@ -685,6 +926,10 @@ def build_manifest_row(
         "doi": base["doi"],
         "openalex_id": openalex_id,
         "semantic_scholar_id": semantic_scholar_id,
+        "pmid": pmid or base.get("pmid", ""),
+        "pmcid": pmcid or base.get("pmcid", ""),
+        "pubmed_url": pubmed_url,
+        "pmc_url": pmc_url,
         "status": status,
         "source_used": source_used,
         "pdf_path": str(pdf_path),
@@ -702,7 +947,9 @@ def normalized_input_row(row: Dict[str, str], index: int) -> Dict[str, str]:
         paper_id = f"REFINE-{index:04d}"
     title = get_first(row, ["title", "Title", "display_name", "paper_title"])
     doi = clean_doi(get_first(row, ["doi", "DOI", "paper_doi"] ))
-    return {"paper_id": paper_id, "title": title, "doi": doi}
+    pmid = normalize_pmid(get_first(row, ["pmid", "PMID", "pubmed_id", "PubMed ID"]))
+    pmcid = normalize_pmcid(get_first(row, ["pmcid", "PMCID", "pmc_id", "PMC ID"]))
+    return {"paper_id": paper_id, "title": title, "doi": doi, "pmid": pmid, "pmcid": pmcid}
 
 
 def process_paper(
@@ -711,6 +958,8 @@ def process_paper(
     out_dir: Path,
     openalex_key: str,
     ss_key: str,
+    ncbi_email: str,
+    ncbi_api_key: str,
     overwrite: bool,
     dry_run: bool,
 ) -> Dict[str, str]:
@@ -800,6 +1049,51 @@ def process_paper(
             if failure:
                 failures.append(failure)
 
+
+    # 3. PubMed / PMC fallback
+    logger.info("[%s] PubMed/PMC fallback", paper_id)
+    pubmed_attempts, pubmed_meta, pubmed_status = pubmed_pmc_candidate_urls(
+        session=session,
+        row=row,
+        ncbi_email=ncbi_email,
+        ncbi_api_key=ncbi_api_key,
+    )
+    pmid = pubmed_meta.get("pmid", "")
+    pmcid = pubmed_meta.get("pmcid", "")
+    pubmed_url = pubmed_meta.get("pubmed_url", "")
+    pmc_url = pubmed_meta.get("pmc_url", "")
+
+    for attempt in pubmed_attempts:
+        result, failure = try_url_attempt(session, attempt, paper_id, pdf_path, dry_run)
+        if result is not None:
+            status_value = STATUS_PMC_PDF_DOWNLOADED if result["status"] == STATUS_DOWNLOADED else result["status"]
+            return build_manifest_row(
+                row,
+                status=status_value,
+                source_used="pubmed_pmc" if result["status"] != STATUS_DRY_RUN else "pubmed_pmc",
+                pdf_path=pdf_path,
+                openalex_id=openalex_id,
+                semantic_scholar_id=ss_id,
+                pmid=pmid,
+                pmcid=pmcid,
+                pubmed_url=pubmed_url,
+                pmc_url=pmc_url,
+                landing_page_url=result.get("landing_page_url", pmc_url),
+                pdf_url=result.get("pdf_url", ""),
+                oa_status=oa_status,
+                license_value=license_value,
+                error_message=result.get("error_message", ""),
+            )
+        if failure:
+            failures.append(failure)
+
+    if pubmed_status == "pubmed_not_found":
+        failures.append((STATUS_PUBMED_NOT_FOUND, pubmed_url, "No PubMed/PMC record found from DOI/title"))
+    elif pubmed_status == "pubmed_metadata_only":
+        failures.append((STATUS_PUBMED_METADATA_ONLY, pubmed_url, "PubMed record found but no PMCID/PMC full text"))
+    elif pubmed_status == "pmc_fulltext_no_pdf":
+        failures.append((STATUS_PMC_FULLTEXT_NO_PDF, pmc_url, "PMC full text found but no valid PDF link discovered"))
+
     # Choose the most informative final failure.
     priority = [
         STATUS_PUBLISHER_403,
@@ -809,6 +1103,11 @@ def process_paper(
         STATUS_LANDING_PAGE_UNRESOLVED,
         STATUS_INVALID_PDF,
         STATUS_ERROR,
+        STATUS_PMC_FULLTEXT_NO_PDF,
+        STATUS_PUBMED_METADATA_ONLY,
+        STATUS_PMC_NOT_AVAILABLE,
+        STATUS_PMC_PDF_NOT_FOUND,
+        STATUS_PUBMED_NOT_FOUND,
         STATUS_NO_OA_LOCATION,
     ]
     final_status, final_url, final_error = STATUS_NO_OA_LOCATION, "", "No OA PDF location found from OpenAlex or Semantic Scholar"
@@ -825,6 +1124,10 @@ def process_paper(
         pdf_path=pdf_path,
         openalex_id=openalex_id,
         semantic_scholar_id=ss_id,
+        pmid=locals().get("pmid", ""),
+        pmcid=locals().get("pmcid", ""),
+        pubmed_url=locals().get("pubmed_url", ""),
+        pmc_url=locals().get("pmc_url", ""),
         landing_page_url=final_url if final_status != STATUS_PUBLISHER_403 else "",
         pdf_url=final_url if final_status == STATUS_PUBLISHER_403 else "",
         oa_status=oa_status,
@@ -839,7 +1142,7 @@ def process_paper(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Download legal OA PDFs for ReFiNe eligible studies.")
+    parser = argparse.ArgumentParser(description="Download legal OA PDFs for ReFiNe eligible studies via OpenAlex, Semantic Scholar, and PubMed/PMC.")
     parser.add_argument("--input", type=Path, default=Path("data/input/eligible_studies.csv"))
     parser.add_argument("--out-dir", type=Path, default=Path("data/pdfs"))
     parser.add_argument("--manifest", type=Path, default=Path("data/input/pdf_download_manifest.csv"))
@@ -850,6 +1153,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--manual-only", action="store_true")
     parser.add_argument("--api-key", default=None, help="OpenAlex API key; overrides OPENALEX_API_KEY")
     parser.add_argument("--ss-api-key", default=None, help="Semantic Scholar API key; overrides SEMANTIC_SCHOLAR_API_KEY")
+    parser.add_argument("--ncbi-email", default=None, help="NCBI email; overrides NCBI_EMAIL")
+    parser.add_argument("--ncbi-api-key", default=None, help="NCBI API key; overrides NCBI_API_KEY")
     parser.add_argument("--sleep", type=float, default=1.0, help="Seconds between papers; default 1.0")
     parser.add_argument("-v", "--verbose", action="store_true")
     return parser
@@ -877,6 +1182,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     openalex_key = args.api_key or os.environ.get("OPENALEX_API_KEY", "")
     ss_key = args.ss_api_key or os.environ.get("SEMANTIC_SCHOLAR_API_KEY", "")
+    ncbi_email = args.ncbi_email or os.environ.get("NCBI_EMAIL", os.environ.get("OPENALEX_EMAIL", ""))
+    ncbi_api_key = args.ncbi_api_key or os.environ.get("NCBI_API_KEY", "")
+    if not ncbi_email:
+        logger.warning("NCBI_EMAIL is not set. PubMed/PMC fallback will still run, but NCBI recommends providing an email.")
 
     raw_rows = load_csv_rows(args.input)
     papers = [normalized_input_row(row, idx + 1) for idx, row in enumerate(raw_rows)]
@@ -908,6 +1217,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             out_dir=args.out_dir,
             openalex_key=openalex_key,
             ss_key=ss_key,
+            ncbi_email=ncbi_email,
+            ncbi_api_key=ncbi_api_key,
             overwrite=args.overwrite,
             dry_run=args.dry_run,
         )
