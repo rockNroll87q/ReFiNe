@@ -72,7 +72,6 @@ MANUAL_STATUSES = {
     STATUS_NO_OA_LOCATION,
     STATUS_LANDING_PAGE_UNRESOLVED,
     STATUS_REPOSITORY_LANDING_PAGE,
-    STATUS_PMC_LANDING_PAGE,
     STATUS_EUROPEPMC_BAD_PDF_URL,
     STATUS_ERROR,
     STATUS_PMC_FULLTEXT_NO_PDF,
@@ -100,6 +99,8 @@ MANIFEST_COLUMNS = [
     "oa_status",
     "license",
     "error_message",
+    "secondary_status",
+    "secondary_error_message",
 ]
 
 TRUSTED_LANDING_DOMAINS = (
@@ -240,6 +241,15 @@ def openalex_search_by_title(session: requests.Session, title: str, api_key: str
 
 
 def openalex_candidate_urls(work: Dict[str, Any]) -> List[UrlAttempt]:
+    """Generate URL attempts from an OpenAlex work.
+
+    Skips bare PubMed abstract pages (e.g. https://pubmed.ncbi.nlm.nih.gov/31411064)
+    because those are metadata-only pages with no direct PDF link and should be
+    handled by the dedicated PubMed/PMC fallback instead.
+
+    PMC article pages (pmc.ncbi.nlm.nih.gov/articles/... or ncbi.nlm.nih.gov/pmc/...)
+    are kept as candidates since they may expose PDF links.
+    """
     attempts: List[UrlAttempt] = []
 
     def add(url: Any, kind: str = "pdf_or_landing") -> None:
@@ -248,6 +258,15 @@ def openalex_candidate_urls(work: Dict[str, Any]) -> List[UrlAttempt]:
         url = url.strip()
         if not url or is_semantic_scholar_page(url):
             return
+
+        # Skip bare PubMed abstract pages — these are metadata-only and should be
+        # handled by the dedicated PubMed/PMC fallback.
+        domain = get_domain(url)
+        if domain == "pubmed.ncbi.nlm.nih.gov":
+            logger.debug("[%s] Skipping pubmed abstract URL (handled by PMC fallback): %s", work.get("id", ""), url[:120])
+            return
+
+        # Keep PMC article pages as candidates — they may expose PDF links.
         if url not in {a.url for a in attempts}:
             attempts.append(UrlAttempt(url=url, source="openalex", kind=kind))
 
@@ -522,9 +541,48 @@ def resolve_landing_page(session: requests.Session, url: str, content: bytes) ->
             # Keep trying other links; one blocked link does not prove all are blocked.
             continue
 
-    # PMC pages often expose a PDF link in the page HTML. If not, classify clearly.
+    # --- PubMed abstract pages (metadata-only, no PMCID) ---
+    # These should NOT be classified as PMC pages. They are handled by the
+    # dedicated PubMed/PMC fallback via pubmed_pmc_candidate_urls().
+    if domain == "pubmed.ncbi.nlm.nih.gov":
+        return STATUS_PUBMED_METADATA_ONLY, "", "PubMed abstract page (metadata-only, no PMCID)"
+
+    # --- PMC / NCBI full-text pages ---
     if "pmc.ncbi.nlm.nih.gov" in domain or "ncbi.nlm.nih.gov" in domain:
-        return STATUS_PMC_LANDING_PAGE, "", "PMC/NCBI landing page found but no valid direct PDF link discovered"
+        url_path = url.lower()
+
+        # Check if this looks like a direct PMC PDF path (e.g., /articles/PMCxxxx/pdf/filename.pdf)
+        # Only match when the URL actually contains "/pdf/" in its path segments
+        # or explicitly ends with ".pdf". This avoids false positives on plain
+        # article URLs like /pmc/articles/9323432 which are full-text HTML pages.
+        is_pmc_pdf_path = bool(
+            ("/pdf/" in url_path and any(part.lower().startswith("pmc") for part in url.split("/")))
+            or (url_path.endswith(".pdf") and any(part.lower().startswith("pmc") for part in url.split("/")))
+        )
+
+        if is_pmc_pdf_path:
+            return STATUS_PMC_FULLTEXT_NO_PDF, "", "PMC full-text available but no downloadable PDF"
+
+        # Distinguish PMC article pages with zero extractable PDF links from generic landing pages.
+        # Match multiple URL formats:
+        #   https://pmc.ncbi.nlm.nih.gov/articles/PMC1234567/
+        #   https://www.ncbi.nlm.nih.gov/pmc/articles/1234567
+        #   https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1234567/
+        is_pmc_article_page = any(
+            p in url_path for p in ["/articles/pmc", "/articles/PMC"]
+        ) or ("/pmc/articles/" in url_path)
+
+        if is_pmc_article_page:
+            # When links is empty on a PMC article page, we cannot confirm that a PMCID
+            # exists (nor that both the OA service and page parsing were checked).  The
+            # more honest classification is pmc_fulltext_no_pdf — the full text is
+            # available as HTML but no downloadable PDF link was found in the page.
+            return STATUS_PMC_FULLTEXT_NO_PDF, "", "PMC full-text available as HTML; no downloadable PDF link found"
+
+        # Generic NCBI/PubMed landing pages that are not PMC article pages
+        # (e.g., search pages, tool pages). Classify as unresolved rather than
+        # the misleading generic pmc_landing_page.
+        return STATUS_LANDING_PAGE_UNRESOLVED, "", "NCBI/PubMed non-PMC page with no valid direct PDF link"
 
     if "europepmc.org" in domain:
         render_url = f"{url.split('?')[0]}?pdf=render"
@@ -563,6 +621,7 @@ def try_url_attempt(
 
     if status == "pdf":
         if dry_run:
+            logger.info("[%s] [DRY RUN] PDF URL confirmed valid: %s", paper_id, url[:120])
             return {
                 "status": STATUS_DRY_RUN,
                 "source_used": attempt.source,
@@ -570,20 +629,26 @@ def try_url_attempt(
                 "landing_page_url": "",
                 "error_message": "",
             }, None
+        logger.info("[%s] Downloading PDF from: %s", paper_id, url[:120])
         dl_status, dl_error = download_pdf(session, url, pdf_path)
         if dl_status == STATUS_DOWNLOADED:
+            file_size = pdf_path.stat().st_size
+            source_display = attempt.source
+            logger.info("[%s] Downloaded PMC PDF: %s, size = %d bytes", paper_id, pdf_path, file_size)
             return {
                 "status": STATUS_DOWNLOADED,
-                "source_used": attempt.source,
+                "source_used": source_display,
                 "pdf_url": url,
                 "landing_page_url": "",
                 "error_message": "",
             }, None
+        logger.warning("[%s] PDF download failed: %s — %s", paper_id, url[:120], dl_error)
         return None, (dl_status, url, dl_error)
 
-    if status == "html_landing_page":
+    elif status == "html_landing_page":
         # Only resolve known OA/repository/DOI landing pages. Do not crawl broadly.
         if is_probable_landing_domain(url):
+            logger.info("[%s] Resolving landing page: %s", paper_id, url[:120])
             resolved_status, pdf_url, resolved_error = resolve_landing_page(session, url, content)
             if resolved_status == STATUS_DOWNLOADED and pdf_url:
                 if dry_run:
@@ -596,6 +661,8 @@ def try_url_attempt(
                     }, None
                 dl_status, dl_error = download_pdf(session, pdf_url, pdf_path)
                 if dl_status == STATUS_DOWNLOADED:
+                    file_size = pdf_path.stat().st_size
+                    logger.info("[%s] Downloaded PDF via landing page: %s, size = %d bytes", paper_id, pdf_url[:120], file_size)
                     return {
                         "status": STATUS_DOWNLOADED,
                         "source_used": f"{attempt.source}_landing_page",
@@ -603,14 +670,22 @@ def try_url_attempt(
                         "landing_page_url": url,
                         "error_message": "",
                     }, None
+                logger.warning("[%s] Landing page PDF download failed: %s — %s", paper_id, pdf_url[:120], dl_error)
                 return None, (dl_status, pdf_url, dl_error)
+            logger.info("[%s] Landing page resolution failed: %s", paper_id, resolved_error)
             return None, (resolved_status, url, resolved_error)
-        return None, (STATUS_LANDING_PAGE_UNRESOLVED, url, "HTML landing page on untrusted/non-OA domain")
-
-    if status == "403":
+        # Untrusted domain — fall through to generic error handling below
+    elif status == "403":
+        logger.warning("[%s] Publisher 403 on: %s", paper_id, url[:120])
         return None, (STATUS_PUBLISHER_403, url, f"Publisher HTTP 403: {get_domain(url)}")
 
-    return None, (STATUS_INVALID_PDF if "no %pdf" in error.lower() else STATUS_ERROR, url, error)
+    # For .pdf URLs that failed %PDF validation, classify as invalid_pdf (NOT landing_page).
+    if url.lower().endswith(".pdf"):
+        logger.info("[%s] PMC PDF validation failed: %s", paper_id, error)
+        return None, (STATUS_INVALID_PDF, url, error)
+
+    # Default fallback for unrecognized status values
+    return None, (STATUS_ERROR, url, error)
 
 
 
@@ -733,13 +808,23 @@ def pmc_oa_pdf_urls(
     try:
         resp = session.get(PMC_OA_BASE, params=params, timeout=30)
         if resp.status_code != 200:
+            logger.info("PMC OA service returned HTTP %d for %s", resp.status_code, pmcid)
             return urls
         root = ET.fromstring(resp.content)
         for link in root.findall(".//link"):
             href = link.attrib.get("href", "").strip()
             fmt = link.attrib.get("format", "").lower()
             if href and (fmt == "pdf" or href.lower().endswith(".pdf") or ".pdf" in href.lower()):
+                # Convert FTP URLs to HTTP PMC download URLs so requests can follow them.
+                if href.lower().startswith("ftp://"):
+                    path_part = href[len("ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/"):]  # oa_pdf/XX/YY/file.pdf
+                    parts = path_part.split("/")
+                    if len(parts) >= 3:
+                        filename = parts[-1]
+                        pmcid_upper = normalize_pmcid(pmcid).upper()
+                        href = f"https://pmc.ncbi.nlm.nih.gov/articles/{pmcid_upper}/pdf/{filename}"
                 urls.append(href)
+        logger.info("Found PMCID: %s | PMC OA service returned %d PDF URL(s)", pmcid, len(urls))
     except Exception as exc:
         logger.debug("PMC OA service failed for %s: %s", pmcid, exc)
     return urls
@@ -754,14 +839,17 @@ def pmc_page_pdf_urls(session: requests.Session, pmcid: str) -> Tuple[List[str],
     try:
         resp = session.get(pmc_url, timeout=60, stream=True, allow_redirects=True)
         if resp.status_code != 200:
+            logger.info("PMC page returned HTTP %d for %s", resp.status_code, pmcid)
             return [], pmc_url
         html = read_limited_response(resp, limit=HTML_READ_LIMIT).decode("utf-8", errors="replace")
         links = extract_pdf_links_from_html(html, pmc_url)
+        logger.info("Found PMCID: %s | PMC page HTML extracted %d PDF link(s)", pmcid, len(links))
         # Some PMC pages use article-relative PDF URLs. Keep an explicit conservative fallback pattern.
         for match in re.finditer(r'href=["\']([^"\']*/articles/' + re.escape(pmcid) + r'/pdf/[^"\']+\.pdf[^"\']*)["\']', html, re.I):
             url = normalize_absolute_url(match.group(1), pmc_url)
             if url not in links:
                 links.append(url)
+        logger.info("Found PMCID: %s | Total PMC PDF URLs after normalization: %d", pmcid, len(links))
         return links, pmc_url
     except requests.RequestException as exc:
         logger.debug("PMC page fetch failed for %s: %s", pmcid, exc)
@@ -821,9 +909,12 @@ def pubmed_pmc_candidate_urls(
         if url not in urls:
             urls.append(url)
 
-    attempts = [UrlAttempt(url=url, source="pubmed_pmc", kind="pdf") for url in urls if url]
-    if not attempts:
-        return [], meta, "pmc_fulltext_no_pdf"
+    # If both the OA service and page parsing returned zero PDF URLs, classify as
+    # pmc_pdf_not_found (not pmc_fulltext_no_pdf).  The latter is reserved for cases
+    # where the page *did* expose links but none were valid.
+    if not urls:
+        return [], meta, "pmc_pdf_not_found"
+    attempts = [UrlAttempt(url=url, source="pubmed_pmc", kind="pdf") for url in urls]
     return attempts, meta, ""
 
 # ---------------------------------------------------------------------------
@@ -919,6 +1010,8 @@ def build_manifest_row(
     oa_status: str = "",
     license_value: str = "",
     error_message: str = "",
+    secondary_status: str = "",
+    secondary_error_message: str = "",
 ) -> Dict[str, str]:
     return {
         "paper_id": base["paper_id"],
@@ -938,6 +1031,8 @@ def build_manifest_row(
         "oa_status": oa_status,
         "license": license_value,
         "error_message": error_message,
+        "secondary_status": secondary_status,
+        "secondary_error_message": secondary_error_message,
     }
 
 
@@ -1066,10 +1161,13 @@ def process_paper(
     for attempt in pubmed_attempts:
         result, failure = try_url_attempt(session, attempt, paper_id, pdf_path, dry_run)
         if result is not None:
-            status_value = STATUS_PMC_PDF_DOWNLOADED if result["status"] == STATUS_DOWNLOADED else result["status"]
+            # If PubMed/PMC found a valid direct PDF URL and downloaded it successfully,
+            # return status 'downloaded' with source_used='pubmed_pmc'.
+            if result["status"] == STATUS_DOWNLOADED:
+                logger.info("[%s] Downloaded PMC PDF: %s, size = %d bytes", paper_id, pdf_path, pdf_path.stat().st_size)
             return build_manifest_row(
                 row,
-                status=status_value,
+                status=result["status"],
                 source_used="pubmed_pmc" if result["status"] != STATUS_DRY_RUN else "pubmed_pmc",
                 pdf_path=pdf_path,
                 openalex_id=openalex_id,
@@ -1087,27 +1185,41 @@ def process_paper(
         if failure:
             failures.append(failure)
 
+    # Track secondary PubMed/PMC outcomes for manifest.
+    _secondary_status: str = ""
+    _secondary_error: str = ""
+
     if pubmed_status == "pubmed_not_found":
         failures.append((STATUS_PUBMED_NOT_FOUND, pubmed_url, "No PubMed/PMC record found from DOI/title"))
+        # Only set secondary if we haven't already captured a more specific outcome.
+        if not _secondary_status:
+            _secondary_status = STATUS_PUBMED_NOT_FOUND
+            _secondary_error = "No PubMed/PMC record found from DOI/title"
     elif pubmed_status == "pubmed_metadata_only":
         failures.append((STATUS_PUBMED_METADATA_ONLY, pubmed_url, "PubMed record found but no PMCID/PMC full text"))
+        if not _secondary_status:
+            _secondary_status = STATUS_PUBMED_METADATA_ONLY
+            _secondary_error = "PubMed record found but no PMCID/PMC full text"
     elif pubmed_status == "pmc_fulltext_no_pdf":
         failures.append((STATUS_PMC_FULLTEXT_NO_PDF, pmc_url, "PMC full text found but no valid PDF link discovered"))
+        if not _secondary_status:
+            _secondary_status = STATUS_PMC_FULLTEXT_NO_PDF
+            _secondary_error = "PMC full text found but no valid PDF link discovered"
 
     # Choose the most informative final failure.
+    # Specific PubMed/PMC statuses are preferred over generic landing_page statuses.
     priority = [
         STATUS_PUBLISHER_403,
-        STATUS_PMC_LANDING_PAGE,
-        STATUS_EUROPEPMC_BAD_PDF_URL,
-        STATUS_REPOSITORY_LANDING_PAGE,
-        STATUS_LANDING_PAGE_UNRESOLVED,
         STATUS_INVALID_PDF,
-        STATUS_ERROR,
+        STATUS_PMC_PDF_NOT_FOUND,
         STATUS_PMC_FULLTEXT_NO_PDF,
         STATUS_PUBMED_METADATA_ONLY,
+        STATUS_REPOSITORY_LANDING_PAGE,
+        STATUS_LANDING_PAGE_UNRESOLVED,
+        STATUS_ERROR,
         STATUS_PMC_NOT_AVAILABLE,
-        STATUS_PMC_PDF_NOT_FOUND,
         STATUS_PUBMED_NOT_FOUND,
+        STATUS_EUROPEPMC_BAD_PDF_URL,
         STATUS_NO_OA_LOCATION,
     ]
     final_status, final_url, final_error = STATUS_NO_OA_LOCATION, "", "No OA PDF location found from OpenAlex or Semantic Scholar"
@@ -1116,6 +1228,16 @@ def process_paper(
         if match:
             final_status, final_url, final_error = match
             break
+
+    # If the primary failure is publisher_403 but PubMed/PMC also ran and found a PMCID,
+    # record the secondary PMC outcome so the manifest captures both.
+    if final_status == STATUS_PUBLISHER_403 and _secondary_status:
+        pass  # Keep publisher_403 as primary; secondary is already set above
+    elif not _secondary_status and failures:
+        # If no explicit secondary was captured, use the last failure as secondary.
+        last_fail = failures[-1]
+        _secondary_status = last_fail[0]
+        _secondary_error = last_fail[2]
 
     return build_manifest_row(
         row,
@@ -1133,6 +1255,8 @@ def process_paper(
         oa_status=oa_status,
         license_value=license_value,
         error_message=final_error,
+        secondary_status=_secondary_status,
+        secondary_error_message=_secondary_error,
     )
 
 
@@ -1223,20 +1347,63 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             dry_run=args.dry_run,
         )
         manifest_by_id[paper_id] = result
-        stats[result["status"]] = stats.get(result["status"], 0) + 1
+
+        # Track source-specific download counters
+        status = result["status"]
+        source = result.get("source_used", "")
+        if source == "openalex" and status in SUCCESS_STATUSES:
+            stats["downloaded_openalex"] = stats.get("downloaded_openalex", 0) + 1
+        elif source == "semantic_scholar" and status in SUCCESS_STATUSES:
+            stats["downloaded_semantic_scholar"] = stats.get("downloaded_semantic_scholar", 0) + 1
+        elif source == "pubmed_pmc" and status in SUCCESS_STATUSES:
+            stats["downloaded_pubmed_pmc"] = stats.get("downloaded_pubmed_pmc", 0) + 1
+
+        # Track failure / special statuses
+        if status not in SUCCESS_STATUSES:
+            stats[status] = stats.get(status, 0) + 1
+
         if args.sleep and idx < len(papers):
             time.sleep(args.sleep)
 
     write_manifest(manifest_by_id, paper_order, args.manifest)
     write_manual_queue(manifest_by_id, manual_queue)
 
+    # Define the canonical order for summary output.
+    _SUMMARY_KEYS = [
+        "downloaded_openalex",
+        "downloaded_semantic_scholar",
+        "downloaded_pubmed_pmc",
+        "publisher_403",
+        "pubmed_metadata_only",
+        "pmc_fulltext_no_pdf",
+        "pmc_pdf_not_found",
+        "repository_landing_page",
+        "landing_page_unresolved",
+        "invalid_pdf",
+        "no_oa_location",
+        "error",
+        "already_exists",
+        "dry_run",
+    ]
+
     print("\n" + "=" * 60)
     print("PDF Download Summary")
     print("=" * 60)
+    # Print canonical keys first (in order), then any extra keys alphabetically.
+    printed_keys: Set[str] = set()
+    for key in _SUMMARY_KEYS:
+        if stats.get(key, 0) > 0:
+            print(f"  {key}: {stats[key]}")
+            printed_keys.add(key)
+    # Print any remaining keys not in the canonical list.
     for key in sorted(stats):
-        print(f"  {key}: {stats[key]}")
+        if key not in printed_keys:
+            print(f"  {key}: {stats[key]}")
     print("-" * 60)
-    print(f"  processed_this_run: {sum(stats.values())}")
+    total_downloaded = sum(
+        stats.get(k, 0) for k in ["downloaded_openalex", "downloaded_semantic_scholar", "downloaded_pubmed_pmc"]
+    )
+    print(f"  total_downloaded: {total_downloaded}")
     print(f"  manifest_rows_total: {len(manifest_by_id)}")
     print(f"  manual_queue: {manual_queue}")
     print("=" * 60)
