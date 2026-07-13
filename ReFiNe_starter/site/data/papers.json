@@ -113,7 +113,8 @@
         "Genotyping for FKBP5 single nucleotide polymorphisms (SNPs).",
         "Assessment using Beck Depression Inventory and Spielberger Anxiety Inventory (STAI).",
         "Cross-sectional design with no longitudinal follow-up or trauma/stress evaluation."
-      ]
+      ],
+      "plain_text_summary": "This VBM study used 3D T1-weighted MRI from 112 healthy Japanese volunteers, alongside FKBP5 SNP genotyping from blood samples and mood/anxiety measures including BDI, STAI and POMS. The study reported associations between FKBP5 variants and grey matter volume in the right amygdala and orbitofrontal cortex, with additional links between amygdala volume and mood/anxiety scores."
     },
     "extraction": {
       "status": "completed",
