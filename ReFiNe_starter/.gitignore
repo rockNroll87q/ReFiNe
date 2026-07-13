@@ -3,6 +3,7 @@
 
 # Downloaded PDFs (large binary files)
 data/pdfs/*.pdf
+data/pdfs_orphan/*.pdf
 data/text/*.md
 data/text/*.md
 data/logs/*.txt
