@@ -485,38 +485,58 @@ function paperMatchesFilters(paper, activeFilters) {
 }
 
 // ============================================================
-// Render active filter chips (inline in the bar) + reset button visibility
+// Render active filter chips (inline in the bar) — always visible
 // ============================================================
 function renderActiveFilterChips(activeFilters) {
   const bar = document.getElementById("active-filters-bar");
   const chipsContainer = document.getElementById("active-filters-chips");
   const resetBtn = document.getElementById("reset-filters-btn");
-  const legacyClearBtn = document.getElementById("clear-all-filters");
 
-  // Count active filters + search to decide visibility
+  // Always show the bar (even when nothing is active)
+  bar.style.display = "flex";
+
+  // Reset filters button always visible
+  resetBtn.style.display = "inline-block";
+
+  // Get search state for display
   const searchInput = document.getElementById("search-input");
   const hasSearch = searchInput && searchInput.value.trim() !== "";
-  const isActive = activeFilters.length > 0 || hasSearch;
-
-  if (!isActive) {
-    bar.style.display = "none";
-    legacyClearBtn.style.display = "none";
-    return;
-  }
-
-  bar.style.display = "flex";
-  // Reset filters button visible when either filters OR search are active
-  resetBtn.style.display = isActive ? "inline-block" : "none";
-  legacyClearBtn.style.display = hasSearch && activeFilters.length === 0 ? "inline-block" : "none";
 
   let html = "";
-  for (const f of activeFilters) {
-    const label = getTagLabel(f.tagValue);
-    html += `<span class="filter-chip" data-group="${f.groupKey}" data-tag="${f.tagValue}">`;
-    html += `${escapeHtml(label)} <button class="chip-remove" onclick="removeFilterChip('${f.groupKey}','${f.tagValue}')">&times;</button>`;
-    html += `</span>`;
+  if (activeFilters.length === 0 && !hasSearch) {
+    // No filters or search active — show "none" placeholder
+    html = '<span class="no-filters-label">none</span>';
+  } else {
+    // Show active filter chips
+    for (const f of activeFilters) {
+      const label = getTagLabel(f.tagValue);
+      html += `<span class="filter-chip" data-group="${f.groupKey}" data-tag="${f.tagValue}">`;
+      html += `${escapeHtml(label)} <button class="chip-remove" onclick="removeFilterChip('${f.groupKey}','${f.tagValue}')">&times;</button>`;
+      html += `</span>`;
+    }
+    // Show active search term as a chip
+    if (hasSearch) {
+      const searchTerm = searchInput.value.trim();
+      html += `<span class="filter-chip" data-type="search">`;
+      html += `🔍 ${escapeHtml(searchTerm)} <button class="chip-remove" onclick="clearSearchFromChip()">&times;</button>`;
+      html += `</span>`;
+    }
   }
   chipsContainer.innerHTML = html;
+}
+
+// ============================================================
+// Clear search from the active filter chip (called from inline onclick)
+// ============================================================
+function clearSearchFromChip() {
+  const searchInput = document.getElementById("search-input");
+  const clearBtn = document.getElementById("clear-search");
+  if (searchInput) {
+    searchInput.value = "";
+    render();
+    if (clearBtn) clearBtn.style.display = "none";
+    searchInput.focus();
+  }
 }
 
 // ============================================================
@@ -674,18 +694,6 @@ async function init() {
   document.getElementById("reset-filters-btn").addEventListener("click", () => {
     closeAllDropdowns();
     document.querySelectorAll("#filter-buttons-row ~ * input[type=checkbox], .filter-dropdown-panel input[type=checkbox]").forEach(cb => cb.checked = false);
-    // Also clear legacy checkboxes if any exist
-    document.querySelectorAll(".filter-group input[type=checkbox]").forEach(cb => cb.checked = false);
-    const searchInput = document.getElementById("search-input");
-    if (searchInput) searchInput.value = "";
-    render();
-  });
-
-  // Fallback: legacy clear-all-filters button
-  document.getElementById("clear-all-filters").addEventListener("click", () => {
-    closeAllDropdowns();
-    document.querySelectorAll("#filter-buttons-row ~ * input[type=checkbox], .filter-dropdown-panel input[type=checkbox]").forEach(cb => cb.checked = false);
-    document.querySelectorAll(".filter-group input[type=checkbox]").forEach(cb => cb.checked = false);
     const searchInput = document.getElementById("search-input");
     if (searchInput) searchInput.value = "";
     render();

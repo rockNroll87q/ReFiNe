@@ -23,27 +23,20 @@
     <div class="filter-buttons-row" id="filter-buttons-row"></div>
     <!-- Dropdown panels appear below the button when opened -->
     <div id="filter-dropdowns-container"></div>
-  </section>
-
-  <!-- Active filter chips (inline, near controls) -->
-  <div id="active-filters-bar" class="active-filters-bar" style="display:none;">
-    <span class="active-filters-label">Active filters:</span>
-    <div id="active-filters-chips"></div>
-    <button id="reset-filters-btn" class="reset-filters-btn">&times;&nbsp;Reset filters</button>
-  </div>
-
-  <!-- Clear all / Reset filters button (legacy position, hidden by default) -->
-  <button id="clear-all-filters" class="clear-all-btn" style="display:none;">Reset filters</button>
-
-  <section class="demo-actions">
-    <h2>Demo Volunteer Selections</h2>
-    <p class="demo-note">This is a static demo. All selections are stored only in your browser (localStorage) and are not submitted anywhere.</p>
-    <div class="demo-buttons">
-      <button id="export-json">Export selections as JSON</button>
-      <button id="clear-demo">Clear demo selections</button>
+    <!-- Active filter chips (inline, always visible) -->
+    <div id="active-filters-bar" class="active-filters-bar">
+      <span class="active-filters-label">Active filters:</span>
+      <div id="active-filters-chips"></div>
+      <button id="reset-filters-btn" class="reset-filters-btn">&times;&nbsp;Reset filters</button>
     </div>
-    <div id="export-output" class="export-output" style="display:none;"></div>
   </section>
+
+  <!-- Hidden demo utility buttons (kept for internal use, not visible in public UI) -->
+  <div id="demo-utility-panel" style="display:none;">
+    <button id="export-json">Export selections as JSON</button>
+    <button id="clear-demo">Clear demo selections</button>
+    <div id="export-output" class="export-output" style="display:none;"></div>
+  </div>
 
   <main>
     <div id="count"></div>

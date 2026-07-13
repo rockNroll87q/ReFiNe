@@ -39,7 +39,20 @@ Return a JSON object with these keys:
   - `population`: One of: "healthy", "clinical", "mixed_clinical_and_healthy_controls"
   - `clinical_group`: One level only (no subgroups): "mood_affective_disorders", "anxiety_stress_ocd_related_disorders", "psychotic_disorders", "neurodevelopmental_disorders", "neurological_disorders", "dementia_neurodegenerative_disorders", "other_clinical_group"
   - `age_group`: One of: "children", "adolescents", "young_adults", "adults", "older_adults", "mixed_lifespan"
+    Assign age-group tags whenever the paper reports participant age ranges, mean ages, school stage, or cohort age.
+    Use "children" for pre-adolescent samples (typically under 13).
+    Use "adolescents" for teenage samples (approximately 13–19 years).
+    Use "young_adults" for university-age or early-adult samples (approximately 18–30 years).
+    Use "adults" for general adult samples.
+    Use "older_adults" for late-life or ageing samples (typically 60+ years).
+    Use "mixed_lifespan" when the sample clearly spans multiple life stages.
+    If uncertain, prefer fewer tags, but do not leave age_group empty when the age range is explicitly stated.
   - `study_design`: One or more from: "cross_sectional", "longitudinal", "intervention_treatment", "case_control", "cohort_population_based"
+    Use "cross_sectional" when the neuroimaging analysis uses one imaging timepoint per participant, even if participants come from a longitudinal cohort.
+    Use "longitudinal" only when the replication would require repeated imaging, longitudinal outcome modelling, follow-up diagnoses, or within-person change over time.
+    Do NOT tag "longitudinal" only because questionnaires or life-event measures were collected at multiple ages, unless the paper explicitly models longitudinal change or requires follow-up for the main finding.
+    Use "case_control" together with "cross_sectional" when the study compares clinical participants and controls at one timepoint.
+    Use "cohort_population_based" when the paper uses a community/population cohort rather than a selected case-control clinical sample.
   - `associated_data`: Zero or more from: "depression_severity", "anxiety_severity", "general_psychopathology", "diagnosis_clinical_status", "illness_duration", "age_of_onset", "episode_history", "comorbidity", "medication_status", "psychotherapy", "treatment_response", "remission_relapse", "childhood_trauma", "stressful_life_events", "social_relationships", "socioeconomic_adversity", "iq", "executive_function", "memory", "behavioural_scales", "genetics", "blood_biomarkers", "cortisol_endocrine_markers", "microbiome", "other_omics", "smoking", "physical_activity", "sleep", "education", "employment", "socioeconomic_status"
 - `extraction_status` (string): "completed" if you extracted features from the paper text.
 - `extraction_notes` (string or null): Brief notes about your extraction.

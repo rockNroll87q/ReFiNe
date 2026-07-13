@@ -12,29 +12,47 @@ body {
 }
 
 /* ---------- Header / nav ---------- */
-.site-header {
+.site-header,
+header {
   background: linear-gradient(135deg, #0b6e4f 0%, #1a9f6f 100%);
   color: white;
   padding: 24px 32px 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
-.site-header h1 { font-size: 1.75rem; margin-bottom: 4px; }
-.site-header p { font-size: 0.95rem; opacity: 0.85; }
+header h1 {
+  font-size: 1.75rem;
+  margin-bottom: 4px;
+  text-align: center;
+}
+header p {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  text-align: center;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-/* ---------- Main container ---------- */
-.main-container {
-  max-width: 1280px;
+/* ---------- Main content container — centered, max-width ~1160px ---------- */
+.main-container,
+main {
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 24px 20px;
+  padding: 24px 28px;
 }
 
-/* ---------- Search bar ---------- */
-.search-bar {
-  width: 100%;
-  position: relative;
-  margin-bottom: 16px;
+/* Ensure main behaves as a block with centered layout */
+main {
+  display: block;
 }
-.search-bar input {
+
+/* ---------- Search bar — centered, full-width of container ---------- */
+#search-container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+.search-input {
   width: 100%;
   padding: 14px 48px 14px 18px;
   font-size: 1rem;
@@ -43,12 +61,12 @@ body {
   background: white;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-.search-bar input:focus {
+.search-input:focus {
   outline: none;
   border-color: #0b6e4f;
   box-shadow: 0 0 0 3px rgba(11, 110, 79, 0.15);
 }
-.search-bar .clear-search {
+.clear-search-btn {
   position: absolute;
   right: 14px;
   top: 50%;
@@ -60,17 +78,26 @@ body {
   cursor: pointer;
   display: none;
 }
-.search-bar .clear-search:hover { color: #2d3748; }
+.clear-search-btn:hover { color: #2d3748; }
 
 /* ============================================================
    COMPACT FILTER BUTTONS (replaces vertical list)
    ============================================================ */
 
+/* ============================================================
+   FILTER BUTTONS ROW — evenly distributed across container width
+   ============================================================ */
 .filter-buttons-row {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 8px;
   margin-bottom: 0;
+}
+
+/* Individual filter button fills its grid cell */
+.compact-filter-btn {
+  width: 100%;
+  justify-content: center;
 }
 
 .compact-filter-btn {
@@ -158,10 +185,10 @@ body {
 }
 
 /* ============================================================
-   ACTIVE FILTER CHIPS BAR (inline, near controls)
-   ============================================================ */
+    ACTIVE FILTERS BAR — always visible, inherits alignment from filters-compact parent
+    ============================================================ */
 .active-filters-bar {
-  display: none;
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
@@ -170,6 +197,14 @@ body {
   background: #f7fafc;
   border-radius: 10px;
   border: 1px solid #e2e8f0;
+  width: 100%;
+}
+
+/* When no filters active, show "none" placeholder */
+.active-filters-bar .no-filters-label {
+  color: #a0aec0;
+  font-style: italic;
+  font-size: 0.9rem;
 }
 
 .active-filters-chips {
@@ -230,27 +265,8 @@ body {
   border-color: #f5b8ab;
 }
 
-/* Legacy clear-all-filters button (fallback) */
-#clear-all-filters {
-  padding: 5px 14px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  background: white;
-  color: #e07a5f;
-  border: 1.5px solid #fde2dc;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: none;
-}
-#clear-all-filters:hover {
-  background: #fef2f0;
-  color: #c94a30;
-  border-color: #f5b8ab;
-}
-
 /* ============================================================
-   RESULT COUNT — compact, close to paper list
+    RESULT COUNT — compact, close to paper list
    ============================================================ */
 .results-count-bar {
   margin-top: 12px;
@@ -274,6 +290,7 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   transition: transform 0.15s, box-shadow 0.15s;
   border: 1px solid #e8ecf1;
+  margin-bottom: 4px;
 }
 .card:hover {
   transform: translateY(-2px);
@@ -363,12 +380,12 @@ body {
 .status-selected { background: #fef3cd; color: #856404; }
 .status-volunteer-pending { background: #d1ecf1; color: #0c5460; }
 
-/* Volunteer button */
+/* Volunteer button — compact, NOT full-width */
 .volunteer-btn {
-  display: block;
-  width: 100%;
+  display: inline-block;
+  width: auto;
   margin-top: 14px;
-  padding: 10px;
+  padding: 10px 22px;
   background: linear-gradient(135deg, #0b6e4f 0%, #1a9f6f 100%);
   color: white;
   border: none;
@@ -464,10 +481,61 @@ body {
   border-radius: 10px;
   border: 1px solid #e2e8f0;
 }
-.export-panel h4, .demo-panel h4 {
-  font-size: 0.9rem;
-  margin-bottom: 10px;
+
+/* ============================================================
+   DEMO SECTION — styled card with proper button styles
+   ============================================================ */
+.demo-actions {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+.demo-actions h2 {
+  font-size: 1.1rem;
   color: #2d3748;
+  margin-bottom: 6px;
+}
+.demo-note {
+  font-size: 0.85rem;
+  color: #718096;
+  margin-bottom: 12px;
+}
+.demo-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Demo buttons — styled, less dominant than volunteer button */
+#export-json,
+#clear-demo,
+.demo-buttons button {
+  padding: 8px 18px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+#export-json {
+  background: linear-gradient(135deg, #0b6e4f 0%, #1a9f6f 100%);
+  color: white;
+  border: none;
+}
+#export-json:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(11, 110, 79, 0.3);
+}
+
+#clear-demo {
+  background: white;
+  color: #e53e3e;
+  border: 1.5px solid #fed7d7;
+}
+#clear-demo:hover {
+  background: #fff5f5;
+  border-color: #fc8181;
 }
 
 .btn-primary {
@@ -484,6 +552,45 @@ body {
 .btn-primary:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(11, 110, 79, 0.3);
+}
+
+/* Modal secondary button */
+.btn-secondary {
+  padding: 8px 18px;
+  background: white;
+  color: #718096;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-secondary:hover {
+  background: #f7fafc;
+  border-color: #a0aec0;
+  color: #4a5568;
+}
+
+/* Modal close button */
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #718096;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 0.12s, color 0.12s;
+}
+.close-btn:hover {
+  background: #f7fafc;
+  color: #2d3748;
 }
 
 .btn-danger {
@@ -531,7 +638,8 @@ body {
 }
 .modal-overlay.show { display: flex; }
 
-.modal-content {
+.modal-content,
+.modal {
   background: white;
   border-radius: 14px;
   padding: 28px;
@@ -541,9 +649,35 @@ body {
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0,0,0,0.2);
 }
-.modal-content h3 {
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 6px;
+}
+.modal-header h2 {
+  margin-bottom: 0;
   color: #2d3748;
+}
+.modal-paper-info {
+  font-size: 0.85rem;
+  color: #718096;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #f7fafc;
+  border-radius: 6px;
+}
+.modal-disclaimer {
+  font-size: 0.8rem;
+  color: #a0aec0;
+  margin-bottom: 16px;
+  font-style: italic;
+}
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
 }
 .modal-subtitle {
   font-size: 0.85rem;
@@ -603,6 +737,15 @@ body {
 }
 
 /* ============================================================
+   FILTER COMPACT SECTION — inside centered container
+   ============================================================ */
+.filters-compact {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* ============================================================
    RESPONSIVE — mobile-first adjustments
    ============================================================ */
 @media (max-width: 768px) {
@@ -637,8 +780,7 @@ body {
     padding: 3px 8px;
   }
 
-  #reset-filters-btn,
-  #clear-all-filters {
+  #reset-filters-btn {
     font-size: 0.78rem;
     padding: 4px 10px;
   }
