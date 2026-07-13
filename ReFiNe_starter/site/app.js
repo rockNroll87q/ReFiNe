@@ -306,6 +306,20 @@ function getTagLabel(tagValue) {
   return tagValue.replace(/_/g, " ");
 }
 
+// Track which dropdown is currently open (only one at a time)
+let _openDropdownGroup = null;
+
+// Close all dropdown panels
+function closeAllDropdowns() {
+  document.querySelectorAll(".compact-filter-btn").forEach(btn => {
+    btn.classList.remove("active", "open");
+  });
+  document.querySelectorAll(".filter-dropdown-panel").forEach(panel => {
+    panel.classList.remove("show");
+  });
+  _openDropdownGroup = null;
+}
+
 // ============================================================
 // Render paper card with Summary + Replication requirements tags
 // ============================================================
@@ -471,21 +485,29 @@ function paperMatchesFilters(paper, activeFilters) {
 }
 
 // ============================================================
-// Render active filter chips above results
+// Render active filter chips (inline in the bar) + reset button visibility
 // ============================================================
 function renderActiveFilterChips(activeFilters) {
   const bar = document.getElementById("active-filters-bar");
   const chipsContainer = document.getElementById("active-filters-chips");
-  const clearBtn = document.getElementById("clear-all-filters");
+  const resetBtn = document.getElementById("reset-filters-btn");
+  const legacyClearBtn = document.getElementById("clear-all-filters");
 
-  if (activeFilters.length === 0) {
+  // Count active filters + search to decide visibility
+  const searchInput = document.getElementById("search-input");
+  const hasSearch = searchInput && searchInput.value.trim() !== "";
+  const isActive = activeFilters.length > 0 || hasSearch;
+
+  if (!isActive) {
     bar.style.display = "none";
-    clearBtn.style.display = "none";
+    legacyClearBtn.style.display = "none";
     return;
   }
 
   bar.style.display = "flex";
-  clearBtn.style.display = "inline-block";
+  // Reset filters button visible when either filters OR search are active
+  resetBtn.style.display = isActive ? "inline-block" : "none";
+  legacyClearBtn.style.display = hasSearch && activeFilters.length === 0 ? "inline-block" : "none";
 
   let html = "";
   for (const f of activeFilters) {
@@ -544,32 +566,94 @@ function render() {
 }
 
 // ============================================================
-// Build grouped collapsible filter sections from FILTER_GROUP_CONFIG
+// Build compact filter buttons + dropdown panels from FILTER_GROUP_CONFIG
 // ============================================================
 function buildFilterGroups() {
-  const container = document.getElementById("filter-groups");
-  let html = "";
+  const btnRow = document.getElementById("filter-buttons-row");
+  const dropContainer = document.getElementById("filter-dropdowns-container");
+  let btnHtml = "";
+  let dropHtml = "";
 
   for (const group of FILTER_GROUP_CONFIG) {
-    html += `<div class="filter-group">`;
-    html += `<details id="details-${group.key}"><summary>${escapeHtml(group.label)}</summary>`;
-    html += `<div class="filter-group-tags">`;
+    // Button for this filter group
+    btnHtml += `<button class="compact-filter-btn" data-group="${group.key}" title="Filter by ${escapeHtml(group.label)}">`;
+    btnHtml += `${escapeHtml(group.label)} <span class="arrow">▼</span>`;
+    btnHtml += `</button>`;
+
+    // Dropdown panel for this filter group
+    dropHtml += `<div class="filter-dropdown-panel" data-group="${group.key}"><div class="filter-chips-wrap">`;
 
     for (const tag of group.tags) {
       const checkboxId = `filter-${group.key}-${tag.value}`;
-      html += `<label class="filter-chip-input" for="${checkboxId}">`;
-      html += `<input type="checkbox" id="${checkboxId}" data-group="${group.key}" data-tag="${tag.value}">`;
-      html += `<span class="chip-label">${escapeHtml(tag.label)}</span>`;
-      html += `</label>`;
+      dropHtml += `<label class="filter-chip-input" for="${checkboxId}">`;
+      dropHtml += `<input type="checkbox" id="${checkboxId}" data-group="${group.key}" data-tag="${tag.value}">`;
+      dropHtml += `<span class="chip-label">${escapeHtml(tag.label)}</span>`;
+      dropHtml += `</label>`;
     }
 
-    html += `</div></details></div>`;
+    dropHtml += `</div></div>`;
   }
 
-  container.innerHTML = html;
+  btnRow.innerHTML = btnHtml;
+  dropContainer.innerHTML = dropHtml;
 
-  // Listen for checkbox changes
-  container.addEventListener("change", () => render());
+  // Click handler for filter group buttons (toggle dropdown)
+  btnRow.addEventListener("click", (e) => {
+    const btn = e.target.closest(".compact-filter-btn");
+    if (!btn) return;
+
+    const groupKey = btn.dataset.group;
+    const panel = dropContainer.querySelector(`.filter-dropdown-panel[data-group="${groupKey}"]`);
+
+    // If clicking the already-open button, close it
+    if (_openDropdownGroup === groupKey) {
+      closeAllDropdowns();
+      return;
+    }
+
+    // Close any open dropdown first
+    closeAllDropdowns();
+
+    // Open this one - position panel below the button
+    btn.classList.add("active", "open");
+    panel.classList.add("show");
+
+    // Position the panel directly below its button (viewport-relative for position:fixed)
+    const btnRect = btn.getBoundingClientRect();
+    panel.style.left = btnRect.left + "px";
+    panel.style.top = btnRect.bottom + 4 + "px";
+
+    _openDropdownGroup = groupKey;
+  });
+
+  // Listen for checkbox changes inside dropdown panels
+  dropContainer.addEventListener("change", (e) => {
+    if (e.target.type === "checkbox") {
+      render();
+    }
+  });
+
+  // Close dropdowns when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!_openDropdownGroup) return;
+    const btnRowEl = document.getElementById("filter-buttons-row");
+    const dropContainerEl = document.getElementById("filter-dropdowns-container");
+    if (!btnRowEl.contains(e.target) && !dropContainerEl.contains(e.target)) {
+      closeAllDropdowns();
+    }
+  });
+
+  // Reposition dropdown on scroll to keep it aligned with its button
+  window.addEventListener("scroll", () => {
+    if (_openDropdownGroup) {
+      const btn = document.querySelector(`.compact-filter-btn[data-group="${_openDropdownGroup}"]`);
+      const panel = dropContainer.querySelector(`.filter-dropdown-panel[data-group="${_openDropdownGroup}"]`);
+      if (btn && panel) {
+        const btnRect = btn.getBoundingClientRect();
+        panel.style.top = btnRect.bottom + 4 + "px";
+      }
+    }
+  });
 }
 
 async function init() {
@@ -586,9 +670,22 @@ async function init() {
   buildFilterGroups();
   render();
 
-  // Setup clear all filters button
+  // Setup reset filters button (primary in active-filters-bar)
+  document.getElementById("reset-filters-btn").addEventListener("click", () => {
+    closeAllDropdowns();
+    document.querySelectorAll("#filter-buttons-row ~ * input[type=checkbox], .filter-dropdown-panel input[type=checkbox]").forEach(cb => cb.checked = false);
+    // Also clear legacy checkboxes if any exist
+    document.querySelectorAll(".filter-group input[type=checkbox]").forEach(cb => cb.checked = false);
+    const searchInput = document.getElementById("search-input");
+    if (searchInput) searchInput.value = "";
+    render();
+  });
+
+  // Fallback: legacy clear-all-filters button
   document.getElementById("clear-all-filters").addEventListener("click", () => {
-    document.querySelectorAll("#filter-groups input[type=checkbox]").forEach(cb => cb.checked = false);
+    closeAllDropdowns();
+    document.querySelectorAll("#filter-buttons-row ~ * input[type=checkbox], .filter-dropdown-panel input[type=checkbox]").forEach(cb => cb.checked = false);
+    document.querySelectorAll(".filter-group input[type=checkbox]").forEach(cb => cb.checked = false);
     const searchInput = document.getElementById("search-input");
     if (searchInput) searchInput.value = "";
     render();
