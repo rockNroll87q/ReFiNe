@@ -133,19 +133,19 @@
     "doi_url": "https://doi.org/10.1016/j.nicl.2014.01.001",
     "citation": "Walsh, N. D., Dalgleish, T., Lombardo, M. v., Dunn, V. J., van Harmelen, A. L., Ban, M., & Goodyer, I. M. (2014). General and specific effects of early-life psychosocial adversities on adolescent grey matter volume. NeuroImage: Clinical, 4, 308–318. https://doi.org/10.1016/j.nicl.2014.01.001",
     "dataset_features_needed": {
-      "t1w_mri": "yes",
+      "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "no",
-      "healthy_controls": "yes",
+      "healthy_controls": "unclear",
       "genetic_data": "yes",
-      "depression_scale": "yes",
+      "depression_scale": "unclear",
       "anxiety_scale": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_data": "unclear",
+      "clinical_outcomes": "yes",
+      "longitudinal_data": "yes",
       "medication_status": "yes",
       "trauma_or_life_stress": "yes",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "no"
+      "cognitive_data": "yes",
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -155,22 +155,22 @@
       "short_title": "General and specific effects of early-life psychosocial adversities on adolescent grey mat",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted MRI acquired",
-        "Voxel-based morphometry (VBM) performed",
-        "Healthy adolescent cohort with childhood adversity exposure groups",
-        "Genetic data (5-HTTLPR genotype) collected from saliva",
-        "Depression assessed via Mood and Feelings Questionnaire",
-        "Medication status recorded for exclusion criteria",
-        "Trauma/life stress assessed via CAMEEI and RNLE measures"
+        "Structural brain imaging analyzed via voxel-based morphometry",
+        "5-HTTLPR genetic data for all participants",
+        "Childhood adversity assessments using the CAMEEI interview",
+        "Longitudinal psychosocial scores (negative life events at ages 14 and 17)",
+        "Current depressive symptom measurements",
+        "IQ scores from the Weschler Abbreviated Scale of Intelligence",
+        "Retrospective psychiatric history records"
       ],
-      "short_description": "Cross-sectional neuroimaging study of currently healthy adolescents examining the effects of childhood adversities and recent negative life events on grey matter volume using VBM, with 5-HTTLPR genotyping as a covariate."
+      "short_description": "A structural MRI study examining how childhood adversity and serotonin transporter genotype relate to grey matter volume in currently healthy adolescents."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Extracted features directly from the provided text. Bias toward 'unclear' applied where information was not explicitly reported or only implied (e.g., anxiety scales, clinical outcomes, longitudinal design specifics). MDD patients were excluded per criteria; healthy controls correspond to the non-exposed group."
+      "notes": null
     },
     "extraction_status": "completed",
-    "extraction_notes": "Extracted features directly from the provided text. Bias toward 'unclear' applied where information was not explicitly reported or only implied (e.g., anxiety scales, clinical outcomes, longitudinal design specifics). MDD patients were excluded per criteria; healthy controls correspond to the non-exposed group."
+    "extraction_notes": null
   },
   {
     "paper_id": "REFINE-0005",
@@ -288,10 +288,11 @@
       "dataset_features_summary": []
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "missing_pdf",
+      "notes": "PDF not found at /workspace/ReFiNe_starter/data/pdfs/REFINE-0007.pdf"
+    },
+    "extraction_status": "missing_pdf",
+    "extraction_notes": "PDF not found at /workspace/ReFiNe_starter/data/pdfs/REFINE-0007.pdf"
   },
   {
     "paper_id": "REFINE-0008",

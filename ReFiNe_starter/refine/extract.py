@@ -10,6 +10,7 @@ This module orchestrates:
 import json
 import logging
 import os
+import re as _re
 from pathlib import Path
 
 from rich.console import Console as RichConsole
@@ -120,7 +121,6 @@ def _validate_and_parse(raw: str, paper_id: str) -> ExtractedFeatures:
         pass
 
     # Try to find JSON block in the response
-    import re as _re
     json_match = _re.search(r'\{[\s\S]*\}', cleaned)
     if json_match:
         try:
@@ -152,60 +152,266 @@ def _repair_and_parse(raw: str, paper_id: str, error: str) -> ExtractedFeatures:
 # Context window truncation helper
 # ---------------------------------------------------------------------------
 
-def _truncate_text_for_context(text: str, max_chars: int) -> str:
-    """Truncate paper text to fit within a context window limit.
-    
-    Preserves the abstract (beginning) and key sections from the end 
-    of the paper (results/conclusion).
+# Keywords that indicate important sections for scientific paper extraction
+_IMPORTANT_SECTION_KEYWORDS = [
+    # Subjects / participants
+    "subjects", "participants", "sample", "cohort", "population",
+    # Methods / materials
+    "methods", "materials", "procedure", "protocol", "design",
+    # MRI / imaging
+    "mri", "magnetic resonance", "t1", "t2", "voxel-based morphometry",
+    "vb m", "spm", "dar tel", "brain imaging", "image acquisition",
+    # Clinical measures
+    "measures", "measurements", "questionnaires", "scales", "assessment",
+    "inventory", "rating", "score", "scores",
+    # Specific constructs
+    "depression", "anxiety", "trauma", "adversity", "stress",
+    "genetics", "genetic", "genotype", "snp", "blood", "biomarker",
+    "medication", "drug", "treatment",
+    # Study design
+    "longitudinal", "follow-up", "follow up", "prospective", "cross-sectional",
+    # Results and conclusions
+    "results", "findings", "conclusion", "discussion", "summary",
+]
+
+# Priority order for sections (higher = included first if budget is tight)
+_SECTION_PRIORITY = {
+    "abstract": 100,
+    "introduction": 50,
+    "subjects": 90,
+    "participants": 90,
+    "sample": 85,
+    "methods": 95,
+    "materials": 90,
+    "procedure": 80,
+    "protocol": 80,
+    "image acquisition": 90,
+    "mri acquisition": 95,
+    "data acquisition": 85,
+    "voxel-based morphometry": 90,
+    "vb m analysis": 90,
+    "spm": 70,
+    "dar tel": 85,
+    "preprocessing": 85,
+    "measures": 90,
+    "measurements": 85,
+    "questionnaires": 90,
+    "scales": 85,
+    "assessment": 80,
+    "statistical analysis": 85,
+    "depression": 75,
+    "anxiety": 70,
+    "trauma": 65,
+    "adversity": 60,
+    "stress": 65,
+    "genetics": 75,
+    "blood": 70,
+    "biomarker": 70,
+    "medication": 80,
+    "longitudinal": 80,
+    "follow-up": 80,
+    "results": 95,
+    "findings": 90,
+    "conclusion": 85,
+    "discussion": 75,
+}
+
+
+def _parse_sections(text: str) -> list[tuple[str, str]]:
+    """Parse paper text into (heading, content) sections.
+
+    Handles headings like:
+      # Heading
+      ## Heading
+      ### Heading
+      Heading
+      1. Heading
+      1.1 Heading
     """
-    if len(text) <= max_chars:
-        return text
-    
-    marker = "\n\n[... TEXT TRUNCATED DUE TO CONTEXT WINDOW LIMIT ...]\n\n"
-    available_chars = max_chars - len(marker)
-    
-    sections = text.split('\n\n')
-    split_point = int(len(sections) * 0.25)
-    
-    min_from_start = max(3, int(len(sections) * 0.1))
-    min_from_end = max(5, int(len(sections) * 0.2))
-    
-    if split_point < min_from_start:
-        split_point = min_from_start
-    if len(sections) - split_point < min_from_end:
-        split_point = len(sections) - min_from_end
-    
-    start_sections = sections[:split_point]
-    end_sections = sections[split_point:]
-    
+    sections = []
+    lines = text.split('\n')
+    current_heading = None
+    current_content_lines = []
+
+    for line in lines:
+        # Check if this is a heading line
+        stripped = line.strip()
+        is_heading = False
+
+        # Markdown headings (#, ##, ###)
+        if stripped.startswith('#'):
+            is_heading = True
+        # Numbered headings (e.g., "1. Methods", "2.1 Participants")
+        elif _re.match(r'^\d+[\.\)]\s+[A-Z][a-z]+', stripped):
+            is_heading = True
+        # All-caps heading (short line, all uppercase)
+        elif stripped == stripped.upper() and len(stripped) < 80 and len(stripped.split()) <= 10:
+            is_heading = True
+
+        if is_heading and current_heading is not None:
+            # Save previous section
+            sections.append((current_heading, '\n'.join(current_content_lines)))
+            current_heading = stripped.lstrip('#').strip()
+            current_heading = _re.sub(r'^\d+[\.\)]\s*', '', current_heading).strip()
+            current_content_lines = []
+        elif is_heading and current_heading is None:
+            # First heading
+            current_heading = stripped.lstrip('#').strip()
+            current_heading = _re.sub(r'^\d+[\.\)]\s*', '', current_heading).strip()
+            current_content_lines = []
+        else:
+            current_content_lines.append(line)
+
+    # Don't forget the last section
+    if current_heading is not None:
+        sections.append((current_heading, '\n'.join(current_content_lines)))
+
+    return sections
+
+
+def _section_matches_heading(heading: str, keywords: list[str]) -> bool:
+    """Check if a heading matches any of the important keywords."""
+    heading_lower = heading.lower()
+    for kw in keywords:
+        if kw.lower() in heading_lower:
+            return True
+    return False
+
+
+def _section_matches_content(content: str, keywords: list[str], max_chars: int = 500) -> bool:
+    """Check if the beginning of a section's content matches any keyword."""
+    check_text = content[:max_chars].lower()
+    for kw in keywords:
+        if kw.lower() in check_text:
+            return True
+    return False
+
+
+def _get_section_priority(heading: str, keywords: list[str]) -> int:
+    """Get the priority score for a section based on its heading."""
+    heading_lower = heading.lower()
+    max_priority = 0
+
+    # Direct match with known sections
+    for sec_name, priority in _SECTION_PRIORITY.items():
+        if sec_name in heading_lower:
+            max_priority = max(max_priority, priority)
+
+    return max_priority
+
+
+def _build_text_pack(
+    text: str,
+    paper_record: dict | None,
+    max_chars: int,
+) -> tuple[str, bool]:
+    """Build a section-aware text pack for the LLM.
+
+    Returns (packed_text, was_packed) where was_packed indicates if truncation
+    was needed.
+    """
+    sections = _parse_sections(text)
+
+    # Separate abstract and other sections
+    abstract_content = ""
+    other_sections: list[tuple[str, str]] = []
+
+    for heading, content in sections:
+        heading_lower = heading.lower().strip()
+        if "abstract" in heading_lower:
+            abstract_content = content.strip()
+        else:
+            other_sections.append((heading, content))
+
+    # Build priority list of important sections
+    important_sections: list[tuple[str, str, int]] = []
+    for heading, content in other_sections:
+        priority = _get_section_priority(heading, _IMPORTANT_SECTION_KEYWORDS)
+        if priority > 0 or _section_matches_content(content, _IMPORTANT_SECTION_KEYWORDS):
+            # Boost priority if keyword found in content
+            if not _section_matches_heading(heading, _IMPORTANT_SECTION_KEYWORDS):
+                if _section_matches_content(content, _IMPORTANT_SECTION_KEYWORDS):
+                    priority = max(priority, 70)
+            important_sections.append((heading, content, priority))
+
+    # Sort by priority (highest first), then by length (shorter first for same priority)
+    important_sections.sort(key=lambda x: (-x[2], len(x[1])))
+
+    # Also include all other sections with low priority
+    low_priority = [(h, c, 5) for h, c in other_sections
+                    if not _section_matches_heading(h, _IMPORTANT_SECTION_KEYWORDS)
+                    and not _section_matches_content(c, _IMPORTANT_SECTION_KEYWORDS)]
+
+    # Build the text pack
     result_parts = []
     current_len = 0
-    
-    for section in start_sections:
-        section_text = section + '\n\n'
-        if current_len + len(section_text) <= available_chars:
-            result_parts.append(section)
-            current_len += len(section_text)
-        else:
-            break
-    
-    for section in reversed(end_sections):
-        section_text = '\n\n' + section
-        if current_len + len(section_text) <= available_chars:
-            result_parts.append(section)
-            current_len += len(section_text)
-        else:
-            break
-    
-    result = '\n\n'.join(result_parts)
-    
-    if len(result) > max_chars:
-        result = result[:max_chars]
-        last_space = result.rfind(' ')
-        if last_space > max_chars * 0.5:
-            result = result[:last_space]
-    
-    return result + marker
+
+    # Add metadata (title, citation)
+    meta_text = ""
+    if paper_record:
+        title = paper_record.get("title", "")
+        if title:
+            meta_text += f"# Title: {title}\n\n"
+        authors = paper_record.get("authors", "")
+        if authors:
+            meta_text += f"# Authors: {authors}\n\n"
+        journal = paper_record.get("journal", "")
+        year = paper_record.get("year", "")
+        if journal or year:
+            pub_info = []
+            if journal:
+                pub_info.append(journal)
+            if year:
+                pub_info.append(year)
+            meta_text += f"# Publication: {'; '.join(pub_info)}\n\n"
+
+    if meta_text:
+        result_parts.append(meta_text.strip())
+        current_len += len(meta_text)
+
+    # Add abstract (always included first)
+    if abstract_content:
+        abstract_section = f"# Abstract\n\n{abstract_content}"
+        abstract_len = len(abstract_section) + 2  # +2 for \n\n separator
+        if current_len + abstract_len <= max_chars:
+            result_parts.append(abstract_section)
+            current_len += abstract_len
+
+    # Add high-priority sections first (priority >= 80)
+    high_priority = [(h, c, p) for h, c, p in important_sections if p >= 80]
+    medium_priority = [(h, c, p) for h, c, p in important_sections if 50 <= p < 80]
+    low_priority_final = [(h, c, p) for h, c, p in important_sections if p < 50] + low_priority
+
+    for heading, content, _priority in high_priority:
+        section_text = f"\n\n# {heading}\n\n{content}"
+        section_len = len(section_text)
+        if current_len + section_len <= max_chars:
+            result_parts.append(section_text)
+            current_len += section_len
+
+    # Add medium-priority sections if space allows
+    for heading, content, _priority in medium_priority:
+        section_text = f"\n\n# {heading}\n\n{content}"
+        section_len = len(section_text)
+        if current_len + section_len <= max_chars:
+            result_parts.append(section_text)
+            current_len += section_len
+
+    # Add low-priority sections if space allows (up to 50% of remaining budget)
+    remaining_budget = max_chars - current_len
+    low_priority_limit = int(remaining_budget * 0.3)  # Use up to 30% for low priority
+
+    for heading, content, _priority in low_priority_final:
+        section_text = f"\n\n# {heading}\n\n{content}"
+        section_len = len(section_text)
+        if current_len + section_len <= max_chars and section_len <= low_priority_limit:
+            result_parts.append(section_text)
+            current_len += section_len
+
+    packed_text = '\n'.join(result_parts)
+    was_packed = len(packed_text) < len(text)
+
+    return packed_text, was_packed
 
 
 # ---------------------------------------------------------------------------
@@ -272,35 +478,80 @@ def extract_paper(paper_id: str) -> None:
             _save_papers_json(papers)
             return
 
-    # --- 4. LLM extraction with context window truncation ---
+    # --- 4. LLM extraction with section-aware text packing ---
     prompt_template = _load_prompt_template()
     
     # Read context length from environment, default to 32768 (LM Studio's safe default)
     MAX_CONTEXT_TOKENS = int(os.environ.get("REFINE_MAX_CONTEXT_TOKENS", "32768"))
     TOKEN_CHAR_RATIO = 4.0  # Approximate characters per token
     
-    # Estimate prompt overhead (system prompt + template structure)
-    system_prompt_tokens = int(len(SYSTEM_PROMPT) / TOKEN_CHAR_RATIO)
-    template_overhead = int(len(prompt_template.replace("{{PAPER_TEXT}}", "").replace("{{PAPER_ID}}", "")) / TOKEN_CHAR_RATIO)
+    # Measure the full prompt overhead: system_prompt + template with minimal placeholders
+    min_id = "R"  # single char to minimize placeholder size impact
+    min_placeholder_text = ""  # empty text to measure pure overhead
+    measured_full_prompt = SYSTEM_PROMPT + "\n\n" + prompt_template.replace("{{PAPER_ID}}", min_id).replace("{{PAPER_TEXT}}", min_placeholder_text)
     
-    # Reserve extra space for LLM response and safety margin (20%)
-    reserved_tokens = int((system_prompt_tokens + template_overhead) * 1.2)
+    # Total tokens for the full prompt with zero text content (system + template overhead)
+    overhead_tokens = int(len(measured_full_prompt) / TOKEN_CHAR_RATIO)
     
-    max_text_tokens = MAX_CONTEXT_TOKENS - system_prompt_tokens - template_overhead - reserved_tokens
-    max_text_chars = int(max_text_tokens * TOKEN_CHAR_RATIO)
+    # Reserve extra space for LLM response (minimum 2048 chars / ~512 tokens safety margin)
+    reserved_chars = 2048
+    
+    # Calculate max text chars: what's left after subtracting prompt overhead and response reserve
+    available_for_text_tokens = MAX_CONTEXT_TOKENS - overhead_tokens - int(reserved_chars / TOKEN_CHAR_RATIO)
+    
+    if available_for_text_tokens < 0:
+        available_for_text_tokens = 1000  # fallback minimum
+    
+    max_text_chars = int(available_for_text_tokens * TOKEN_CHAR_RATIO)
     
     # Ensure minimum text length for meaningful content
     min_text_chars = 10000  # Keep at least 10K chars (~2.5K tokens)
     max_text_chars = max(max_text_chars, min_text_chars)
     
+    original_text_len = len(text)
+    was_packed = False
+    
+    # Re-derive max_text_tokens for display purposes
+    max_text_tokens = int(max_text_chars / TOKEN_CHAR_RATIO)
+    
     if len(text) > max_text_chars:
-        console.print(f"Text exceeds context limit ({len(text)} chars ≈ {len(text)//TOKEN_CHAR_RATIO} tokens > {max_text_tokens} text tokens). Truncating...")
+        console.print(f"Text exceeds context limit ({len(text)} chars ≈ {len(text)//TOKEN_CHAR_RATIO} tokens > {max_text_tokens} text tokens). Using section-aware text packing...")
         
-        # Keep abstract (beginning) and key sections (end/results)
-        truncated_text = _truncate_text_for_context(text, max_text_chars)
-        prompt = prompt_template.replace("{{PAPER_ID}}", paper_id).replace("{{PAPER_TEXT}}", truncated_text)
+        # Build a section-aware text pack
+        packed_text, was_packed = _build_text_pack(text, record, max_text_chars)
+        
+        # Save the actual packed text to disk for debugging/inspection
+        LOGS_DIR.mkdir(parents=True, exist_ok=True)
+        text_pack_path = LOGS_DIR / f"{paper_id}.llm_text_pack.txt"
+        text_pack_path.write_text(packed_text, encoding="utf-8")
+        console.print(f"  Saved LLM text pack to: {text_pack_path}")
+        
+        prompt = prompt_template.replace("{{PAPER_ID}}", paper_id).replace("{{PAPER_TEXT}}", packed_text)
     else:
+        packed_text = text
+        was_packed = False
+        
+        # Still save the text pack even when no packing needed
+        LOGS_DIR.mkdir(parents=True, exist_ok=True)
+        text_pack_path = LOGS_DIR / f"{paper_id}.llm_text_pack.txt"
+        text_pack_path.write_text(packed_text, encoding="utf-8")
+        
         prompt = prompt_template.replace("{{PAPER_ID}}", paper_id).replace("{{PAPER_TEXT}}", text)
+
+    # Print diagnostics
+    packed_len = len(packed_text)
+    
+    # Estimate total prompt size that will be sent to LLM
+    full_prompt_for_llm = SYSTEM_PROMPT + "\n\n" + prompt_template.replace("{{PAPER_ID}}", paper_id).replace("{{PAPER_TEXT}}", packed_text)
+    estimated_total_tokens = int(len(full_prompt_for_llm) / TOKEN_CHAR_RATIO)
+    
+    console.print(f"\n--- Text Pack Diagnostics ---")
+    console.print(f"  Original text length: {original_text_len} chars ({original_text_len // TOKEN_CHAR_RATIO:.0f} tokens)")
+    console.print(f"  Packed text length:   {packed_len} chars ({packed_len // TOKEN_CHAR_RATIO:.0f} tokens)")
+    console.print(f"  Packing used:         {'Yes' if was_packed else 'No'}")
+    console.print(f"  Estimated total prompt tokens (system + user): {estimated_total_tokens}")
+    console.print(f"  Context window limit: {MAX_CONTEXT_TOKENS} tokens")
+    console.print("--- End Diagnostics ---\n")
 
     raw_response, llm_metadata = call_llm(prompt, SYSTEM_PROMPT, paper_id=paper_id)
 
