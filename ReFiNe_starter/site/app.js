@@ -332,27 +332,29 @@ function renderCard(paper) {
     card += `<div class="summary-section"><h4>Summary</h4><p>${escapeHtml(summaryText)}</p></div>`;
   }
 
-  // Replication requirements section (from filter_tags, NOT old yes/no badges)
-  const filterTags = paper.filter_tags || {};
-  const hasFilterTags = Object.values(filterTags).some(arr => Array.isArray(arr) && arr.length > 0);
+  // Required data section - compact single row from all filter_tags
+   const filterTags = paper.filter_tags || {};
+   const hasFilterTags = Object.values(filterTags).some(arr => Array.isArray(arr) && arr.length > 0);
 
-  if (hasFilterTags) {
-    card += `<div class="replication-requirements">`;
-    card += `<h4>Replication requirements</h4>`;
-    for (const group of FILTER_GROUP_CONFIG) {
-      const tags = filterTags[group.key] || [];
-      if (tags.length > 0) {
-        card += `<div class="req-group"><span class="req-group-label">${escapeHtml(group.label)}:</span> `;
-        card += `<div class="req-chips">`;
-        for (const tag of tags) {
-          const label = getTagLabel(tag);
-          card += `<span class="req-chip">${escapeHtml(label)}</span>`;
-        }
-        card += `</div></div>`;
-      }
-    }
-    card += `</div>`;
-  }
+   if (hasFilterTags) {
+     // Collect all tags across groups into a flat array
+     const allTags = [];
+     for (const group of FILTER_GROUP_CONFIG) {
+       const tags = filterTags[group.key] || [];
+       for (const tag of tags) {
+         allTags.push(tag);
+       }
+     }
+
+     card += `<div class="replication-requirements">`;
+     card += `<h4>Required data:</h4>`;
+     card += `<div class="req-chips-inline">`;
+     for (const tag of allTags) {
+       const label = getTagLabel(tag);
+       card += `<span class="req-chip">${escapeHtml(label)}</span>`;
+     }
+     card += `</div></div>`;
+   }
 
   // Coverage line
   const coverage = computeCoverageForPaper(paper.paper_id);
