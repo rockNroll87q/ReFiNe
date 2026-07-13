@@ -59,6 +59,7 @@ class WebsiteCard(BaseModel):
 
     short_description: str | None = None
     dataset_features_summary: list[str] = Field(default_factory=list)
+    plain_text_summary: str | None = None
 
 
 class ExtractionInfo(BaseModel):
@@ -140,4 +141,5 @@ class ExtractedFeatures(BaseModel):
             short_description=wc.get("short_description") or wc.get("short_title"),
             dataset_features_summary=wc.get("dataset_features_summary")
             or wc.get("dataset_features_summary", []),
+            plain_text_summary=wc.get("plain_text_summary"),
         )

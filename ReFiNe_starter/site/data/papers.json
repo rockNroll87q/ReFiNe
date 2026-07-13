@@ -94,7 +94,7 @@
       "genetic_data": "yes",
       "depression_scale": "yes",
       "anxiety_scale": "yes",
-      "clinical_outcomes": "unclear",
+      "clinical_outcomes": "yes",
       "longitudinal_data": "no",
       "medication_status": "unclear",
       "trauma_or_life_stress": "no",
@@ -109,19 +109,21 @@
       "short_title": "FKBP5 is associated with amygdala volume in the human brain and mood state: A voxel-based ",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "Voxel-based morphometry (VBM) analysis of brain structure in 112 healthy controls.",
-        "Genotyping for FKBP5 single nucleotide polymorphisms (SNPs).",
-        "Assessment using Beck Depression Inventory and Spielberger Anxiety Inventory (STAI).",
-        "Cross-sectional design with no longitudinal follow-up or trauma/stress evaluation."
+        "Structural MRI data analyzed via VBM",
+        "FKBP5 SNP genotype data (rs3800373, rs992105, rs1360780, rs9470080)",
+        "Beck Depression Inventory scores",
+        "State and Trait Anxiety Inventory (STAI) scores",
+        "Profile of Mood States (POMS) scores"
       ],
-      "plain_text_summary": "This VBM study used 3D T1-weighted MRI from 112 healthy Japanese volunteers, alongside FKBP5 SNP genotyping from blood samples and mood/anxiety measures including BDI, STAI and POMS. The study reported associations between FKBP5 variants and grey matter volume in the right amygdala and orbitofrontal cortex, with additional links between amygdala volume and mood/anxiety scores."
+      "plain_text_summary": "This VBM study used 3D T1-weighted MRI from 112 healthy Japanese volunteers, alongside FKBP5 SNP genotyping from blood samples and mood/anxiety measures including BDI, STAI and POMS. The study reported associations between FKBP5 variants and grey matter volume in the right amygdala and orbitofrontal cortex, with additional links between amygdala volume and mood/anxiety scores.",
+      "short_description": "A cross-sectional voxel-based morphometry study examining the association between FKBP5 genetic variants, amygdala volume, and mood states in healthy controls."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Extracted features based on explicit mentions in the abstract, key points, and conclusions. Study focuses on healthy controls, VBM analysis, FKBP5 genetics, and mood/anxiety scales (BDI, STAI). Explicitly notes cross-sectional design and lack of trauma/stress evaluation."
+      "notes": "Features extracted strictly from abstract and text. T1-weighted specification not explicitly stated but implied by VBM methodology. Trauma/stress explicitly noted as not evaluated in this sample. Cross-sectional design confirmed. No blood/biomarker collection or cognitive testing reported for the study cohort."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Extracted features based on explicit mentions in the abstract, key points, and conclusions. Study focuses on healthy controls, VBM analysis, FKBP5 genetics, and mood/anxiety scales (BDI, STAI). Explicitly notes cross-sectional design and lack of trauma/stress evaluation."
+    "extraction_notes": "Features extracted strictly from abstract and text. T1-weighted specification not explicitly stated but implied by VBM methodology. Trauma/stress explicitly noted as not evaluated in this sample. Cross-sectional design confirmed. No blood/biomarker collection or cognitive testing reported for the study cohort."
   },
   {
     "paper_id": "REFINE-0004",

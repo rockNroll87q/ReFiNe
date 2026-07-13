@@ -26,7 +26,14 @@ Requesting extraction for paper: **{{PAPER_ID}}**
 Return a JSON object with these keys:
 - `paper_id` (string): MUST exactly match the requested paper ID. Do NOT modify it.
 - `dataset_features_needed` (object): For each feature key below, set one of "yes", "no", "unclear", "not_applicable" based on the actual paper text.
-- `website_card` (object): {"short_description": null or string, "dataset_features_summary": [list of strings]}
+- `website_card` (object) with these fields:
+  - `short_description`: null or a short string summarizing the paper in one sentence.
+  - `dataset_features_summary`: [list of strings] — brief bullet-style summaries of dataset features needed for replication.
+  - `plain_text_summary`: A plain-English summary of 2–3 sentences focused on:
+    1. Data used / population / imaging modality (e.g., "T1-weighted MRI from 112 healthy volunteers").
+    2. Main broad result (e.g., "FKBP5 genotypes were associated with grey matter volume in the amygdala.").
+    3. Key data requirements useful for replication (e.g., "Replication would require access to raw MRI scans, FKBP5 SNP genotype data, and mood/anxiety scale scores.").
+    - Do NOT include detailed statistics, p-values, coordinates, or overly technical model details.
 - `extraction_status` (string): "completed" if you extracted features from the paper text.
 - `extraction_notes` (string or null): Brief notes about your extraction.
 
