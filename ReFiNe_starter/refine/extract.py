@@ -783,12 +783,16 @@ def _merge_into_papers(
     # Merge dataset_features_needed
     record["dataset_features_needed"] = extracted.dataset_features_needed
 
-    # Merge website_card
+    # Merge website_card - replace entirely when extracted data is available
     wc = _as_dict(extracted.website_card)
-    if wc.get("short_description") is not None:
-        record.setdefault("website_card", {})["short_description"] = wc["short_description"]
-    if wc.get("dataset_features_summary"):
-        record.setdefault("website_card", {})["dataset_features_summary"] = wc["dataset_features_summary"]
+    if wc:
+        record["website_card"] = {}
+        if wc.get("short_description") is not None:
+            record["website_card"]["short_description"] = wc["short_description"]
+        if wc.get("dataset_features_summary"):
+            record["website_card"]["dataset_features_summary"] = wc["dataset_features_summary"]
+        if wc.get("plain_text_summary") is not None:
+            record["website_card"]["plain_text_summary"] = wc["plain_text_summary"]
 
     # Merge extraction info
     ext_status = extracted.extraction_status
