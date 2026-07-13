@@ -251,7 +251,65 @@ function renderCard(paper) {
   return card;
 }
 
+function matchesSearch(paper, query) {
+  // Normalize: lowercase and trim
+  const q = query.toLowerCase().trim();
+  if (!q) return true;
+
+  // Helper to check if a string or array contains the query (case-insensitive)
+  function textMatch(text) {
+    if (!text) return false;
+    return String(text).toLowerCase().includes(q);
+  }
+
+  function arrayMatch(arr) {
+    if (!Array.isArray(arr)) return false;
+    return arr.some(item => String(item).toLowerCase().includes(q));
+  }
+
+  // Search across paper fields
+  // paper_id, title, year, doi
+  if (textMatch(paper.paper_id)) return true;
+  if (textMatch(paper.title)) return true;
+  if (textMatch(paper.year)) return true;
+  if (textMatch(paper.doi)) return true;
+
+  // authors from citation field
+  if (paper.citation && textMatch(paper.citation)) return true;
+
+  // disease/family/diagnosis fields if present
+  if (textMatch(paper.disease)) return true;
+  if (textMatch(paper.family)) return true;
+  if (textMatch(paper.diagnosis)) return true;
+
+  // website_card fields
+  const wc = paper.website_card || {};
+  if (textMatch(wc.short_description)) return true;
+  if (textMatch(wc.plain_text_summary)) return true;
+  if (arrayMatch(wc.dataset_features_summary)) return true;
+
+  // dataset feature labels, especially when the feature value is "yes"
+  const features = paper.dataset_features_needed || {};
+  for (const [key, val] of Object.entries(features)) {
+    // Match on the feature key (label) or the value "yes"
+    if (val === "yes" && textMatch(key)) return true;
+    if (textMatch(val)) return true;
+  }
+
+  return false;
+}
+
 function render() {
+  // Get search query
+  const searchInput = document.getElementById("search-input");
+  const clearBtn = document.getElementById("clear-search");
+  const searchQuery = searchInput ? searchInput.value : "";
+
+  // Show/hide clear button based on search input
+  if (clearBtn) {
+    clearBtn.style.display = searchQuery.trim() ? "inline-block" : "none";
+  }
+
   // Collect active filter values keyed by feature key
   const activeFilters = {};
   for (const [key] of REFINE_FEATURES) {
@@ -262,6 +320,10 @@ function render() {
   }
 
   const filtered = papers.filter(p => {
+    // First apply text search filter
+    if (!matchesSearch(p, searchQuery)) return false;
+
+    // Then apply feature filters
     const features = p.dataset_features_needed || {};
     for (const [key, filterVal] of Object.entries(activeFilters)) {
       const paperVal = features[key] || "unclear";
@@ -320,6 +382,27 @@ async function init() {
     document.querySelectorAll(".filter select").forEach(s => s.value = "any");
     render();
   });
+
+  // Setup search input - debounce to avoid excessive re-renders
+  const searchInput = document.getElementById("search-input");
+  let searchDebounceTimer = null;
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => render(), 150);
+    });
+
+    // Setup clear button
+    const clearBtn = document.getElementById("clear-search");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        clearBtn.style.display = "none";
+        render();
+        searchInput.focus();
+      });
+    }
+  }
 
   // Setup volunteer modal
   setupVolunteerModal();

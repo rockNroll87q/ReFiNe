@@ -106,8 +106,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "FKBP5 is associated with amygdala volume in the human brain and mood state: A voxel-based ",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional VBM study investigating the association between FKBP5 gene polymorphisms, amygdala volume, and mood states in 112 healthy controls.",
       "dataset_features_summary": [
         "T1-weighted MRI scans",
         "Voxel-based morphometry (VBM) analysis",
@@ -116,8 +115,7 @@
         "State-Trait Anxiety Inventory (STAI) scores",
         "Profile of Mood States (POMS) scores"
       ],
-      "plain_text_summary": "This VBM study used 3D T1-weighted MRI from 112 healthy Japanese volunteers, alongside FKBP5 SNP genotyping from blood samples and mood/anxiety measures including BDI, STAI and POMS. The study reported associations between FKBP5 variants and grey matter volume in the right amygdala and orbitofrontal cortex, with additional links between amygdala volume and mood/anxiety scores.",
-      "short_description": "A cross-sectional VBM study investigating the association between FKBP5 gene polymorphisms, amygdala volume, and mood states in 112 healthy controls."
+      "plain_text_summary": "This cross-sectional study analyzed T1-weighted MRI scans and FKBP5 genetic variants in 112 healthy Japanese volunteers to examine their relationship with brain structure and mood. The results showed that specific FKBP5 SNPs were significantly associated with gray matter volume in the right amygdala and orbitofrontal cortex, which correlated with depression-dejection and anxiety scores. Replication would require access to raw T1-weighted MRI data, FKBP5 SNP genotype information, and standardized psychological scale scores (BDI, STAI, POMS) from a healthy control cohort without psychiatric history or medication use."
     },
     "extraction": {
       "status": "completed",
@@ -140,10 +138,10 @@
       "healthy_controls": "yes",
       "genetic_data": "yes",
       "depression_scale": "yes",
-      "anxiety_scale": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_data": "no",
-      "medication_status": "unclear",
+      "anxiety_scale": "no",
+      "clinical_outcomes": "yes",
+      "longitudinal_data": "yes",
+      "medication_status": "yes",
       "trauma_or_life_stress": "yes",
       "cognitive_data": "yes",
       "blood_or_biomarker_data": "no"
@@ -153,24 +151,24 @@
       "population": null
     },
     "website_card": {
-      "short_description": "A cross-sectional neuroimaging study examining the association between childhood adversities and recent negative life events with grey matter volume in currently healthy adolescents.",
+      "short_description": "A cross-sectional neuroimaging study examining the association between childhood adversities, recent negative life events, and grey matter volume in currently healthy adolescents.",
       "dataset_features_summary": [
-        "T1-weighted MRI scans from 58 healthy adolescents",
-        "Voxel-based morphometry (VBM) analysis of grey matter volume",
-        "Genetic data (5-HTTLPR genotype) collected via saliva samples",
-        "Retrospective childhood adversity assessment using maternal interviews (CAMEEI)",
-        "Recent negative life events ratings recorded at ages 14 and 17",
-        "Current depressive symptoms measured with the Mood and Feelings Questionnaire (MFQ)",
-        "IQ scores obtained via the Wechsler Abbreviated Scale of Intelligence"
+        "T1-weighted structural MRI scans",
+        "Voxel-based morphometry (VBM) analysis",
+        "Saliva-derived 5-HTTLPR genotype data",
+        "Mood and Feelings Questionnaire (MFQ) for depressive symptoms",
+        "Childhood adversity and recent negative life event assessments",
+        "Wechsler Abbreviated Scale of Intelligence (IQ scores)",
+        "Medication status exclusion criteria"
       ],
-      "plain_text_summary": "This cross-sectional study analyzed T1-weighted MRI scans from 58 currently healthy adolescents to investigate how childhood adversities and recent negative life events relate to regional grey matter volume. The researchers used voxel-based morphometry and found that moderate, chronic family-focused adversities were associated with reduced cerebellar grey matter volume, while recent stress at age 14 correlated with increased volume in prefrontal and cingulate regions. Replication would require access to raw T1-weighted MRI data, retrospective childhood adversity assessments (e.g., maternal interviews), recent negative life event scores, current depression scale ratings, and 5-HTTLPR genotype information."
+      "plain_text_summary": "This study used T1-weighted MRI scans from 58 currently healthy adolescents to examine how childhood adversities and recent negative life events relate to grey matter volume. Participants were genotyped for the 5-HTTLPR polymorphism, assessed for depressive symptoms using the Mood and Feelings Questionnaire, and evaluated for past psychiatric history and family functioning. Replication would require access to raw structural MRI data, saliva-based genetic samples, standardized depression and life event scales, and detailed demographic/clinical covariates including IQ and medication status."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Extracted features based strictly on explicit mentions in the methods and results sections. Anxiety scales and clinical outcomes were not explicitly reported as administered or analyzed, resulting in 'unclear' classifications per instructions. Longitudinal data was marked 'no' because the neuroimaging analysis was explicitly described as cross-sectional despite recruitment from a longitudinal cohort. Medication status was only noted as an exclusion criterion rather than a recorded analytical variable."
+      "notes": "All features were explicitly reported in the text. MDD patients were excluded; healthy community adolescents served as the comparison group. Longitudinal data refers to assessments collected at ages 14 and 17 from the ROOTS cohort, though imaging analysis was cross-sectional. No blood/biomarker or anxiety scale data was collected."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Extracted features based strictly on explicit mentions in the methods and results sections. Anxiety scales and clinical outcomes were not explicitly reported as administered or analyzed, resulting in 'unclear' classifications per instructions. Longitudinal data was marked 'no' because the neuroimaging analysis was explicitly described as cross-sectional despite recruitment from a longitudinal cohort. Medication status was only noted as an exclusion criterion rather than a recorded analytical variable."
+    "extraction_notes": "All features were explicitly reported in the text. MDD patients were excluded; healthy community adolescents served as the comparison group. Longitudinal data refers to assessments collected at ages 14 and 17 from the ROOTS cohort, though imaging analysis was cross-sectional. No blood/biomarker or anxiety scale data was collected."
   },
   {
     "paper_id": "REFINE-0005",
@@ -681,14 +679,13 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Neural correlates of physical activity moderate the association between problematic mobile",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional study examining how physical activity and brain gray matter volume moderate the relationship between problematic mobile phone use and psychological symptoms in college students.",
       "dataset_features_summary": [
         "T1-weighted structural MRI scans from 251 college students",
         "Self-reported scores for problematic mobile phone use, physical activity, depression, anxiety, and stress (DASS-21)",
         "Voxel-based morphometry (VBM) analysis of gray matter volume"
       ],
-      "short_description": "A cross-sectional study examining how physical activity and brain gray matter volume moderate the relationship between problematic mobile phone use and psychological symptoms in college students."
+      "plain_text_summary": "This cross-sectional study collected T1-weighted MRI scans and self-reported data on problematic mobile phone use, physical activity, and psychological symptoms from 251 college students. The main results indicated that higher levels of physical activity significantly reduced the association between problematic mobile phone use and depressive, anxiety, and stress symptoms, with gray matter volume in the left insula also moderating this relationship for depression. Replication would require access to raw T1-weighted MRI data, standardized psychological symptom scales (like DASS-21), and detailed physical activity metrics."
     },
     "extraction": {
       "status": "completed",
@@ -804,8 +801,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "The function and structure of precuneus is associated with subjective sleep quality in maj",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional MRI study examining the association between subjective sleep quality and precuneus function and structure in major depression patients versus healthy controls.",
       "dataset_features_summary": [
         "T1-weighted structural MRI data",
         "Resting-state functional MRI (fALFF) data",
@@ -816,7 +812,7 @@
         "Hamilton Anxiety Rating Scale (HAMA) scores",
         "Pittsburgh Sleep Quality Index (PSQI) scores"
       ],
-      "short_description": "A cross-sectional MRI study examining the association between subjective sleep quality and precuneus function and structure in major depression patients versus healthy controls."
+      "plain_text_summary": "This cross-sectional study used resting-state and T1-weighted MRI to examine the neural basis of poor subjective sleep quality in 114 individuals with major depression compared to 74 healthy controls. The results showed that poorer sleep quality was associated with lower local neuronal activity (fALFF) and reduced gray matter volume in the bilateral precuneus specifically within the depressed group, which also exhibited higher baseline precuneus activity than controls. Replication would require access to raw resting-state and structural MRI scans, Pittsburgh Sleep Quality Index scores, Hamilton Depression/Anxiety scale data, and confirmed major depression diagnoses for both patient and control groups."
     },
     "extraction": {
       "status": "completed",
@@ -4189,8 +4185,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Prefrontal cortex and amygdala anatomy in youth with persistent levels of harsh parenting ",
-      "one_sentence_description": null,
+      "short_description": "A structural MRI study examining the association between persistent harsh parenting, subclinical anxiety symptoms, and prefrontal cortex and amygdala anatomy in healthy youth aged 12–16.",
       "dataset_features_summary": [
         "T1-weighted anatomical MRI scans acquired at ages 12-16",
         "Voxel-based morphometry (VBM) and FreeSurfer cortical thickness analysis",
@@ -4199,7 +4194,7 @@
         "Verbal IQ scores via the PPVT-R",
         "Strict exclusion criteria for psychiatric history, medication use, and severe maltreatment"
       ],
-      "short_description": "A structural MRI study examining the association between persistent harsh parenting, subclinical anxiety symptoms, and prefrontal cortex and amygdala anatomy in healthy youth aged 12–16."
+      "plain_text_summary": "This study analyzed T1-weighted MRI scans from 88 healthy youth aged 12–16 years who were categorized based on persistent levels of harsh parenting and subclinical anxiety symptoms tracked longitudinally from ages 2.5 to 9. The researchers found that higher historical harsh parenting was associated with smaller prefrontal cortex and amygdala volumes, while interactions between parenting and anxiety influenced rostral anterior cingulate cortex thickness and amygdala volume. Replication would require access to raw T1-weighted MRI data, longitudinal parent-reported measures of coercive parenting and child anxiety from early childhood, current anxiety scale scores (e.g., SCARED-R), verbal IQ assessments, and strict exclusion criteria for psychiatric history and medication use."
     },
     "extraction": {
       "status": "completed",
@@ -4275,15 +4270,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Smaller gray matter volume of hippocampus/parahippocampus in elderly people with subthresh",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional MRI study examining hippocampal/parahippocampal gray matter volume reductions in elderly individuals with subthreshold depression compared to healthy controls.",
       "dataset_features_summary": [
         "T1-weighted structural MRI scans from 36 older adults (19 with subthreshold depression, 17 healthy controls)",
         "CES-D depression scale scores for all participants",
         "MMSE cognitive assessment data",
         "Voxel-based morphometry (VBM) processed gray matter volume maps"
       ],
-      "short_description": "A cross-sectional MRI study examining hippocampal/parahippocampal gray matter volume reductions in elderly individuals with subthreshold depression compared to healthy controls."
+      "plain_text_summary": "This cross-sectional study analyzed T1-weighted MRI scans from 36 elderly participants to assess hippocampal/parahippocampal gray matter volume. Results showed significantly reduced right parahippocampus volumes in the subthreshold depression group, which correlated inversely with CES-D scores. Replication would require access to raw T1-weighted MRI data, CES-D and MMSE clinical scores, and VBM processing pipelines for elderly populations."
     },
     "extraction": {
       "status": "completed",
@@ -4839,15 +4833,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Evaluating the effect of birth weight on brain volumes and depression: An observational an",
-      "one_sentence_description": null,
+      "short_description": "An observational and genetic study using UK Biobank data to evaluate the associations between birth weight, brain volumes, and depression.",
       "dataset_features_summary": [
         "Polygenic risk scores for birth weight derived from GWAS summary statistics",
         "Self-reported birth weight phenotype",
         "MRI-derived regional brain volume measurements (gray matter, white matter, thalamus, accumbens)",
         "Depression status assessed via PHQ-9 and CIDI-SF"
       ],
-      "short_description": "An observational and genetic study using UK Biobank data to evaluate the associations between birth weight, brain volumes, and depression."
+      "plain_text_summary": "This cross-sectional study analyzed UK Biobank data to examine the associations between self-reported birth weight, MRI-derived brain volumes, and depression. The researchers calculated polygenic risk scores for birth weight and found that specific brain volumes mediate the relationship between birth weight and depression status. Replication would require access to UK Biobank phenotypic data, MRI-derived regional brain volume metrics, and individual-level genotype data for PRS calculation."
     },
     "extraction": {
       "status": "completed",
@@ -5003,8 +4996,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Combined analysis of grey matter voxel-based morphometry and white matter tract-based spat",
-      "one_sentence_description": null,
+      "short_description": "This study investigates grey and white matter structural changes in elderly patients with long-lasting bipolar disorder using combined VBM and TBSS MRI analyses.",
       "dataset_features_summary": [
         "T1-weighted MRI scans for voxel-based morphometry analysis",
         "Diffusion tensor imaging (DTI) data for tract-based spatial statistics",
@@ -5013,7 +5005,7 @@
         "Detailed medication load history and types for each patient",
         "Standardized neuropsychological test results covering memory, executive function, and processing speed"
       ],
-      "short_description": "This study investigates grey and white matter structural changes in elderly patients with long-lasting bipolar disorder using combined VBM and TBSS MRI analyses."
+      "plain_text_summary": "The study analyzed T1-weighted MRI and DTI scans from 19 euthymic elderly patients with long-lasting bipolar disorder and 47 healthy controls. Results showed reduced grey matter concentration in anterior limbic areas and decreased fractional anisotropy in the corpus callosum for patients compared to controls. Replication would require access to raw T1 and DTI MRI scans, detailed medication load records, Geriatric Depression Scale scores, and comprehensive neuropsychological test data."
     },
     "extraction": {
       "status": "completed",
@@ -5169,15 +5161,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "The neuroanatomy of subthreshold depressive symptoms in Huntington’s disease: A combined d",
-      "one_sentence_description": null,
+      "short_description": "A neuroimaging study comparing brain structure and microstructure in early-stage Huntington's disease patients with and without subthreshold depressive symptoms against healthy controls.",
       "dataset_features_summary": [
         "T1-weighted MRI and DTI scans acquired from 61 early-stage HD participants and 40 matched healthy controls",
         "HADS-SIS depression and anxiety scores used to stratify the HD group into non-depressed vs. subthreshold depressive symptom cohorts",
         "Cognitive assessments (TMT, WFL, SDMT, HVLT) and UHDRS motor/functioning scores collected at baseline",
         "Medication history (anti-depressants and anti-hyperkinetic drugs) recorded for both patient groups"
       ],
-      "short_description": "A neuroimaging study comparing brain structure and microstructure in early-stage Huntington's disease patients with and without subthreshold depressive symptoms against healthy controls."
+      "plain_text_summary": "This study examined early-stage Huntington's disease patients with subthreshold depressive symptoms compared to non-depressed HD participants and healthy controls using 3T MRI (VBM and DTI). Participants completed standardized depression/anxiety scales, cognitive tests, and motor assessments. Replication would require access to raw T1-weighted and diffusion MRI scans, HADS-SIS scores, cognitive test data, and medication history for both patient and control groups."
     },
     "extraction": {
       "status": "completed",
@@ -5293,14 +5284,13 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Subjectivity of the anomalous sense of self is represented in gray matter volume in the br",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional study examining the correlation between self-reported sense of self malfunctions and gray matter volume in 96 healthy individuals using MRI.",
       "dataset_features_summary": [
         "T1-weighted structural MRI scans from 96 healthy volunteers",
         "Voxel-based morphometry (VBM) analysis of gray matter volume",
         "Embodied Sense of Self Scale (ESSS) questionnaire scores measuring agency, ownership, and narrative self"
       ],
-      "short_description": "A cross-sectional study examining the correlation between self-reported sense of self malfunctions and gray matter volume in 96 healthy individuals using MRI."
+      "plain_text_summary": "This study used T1-weighted MRI scans from 96 healthy volunteers to examine how individual differences in the subjective sense of self relate to brain structure. Voxel-based morphometry revealed that lower gray matter volume in the left insular cortex was significantly correlated with higher scores on the ownership subscale of the Embodied Sense of Self Scale. Replication would require access to raw T1-weighted MRI data, ESSS questionnaire responses, and demographic information (age, sex) for covariate adjustment."
     },
     "extraction": {
       "status": "completed",
@@ -5336,8 +5326,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Cross-sectional and longitudinal relationships between depressive symptoms and brain atrop",
-      "one_sentence_description": null,
+      "short_description": "A prospective study examining cross-sectional and longitudinal relationships between depressive symptoms and regional brain atrophy in patients with multiple sclerosis using structural MRI.",
       "dataset_features_summary": [
         "High-resolution T1-weighted MPRAGE MRI scans acquired at baseline and 17-month follow-up",
         "Voxel-based morphometry (VBM) analysis of gray matter volume and change over time",
@@ -5345,7 +5334,7 @@
         "Clinical disability tracked via Expanded Disability Status Scale (EDSS) scores",
         "Medication history recorded including antidepressant subscription and disease-modifying therapies"
       ],
-      "short_description": "A prospective study examining cross-sectional and longitudinal relationships between depressive symptoms and regional brain atrophy in patients with multiple sclerosis using structural MRI."
+      "plain_text_summary": "This prospective study investigated the relationship between depressive symptoms and brain atrophy in 40 to 44 patients with relapsing-remitting or secondary progressive multiple sclerosis over a mean interval of 17 months. Researchers used longitudinal T1-weighted MRI processed with voxel-based morphometry to demonstrate that baseline gray matter volume in prefrontal regions predicted worsening depressive symptoms, while increasing atrophy in the thalamus and globus pallidus coincided with symptom progression. Replication would require access to paired structural MRI scans from an MS cohort, standardized depression scale scores (BDI), clinical disability ratings (EDSS), and detailed medication history."
     },
     "extraction": {
       "status": "completed",
@@ -5501,8 +5490,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Perfectionism mediated the relationship between brain structure variation and negative emo",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional neuroimaging study examining the relationship between perfectionism, brain structure, and negative emotion in a nonclinical sample of young adults.",
       "dataset_features_summary": [
         "T1-weighted MRI data from 161 healthy volunteers",
         "Voxel-based morphometry analysis of gray matter volume",
@@ -5510,7 +5498,7 @@
         "Self-Rating Depression Scale (SDS) scores",
         "Chinese Frost Multidimensional Perfectionism Scale (CFMPS) scores"
       ],
-      "short_description": "A cross-sectional neuroimaging study examining the relationship between perfectionism, brain structure, and negative emotion in a nonclinical sample of young adults."
+      "plain_text_summary": "This study used T1-weighted MRI scans from 161 healthy young adults to investigate how perfectionism relates to brain structure and negative emotions. Voxel-based morphometry revealed that specific dimensions of perfectionism were correlated with gray matter volume in the anterior cingulate cortex, which mediated the link between brain structure and self-reported anxiety and depression scores. Replication would require access to raw T1-weighted MRI scans, standardized anxiety and depression scale data, and multidimensional perfectionism questionnaire results from a nonclinical young adult population."
     },
     "extraction": {
       "status": "completed",
@@ -5626,15 +5614,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Neuro-transcriptomic signatures for mood disorder morbidity and suicide mortality",
-      "one_sentence_description": null,
+      "short_description": "This study integrates a voxel-based morphometry meta-analysis of living brain imaging with RNA-sequencing of postmortem anterior insula tissue to identify gene-expression signatures linked to mood disorder morbidity and suicide mortality.",
       "dataset_features_summary": [
         "Coordinate-based VBM meta-analysis data from 47 published studies (MDD, BD, controls)",
         "Postmortem anterior insula RNA-sequencing transcriptomic profiles from 100 donors",
         "Clinical diagnostic status and suicide completion/morbidity factors",
         "Demographic and postmortem tissue quality metrics"
       ],
-      "short_description": "This study integrates a voxel-based morphometry meta-analysis of living brain imaging with RNA-sequencing of postmortem anterior insula tissue to identify gene-expression signatures linked to mood disorder morbidity and suicide mortality."
+      "plain_text_summary": "The study combines a voxel-based morphometry meta-analysis of gray matter volume reductions in major depressive disorder and bipolar disorder with whole-transcriptome RNA-sequencing from 100 postmortem anterior insula brain samples. Results indicate that imaging-defined structural loss correlates with differential gene expression in immune, inflammatory, and neurodevelopmental pathways associated with psychiatric morbidity and suicide completion. Replication would require access to coordinate-based VBM meta-analysis data, postmortem brain tissue RNA-sequencing datasets, and detailed clinical diagnostic plus suicide status records for the donor cohort."
     },
     "extraction": {
       "status": "completed",
@@ -6150,8 +6137,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Non-verbal emotion communication training induces specific changes in brain function and s",
-      "one_sentence_description": null,
+      "short_description": "This study investigates the effects of a four-week non-verbal emotion communication training on brain function and structure using fMRI and voxel-based morphometry in healthy individuals.",
       "dataset_features_summary": [
         "T1-weighted structural MRI scans",
         "fMRI data (EPI sequences) from pre- and post-training sessions",
@@ -6159,7 +6145,7 @@
         "Personality inventory scores (NEO-FFI)",
         "Training protocol details (NECT vs. Sudoku control)"
       ],
-      "short_description": "This study investigates the effects of a four-week non-verbal emotion communication training on brain function and structure using fMRI and voxel-based morphometry in healthy individuals."
+      "plain_text_summary": "The study used T1-weighted MRI and fMRI scans from 14 healthy participants who completed a four-week non-verbal emotion communication training or a Sudoku control task. Results showed that the training induced specific reductions in brain activation during emotional cue processing and increased gray matter volume in the fusiform face area, with effects correlated to neuroticism scores. Replication would require access to raw structural and functional MRI data, detailed behavioral valence ratings and response times, and the standardized NEO-FFI personality inventory."
     },
     "extraction": {
       "status": "completed",
@@ -6275,15 +6261,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Brain hyperintensity location determines outcome in the triad of impaired cognition, physi",
-      "one_sentence_description": null,
+      "short_description": "A cohort study examining how brain hyperintensity location relates to depressive symptoms, cognitive ability, and physical health in older adults.",
       "dataset_features_summary": [
         "T1-weighted MRI data from approximately 205-227 older adults",
         "Depressive symptom scores averaged across ages 64, 66, and 68 using the HADS scale",
         "Comprehensive cognitive assessment data including fluid intelligence, memory, and processing speed tests",
         "Physical health measures including walk time and peak expiratory flow rate"
       ],
-      "short_description": "A cohort study examining how brain hyperintensity location relates to depressive symptoms, cognitive ability, and physical health in older adults."
+      "plain_text_summary": "This study analyzed T1-weighted MRI scans from approximately 205-227 older adults in the Aberdeen 1936 Birth Cohort to examine how brain hyperintensity location relates to depressive symptoms, cognitive ability, and physical health. The main result showed that deep brain hyperintensities were associated with increased depressive symptoms, largely mediated by poorer physical health and reduced cognitive performance. Replication would require access to raw T1-weighted MRI scans, longitudinal depression scale scores, comprehensive neuropsychological test data, and standardized physical fitness measures."
     },
     "extraction": {
       "status": "completed",
@@ -6359,15 +6344,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Dispositional mindfulness co-varies with smaller amygdala and caudate volumes in community",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional study examining the association between dispositional mindfulness and subcortical brain volumes in healthy community adults.",
       "dataset_features_summary": [
         "T1-weighted MRI data from 155 healthy community adults",
         "Dispositional mindfulness scores measured via MAAS questionnaire",
         "Depression scale scores (BDI) and anxiety scale scores (STAI) used as control variables",
         "ROI-based volumetric analysis of amygdala, caudate, hippocampus, and nucleus accumbens"
       ],
-      "short_description": "A cross-sectional study examining the association between dispositional mindfulness and subcortical brain volumes in healthy community adults."
+      "plain_text_summary": "This cross-sectional study analyzed T1-weighted MRI scans from 155 healthy community adults to examine the relationship between dispositional mindfulness and subcortical brain volumes. Higher dispositional mindfulness was associated with smaller grey matter volumes in the right amygdala and left caudate, even after controlling for age, total grey matter volume, depression scores (BDI), and neuroticism. Replication would require access to raw T1-weighted MRI scans, MAAS mindfulness questionnaire data, BDI depression scores, STAI anxiety scores, and demographic information including age and gender."
     },
     "extraction": {
       "status": "completed",
@@ -6486,8 +6470,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Depressive symptoms in cognitively unimpaired older adults are associated with lower struc",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional study examining brain structural and functional correlates of subclinical depressive symptoms in cognitively unimpaired older adults using multimodal neuroimaging.",
       "dataset_features_summary": [
         "T1-weighted MRI data",
         "Voxel-wise morphometric analysis",
@@ -6497,7 +6480,7 @@
         "Cognitive assessment scores (MMSE, MoCA, DRS)",
         "Medication exclusion criteria"
       ],
-      "short_description": "A cross-sectional study examining brain structural and functional correlates of subclinical depressive symptoms in cognitively unimpaired older adults using multimodal neuroimaging."
+      "plain_text_summary": "This cross-sectional study analyzed T1-weighted MRI and PET imaging from cognitively unimpaired older adults in the Age-Well and ADNI cohorts to examine brain changes associated with subclinical depressive symptoms. Participants with higher depressive symptom scores showed lower gray matter volume in the hippocampus, reduced white matter integrity, and decreased glucose metabolism in frontolimbic regions compared to those without symptoms. Replication would require access to raw T1-weighted MRI scans, FDG-PET and amyloid PET data, GDS depression scores, APOE genotype information, and standardized cognitive assessment results from cognitively unimpaired older adults."
     },
     "extraction": {
       "status": "completed",
@@ -6773,8 +6756,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Transient cognitive impairment and white matter hyperintensities in severely depressed old",
-      "one_sentence_description": null,
+      "short_description": "A study examining the association between structural brain alterations and transient cognitive impairment in older patients with severe late-life depression treated with electroconvulsive therapy.",
       "dataset_features_summary": [
         "T1-weighted MRI scans acquired pre-ECT",
         "Cognitive assessments (MMSE) at baseline, during ECT, and up to 6 months post-treatment",
@@ -6782,7 +6764,7 @@
         "Medication status recorded",
         "Visual rating scales for white matter hyperintensities, medial temporal lobe atrophy, and global cortical atrophy"
       ],
-      "short_description": "A study examining the association between structural brain alterations and transient cognitive impairment in older patients with severe late-life depression treated with electroconvulsive therapy."
+      "plain_text_summary": "This study evaluated cognitive trajectories in 80 older patients with severe late-life depression undergoing electroconvulsive therapy (ECT), using pre-treatment T1-weighted MRI scans to assess structural brain changes like white matter hyperintensities. Cognitive function was measured repeatedly from baseline through 6 months post-ECT, revealing a significant but transient drop during treatment that recovered above baseline levels regardless of structural brain alterations. Replication would require access to pre-ECT structural MRI data, repeated cognitive assessment scores (e.g., MMSE), depression rating scales (MADRS), and detailed medication history for the patient cohort."
     },
     "extraction": {
       "status": "completed",
@@ -7218,15 +7200,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "The development of depressogenic self-schemas: Associations with children’s regional grey ",
-      "one_sentence_description": null,
+      "short_description": "A longitudinal study examining the association between the development of self-schemas and regional grey matter volume in the ventrolateral prefrontal cortex among children at risk for depression.",
       "dataset_features_summary": [
         "T1-weighted structural MRI data collected around age 10",
         "Longitudinal behavioral assessments from ages 6, 9, and 12 using the Self-Referent Encoding Task (SRET)",
         "Depressive symptom scores measured via the Child Depression Inventory",
         "Voxel-based morphometry analysis of regional grey matter volume"
       ],
-      "short_description": "A longitudinal study examining the association between the development of self-schemas and regional grey matter volume in the ventrolateral prefrontal cortex among children at risk for depression."
+      "plain_text_summary": "This study followed a community sample of children at risk for internalizing disorders across three time points (ages 6, 9, and 12) to track the development of positive and negative self-schemas using the Self-Referent Encoding Task. Structural MRI data collected around age 10 revealed that slower growth in positive self-schemas was associated with smaller regional grey matter volume in the ventrolateral prefrontal cortex. Replication would require access to longitudinal behavioral assessments, structural MRI scans, and depressive symptom ratings from a similar youth cohort."
     },
     "extraction": {
       "status": "completed",
@@ -7262,8 +7243,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Associations Between Daily Mood States and Brain Gray Matter Volume, Resting-State Functio",
-      "one_sentence_description": null,
+      "short_description": "This study examines associations between daily mood states and brain gray matter volume, resting-state functional connectivity, and task-based activity in healthy adults.",
       "dataset_features_summary": [
         "T1-weighted MRI data acquired from 42 healthy adults",
         "Voxel-based morphometry (VBM) analysis performed on structural scans",
@@ -7271,7 +7251,7 @@
         "Daily mood diary assessing positive/negative affect and rumination over 5 days",
         "Medication status screened as an exclusion criterion"
       ],
-      "short_description": "This study examines associations between daily mood states and brain gray matter volume, resting-state functional connectivity, and task-based activity in healthy adults."
+      "plain_text_summary": "The study analyzed T1-weighted MRI scans, resting-state fMRI, and task-based fMRI data from 42 healthy adults alongside daily diary reports of mood states. Results indicated that smaller left hippocampal gray matter volume was associated with higher daily negative mood and rumination, while both positive and negative daily moods correlated with altered default-mode network connectivity. Replication would require access to raw structural and functional MRI scans, BDI scores, and the specific daily mood diary data used in the original analysis."
     },
     "extraction": {
       "status": "completed",
@@ -7347,8 +7327,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Patients with primary biliary cholangitis and fatigue present with depressive symptoms and",
-      "one_sentence_description": null,
+      "short_description": "A case-control study evaluating structural brain changes, cognitive deficits, and fatigue in patients with primary biliary cholangitis compared to healthy controls.",
       "dataset_features_summary": [
         "T1-weighted MRI scans acquired on a 3 Tesla scanner",
         "Voxel-based morphometry (VBM) analysis performed on grey matter",
@@ -7356,7 +7335,7 @@
         "Cognitive and attention performance assessed via standardized tests and computerized battery",
         "Liver function tests and PBC-specific antibodies recorded as biomarkers"
       ],
-      "short_description": "A case-control study evaluating structural brain changes, cognitive deficits, and fatigue in patients with primary biliary cholangitis compared to healthy controls."
+      "plain_text_summary": "This cross-sectional case-control study compared 20 female patients with primary biliary cholangitis experiencing severe fatigue to 20 age-matched healthy controls. Participants underwent T1-weighted MRI scans, cognitive testing, attention assessments, and completed depression and fatigue questionnaires. Replication would require access to raw T1-weighted MRI data, VBM processing pipelines, standardized cognitive/attention test protocols, BDI scores, and liver function/biomarker records for both patient and control groups."
     },
     "extraction": {
       "status": "completed",
@@ -7552,15 +7531,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Brain morphometry points to emerging patterns of psychosis, depression, and anxiety vulner",
-      "one_sentence_description": null,
+      "short_description": "This longitudinal study examines associations between cortical thickness, surface area, and subcortical volume with psychotic-like, depressive, and anxiety symptoms in a large community sample of children over two years.",
       "dataset_features_summary": [
         "T1-weighted structural MRI scans processed for cortical thickness, surface area, and subcortical volumes",
         "Longitudinal psychiatric symptom assessments (3 timepoints over 2 years)",
         "Medication history data including stimulants, antipsychotics, SSRIs, sedatives, and mood stabilizers",
         "Standardized depression and anxiety scale scores derived from the Child Behavior Checklist"
       ],
-      "short_description": "This longitudinal study examines associations between cortical thickness, surface area, and subcortical volume with psychotic-like, depressive, and anxiety symptoms in a large community sample of children over two years."
+      "plain_text_summary": "The study analyzed T1-weighted MRI scans and longitudinal symptom assessments from a community sample of 8,645 children aged 9-11 years over a two-year period. Results indicated that specific cortical thickness and surface area metrics in temporal, frontal, and parietal regions predicted baseline symptoms and their progression for psychotic-like experiences, depression, and anxiety. Replication would require access to raw or processed structural MRI data, longitudinal psychiatric symptom scores, and detailed medication history."
     },
     "extraction": {
       "status": "completed",
@@ -7836,8 +7814,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Development of disordered eating behaviors and comorbid depressive symptoms in adolescence",
-      "one_sentence_description": null,
+      "short_description": "This longitudinal study investigates neural and psychopathological predictors of disordered eating behaviors and comorbid depressive symptoms in a large cohort of European adolescents using T1-weighted MRI and standardized clinical assessments.",
       "dataset_features_summary": [
         "T1-weighted structural MRI data acquired at age 14",
         "Voxel-based morphometry (VBM) analysis for grey matter volume",
@@ -7845,7 +7822,7 @@
         "Standardized psychopathology assessments using DAWBA bands for depression and anxiety",
         "Medication status recorded via the Timeline Followback Interview"
       ],
-      "short_description": "This longitudinal study investigates neural and psychopathological predictors of disordered eating behaviors and comorbid depressive symptoms in a large cohort of European adolescents using T1-weighted MRI and standardized clinical assessments."
+      "plain_text_summary": "The study analyzed longitudinal data from a normative cohort of European adolescents to identify early predictors of disordered eating behaviors and comorbid depressive symptoms. Researchers used T1-weighted MRI scans at age 14, alongside standardized questionnaires assessing emotional and behavioral problems, psychiatric symptom severity, and medication history at ages 14, 16, and 19. Replication would require access to raw structural MRI data, longitudinal psychopathology scores (specifically DAWBA bands for depression/anxiety), medication history records, and demographic matching variables."
     },
     "extraction": {
       "status": "completed",
@@ -8527,8 +8504,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Orbitofrontal cortex volume in late life depression: Influence of hyperintense lesions and",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional MRI study examining orbitofrontal cortex volume in elderly depressed and non-depressed subjects, analyzing associations with white-matter lesions and genetic polymorphisms.",
       "dataset_features_summary": [
         "T1-weighted MRI scans from 370 older adults",
         "DSM-IV diagnosed MDD patients and healthy controls",
@@ -8536,7 +8512,7 @@
         "Standardized depression severity scores (MADRS) and cognitive screening (MMSE)",
         "Semi-automated ROI volumetry of orbitofrontal cortex and lesion volumes"
       ],
-      "short_description": "A cross-sectional MRI study examining orbitofrontal cortex volume in elderly depressed and non-depressed subjects, analyzing associations with white-matter lesions and genetic polymorphisms."
+      "plain_text_summary": "This cross-sectional study compared T1-weighted MRI scans from 226 elderly patients with major depressive disorder and 144 healthy controls to assess orbitofrontal cortex volume. The researchers found that depressed subjects had significantly smaller OFC volumes, which were negatively associated with the severity of white-matter hyperintensities. Replication would require access to raw T1-weighted MRI data, peripheral blood samples for 5HTTLPR and APOE genotyping, and standardized clinical ratings including MADRS scores and MMSE cognitive assessments."
     },
     "extraction": {
       "status": "completed",
@@ -8692,8 +8668,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Temporal lobe epilepsy and affective disorders: The role of the subgenual anterior cingula",
-      "one_sentence_description": null,
+      "short_description": "This study examines default mode network deactivation and structural brain differences in temporal lobe epilepsy patients with comorbid affective disorders compared to healthy controls.",
       "dataset_features_summary": [
         "T1-weighted MRI scans",
         "Voxel-based morphometry analysis results",
@@ -8702,7 +8677,7 @@
         "Working memory task performance data (n-back accuracy)",
         "Medication status and psychiatric diagnosis history"
       ],
-      "short_description": "This study examines default mode network deactivation and structural brain differences in temporal lobe epilepsy patients with comorbid affective disorders compared to healthy controls."
+      "plain_text_summary": "The study analyzed T1-weighted MRI scans, diffusion tensor imaging, and working memory task performance from 48 temporal lobe epilepsy patients (with or without a history of affective disorders) and 30 healthy volunteers. Results showed that TLE patients with a lifetime affective diagnosis exhibited significantly greater deactivation in the subgenual anterior cingulate cortex during working memory tasks compared to controls, independent of current mood symptoms or medication status. Replication would require access to raw structural and functional MRI data, standardized depression and anxiety scale scores (BDI-FS, BAI), working memory task accuracy metrics, and detailed psychiatric and medication histories."
     },
     "extraction": {
       "status": "completed",
@@ -9138,8 +9113,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Cortical thickness and hippocampal volume in vascular and non-vascular depressed patients",
-      "one_sentence_description": null,
+      "short_description": "A study comparing cortical thickness and hippocampal volume in older adults with vascular versus non-vascular depression using structural MRI.",
       "dataset_features_summary": [
         "Structural MRI data from 41 depressed patients aged 50+",
         "Hamilton Rating Scale for Depression (HRSD) scores",
@@ -9147,7 +9121,7 @@
         "Antidepressant medication trial participation (escitalopram or duloxetine)",
         "Vascular depression classification based on white matter hyperintensities"
       ],
-      "short_description": "A study comparing cortical thickness and hippocampal volume in older adults with vascular versus non-vascular depression using structural MRI."
+      "plain_text_summary": "This study analyzed structural MRI scans from 41 depressed older adults to compare cortical thickness and hippocampal volume between those with and without vascular disease. Participants completed baseline and week-8 neuropsychological evaluations and participated in an open-label antidepressant trial, but no healthy control group was included. Replication would require access to raw structural MRI data, HRSD scores, neuropsychological test results, and detailed vascular lesion classifications for late-life depressed patients."
     },
     "extraction": {
       "status": "completed",
@@ -9503,8 +9477,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Effect of non-invasive spinal cord stimulation in unmedicated adults with major depressive",
-      "one_sentence_description": null,
+      "short_description": "A pilot randomized sham-controlled trial evaluating the antidepressant effects and tolerability of transcutaneous spinal direct current stimulation in unmedicated adults with major depressive disorder.",
       "dataset_features_summary": [
         "Unmedicated MDD patient cohort (n=20)",
         "Longitudinal clinical assessments over 8 weeks",
@@ -9512,7 +9485,7 @@
         "Blood biomarker measurements at baseline and follow-up",
         "Strict medication-free status tracking"
       ],
-      "short_description": "A pilot randomized sham-controlled trial evaluating the antidepressant effects and tolerability of transcutaneous spinal direct current stimulation in unmedicated adults with major depressive disorder."
+      "plain_text_summary": "This pilot randomized controlled trial evaluated the effects of transcutaneous spinal direct current stimulation on unmedicated adults with major depressive disorder over an 8-week period. Participants underwent regular clinical assessments using standardized depression and anxiety scales, alongside blood draws to measure metabolic and hormonal biomarkers at baseline and follow-up intervals. Replication would require access to the MADRS and PHQ-9 assessment protocols, longitudinal blood sample processing for specified biomarkers, and strict medication-free participant recruitment criteria."
     },
     "extraction": {
       "status": "completed",
@@ -9548,8 +9521,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "GWAS-identified risk variants for major depressive disorder: Preliminary support for an as",
-      "one_sentence_description": null,
+      "short_description": "A study investigating GWAS-identified risk variants for major depressive disorder and their association with late-life depressive symptoms and brain structural alterations in an elderly population-based cohort.",
       "dataset_features_summary": [
         "T1-weighted MRI data from 336 participants",
         "Genetic data (BICC1, PCLO, GRM7 SNPs) from buccal samples",
@@ -9559,7 +9531,7 @@
         "Medication status including antidepressant use",
         "Fasting blood biomarkers (glucose, cholesterol)"
       ],
-      "short_description": "A study investigating GWAS-identified risk variants for major depressive disorder and their association with late-life depressive symptoms and brain structural alterations in an elderly population-based cohort."
+      "plain_text_summary": "The study analyzed T1-weighted MRI scans and genetic data from 336 elderly participants in a population-based cohort to examine associations between GWAS-identified risk variants for major depressive disorder and late-life depressive symptoms. Participants were assessed using the MINI diagnostic interview and CES-D depression scale, with healthy controls included for comparison. Replication would require access to raw T1-weighted MRI scans, SNP genotype data for BICC1/PCLO/GRM7, standardized depression ratings (MINI/CES-D), cognitive scores (MMSE), and medication history."
     },
     "extraction": {
       "status": "completed",
@@ -9635,8 +9607,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "The association between gray matter volume in the hippocampal subfield and antidepressant ",
-      "one_sentence_description": null,
+      "short_description": "A longitudinal neuroimaging study examining how hippocampal subfield volume and dynamic functional connectivity mediate antidepressant treatment response in major depressive disorder.",
       "dataset_features_summary": [
         "T1-weighted structural MRI scans for voxel-based morphometry",
         "Resting-state fMRI data for dynamic functional connectivity analysis",
@@ -9644,7 +9615,7 @@
         "Longitudinal clinical assessments following a 3-month SSRI pharmacotherapy course",
         "Demographic and medication history data for MDD patients and healthy controls"
       ],
-      "short_description": "A longitudinal neuroimaging study examining how hippocampal subfield volume and dynamic functional connectivity mediate antidepressant treatment response in major depressive disorder."
+      "plain_text_summary": "This study analyzed T1-weighted MRI and resting-state fMRI data from 36 MDD patients and 43 age- and sex-matched healthy controls to investigate the relationship between hippocampal structure, dynamic functional connectivity, and antidepressant efficacy. Participants underwent baseline imaging and HAMD assessments before starting a 3-month course of SSRIs, with follow-up scans and clinical ratings collected after treatment. Replication would require access to raw structural and functional MRI datasets, longitudinal depression severity scores (HAMD), and detailed medication history for both patient and control groups."
     },
     "extraction": {
       "status": "completed",
@@ -9920,14 +9891,13 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Reduced frontal brain volume in non-treatment-seeking cocaine-dependent individuals: Explo",
-      "one_sentence_description": null,
+      "short_description": "This study investigates gray matter volume reductions in non-treatment-seeking cocaine-dependent individuals and their association with impulsivity, depression, and smoking using voxel-based morphometry.",
       "dataset_features_summary": [
         "T1-weighted MRI scans from 30 cocaine-dependent patients and 33 healthy controls",
         "Clinical assessments including Beck Depression Inventory (BDI), Barratt Impulsivity Scale (BIS), Fagerström Test for Nicotine Dependence (FTND), and premorbid IQ",
         "Voxel-based morphometry analysis of frontal gray matter volumes"
       ],
-      "short_description": "This study investigates gray matter volume reductions in non-treatment-seeking cocaine-dependent individuals and their association with impulsivity, depression, and smoking using voxel-based morphometry."
+      "plain_text_summary": "The study analyzed T1-weighted MRI scans from 30 non-treatment-seeking cocaine-dependent individuals and 33 non-drug-using healthy controls to examine frontal gray matter volume differences. Results showed reduced gray matter in the left middle frontal gyrus among cocaine users, with impulsivity scores significantly correlating with regional brain volumes, while depression and smoking severity did not show significant effects. Replication would require access to raw T1-weighted MRI data, standardized clinical assessment scores (BDI, BIS, FTND), and detailed demographic and substance use history for both patient and control groups."
     },
     "extraction": {
       "status": "completed",
@@ -10083,8 +10053,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Altered connectivity of the anterior cingulate and the posterior superior temporal gyrus i",
-      "one_sentence_description": null,
+      "short_description": "A longitudinal neuroimaging study investigating structural and functional connectivity abnormalities in the anterior cingulate cortex and posterior superior temporal gyrus among patients with later-life depression.",
       "dataset_features_summary": [
         "T1-weighted MRI scans for gray matter volume analysis",
         "Diffusion tensor imaging (DTI) data for white matter tractography",
@@ -10092,7 +10061,7 @@
         "Longitudinal clinical ratings using SIGH-D and GAF scales across depressed and remitted phases",
         "Detailed medication history and imipramine-equivalent dosage calculations"
       ],
-      "short_description": "A longitudinal neuroimaging study investigating structural and functional connectivity abnormalities in the anterior cingulate cortex and posterior superior temporal gyrus among patients with later-life depression."
+      "plain_text_summary": "The study collected T1-weighted MRI, DTI, and resting-state fMRI data from 16 patients with later-life depression and 30 healthy controls during both depressed and remitted phases over a 1.5-year period. Results indicated that patients exhibited reduced gray matter volume and increased white matter diffusivity in the anterior cingulate cortex and posterior superior temporal gyrus compared to healthy subjects, with functional connectivity differences emerging primarily during remission. Successful replication would require access to raw multimodal MRI datasets, longitudinal clinical scale scores (SIGH-D, GAF), and precise medication load records for both groups."
     },
     "extraction": {
       "status": "completed",
@@ -10128,8 +10097,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Frontal-subcortical volumetric deficits in single episode, medication-naïve depressed pati",
-      "one_sentence_description": null,
+      "short_description": "A VBM-DARTEL study investigating frontal-subcortical gray matter volume deficits in medication-naïve, single-episode MDD patients and the effects of 8 weeks of fluoxetine treatment compared to healthy controls.",
       "dataset_features_summary": [
         "T1-weighted structural MRI scans",
         "Voxel-based morphometry (VBM) analysis",
@@ -10137,7 +10105,7 @@
         "Hamilton Depression Rating Scale (HDRS-17) scores",
         "Longitudinal follow-up data after 8 weeks of fluoxetine treatment"
       ],
-      "short_description": "A VBM-DARTEL study investigating frontal-subcortical gray matter volume deficits in medication-naïve, single-episode MDD patients and the effects of 8 weeks of fluoxetine treatment compared to healthy controls."
+      "plain_text_summary": "This study used T1-weighted MRI scans from 28 medication-naïve, single-episode major depressive disorder patients and 28 healthy controls to examine gray matter volume differences using voxel-based morphometry. The researchers found structural abnormalities in frontal-subcortical circuits in the depressed group and tracked changes after an 8-week course of fluoxetine treatment. Replication would require access to baseline and follow-up structural MRI scans, HDRS depression scores, and detailed medication history for both patient and control groups."
     },
     "extraction": {
       "status": "completed",
@@ -10173,15 +10141,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Differences in cerebral structure associated with depressive symptoms in the elderly with ",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional study examining cerebral structural differences and depressive symptoms in elderly Alzheimer's disease patients using MRI and neuropsychological scales.",
       "dataset_features_summary": [
         "3D T1-weighted MRI scans from 20 AD patients and 22 healthy controls",
         "Hamilton Depression Rating Scale (HDRS) and Hamilton Anxiety Scale (HAMA) scores",
         "Cognitive assessments including MMSE, CDR, and ADL scales",
         "Voxel-based morphometry (VBM) and surface-based morphometry (SBM) analysis results"
       ],
-      "short_description": "A cross-sectional study examining cerebral structural differences and depressive symptoms in elderly Alzheimer's disease patients using MRI and neuropsychological scales."
+      "plain_text_summary": "This cross-sectional study analyzed 3D T1-weighted MRI scans from 20 elderly Alzheimer's disease patients and 22 healthy controls to investigate the relationship between cerebral structure and depressive symptoms. Depressive and anxiety symptoms were assessed using standardized scales (HDRS, HAMA), alongside cognitive measures like MMSE and CDR. Replication would require access to raw T1-weighted MRI data, HDRS/HAMA clinical scores, and neuropsychological assessment results for both patient and control groups."
     },
     "extraction": {
       "status": "completed",
@@ -10257,15 +10224,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Grey matter volume increase following electroconvulsive therapy in patients with late life",
-      "one_sentence_description": null,
+      "short_description": "A longitudinal MRI study examining grey matter volume changes following electroconvulsive therapy in elderly patients with late-life depression.",
       "dataset_features_summary": [
         "T1-weighted structural MRI scans acquired pre- and post-treatment",
         "Voxel-based morphometry (VBM) analysis of whole-brain grey matter volume",
         "Clinical assessments including MADRS, MMSE, and CORE psychomotor scores",
         "Detailed medication status and history recorded for all participants"
       ],
-      "short_description": "A longitudinal MRI study examining grey matter volume changes following electroconvulsive therapy in elderly patients with late-life depression."
+      "plain_text_summary": "This longitudinal study used T1-weighted MRI to assess grey matter volume changes in 28 elderly patients with severe late-life depression before and after electroconvulsive therapy (ECT). The results showed significant right-hemispheric grey matter volume increases, particularly in the caudate nucleus and medial temporal lobe, which correlated with improvements in psychomotor symptoms. Replication would require access to pre- and post-treatment structural MRI scans, detailed clinical rating scales (MADRS, MMSE, CORE), and participant medication history."
     },
     "extraction": {
       "status": "completed",
@@ -10381,14 +10347,13 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Cell adhesion molecule expression in the dorsolateral prefrontal cortex and anterior cingu",
-      "one_sentence_description": null,
+      "short_description": "A post-mortem immunohistochemical study examining cell adhesion molecule expression in the prefrontal cortex of elderly patients with major depression compared to healthy controls.",
       "dataset_features_summary": [
         "Post-mortem brain tissue from 20 elderly MDD patients and 20 matched healthy controls",
         "Immunohistochemistry quantification of ICAM-1 and VCAM-1 in DLPFC, ACC, and occipital cortex",
         "Clinical history including antidepressant/ECT medication status and cognitive test results"
       ],
-      "short_description": "A post-mortem immunohistochemical study examining cell adhesion molecule expression in the prefrontal cortex of elderly patients with major depression compared to healthy controls."
+      "plain_text_summary": "This study analyzed post-mortem brain tissue from 20 elderly patients with major depression and 20 healthy controls to measure cell adhesion molecule expression in specific cortical regions. The researchers found significantly increased ICAM-1 and VCAM-1 levels in the dorsolateral prefrontal cortex of depressed subjects, suggesting an inflammatory response linked to cerebral ischaemia. Replication would require access to post-mortem brain tissue blocks from elderly MDD patients and matched controls, along with detailed clinical histories including medication use and cognitive assessment data."
     },
     "extraction": {
       "status": "completed",
@@ -10904,8 +10869,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Relationship of orthostatic blood pressure to white matter hyperintensities and subcortica",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional study examining the relationship between orthostatic blood pressure drops, white matter hyperintensities, and subcortical grey matter volumes in older adults with late-life depression compared to healthy controls.",
       "dataset_features_summary": [
         "T1-weighted MRI scans acquired for WMH quantification and subcortical volumetry",
         "38 MDD patients (age >60) and 30 age-matched healthy controls",
@@ -10913,7 +10877,7 @@
         "Orthostatic systolic/diastolic blood pressure measurements recorded",
         "Detailed medication history documented for both groups"
       ],
-      "short_description": "A cross-sectional study examining the relationship between orthostatic blood pressure drops, white matter hyperintensities, and subcortical grey matter volumes in older adults with late-life depression compared to healthy controls."
+      "plain_text_summary": "This cross-sectional study examined structural brain changes in 38 older adults with late-life major depressive disorder compared to 30 healthy controls using T1-weighted MRI and orthostatic blood pressure testing. The researchers found that drops in systolic blood pressure upon standing were associated with increased white matter hyperintensity volumes in temporal and parietal regions among the depression group, while subcortical grey matter reductions were not linked to vascular measures. Replication would require access to raw T1-weighted MRI scans, orthostatic blood pressure data, standardized depression and cognitive scale scores, and detailed medication histories for both patient and control cohorts."
     },
     "extraction": {
       "status": "completed",
@@ -10949,8 +10913,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Gray matter volume alterations associated with suicidal ideation and suicide attempts in p",
-      "one_sentence_description": null,
+      "short_description": "This study investigates gray matter volume alterations in patients with mood disorders and suicidal behavior compared to healthy controls using voxel-based morphometry.",
       "dataset_features_summary": [
         "T1-weighted structural MRI scans from all participants",
         "Voxel-based morphometry (VBM) processing pipeline parameters",
@@ -10959,7 +10922,7 @@
         "Diagnostic classifications for MDD and BD subtypes",
         "Suicidal ideation and suicide attempt status assessments"
       ],
-      "short_description": "This study investigates gray matter volume alterations in patients with mood disorders and suicidal behavior compared to healthy controls using voxel-based morphometry."
+      "plain_text_summary": "The study analyzed T1-weighted MRI scans from 70 patients with mood disorders and suicidal behavior, 128 mood disorder controls without suicidal behavior, and 145 healthy controls. Results indicated significantly reduced gray matter volumes in the left and right middle frontal gyrus for patients exhibiting suicidal behavior compared to both control groups. Replication would require access to raw T1-weighted MRI data, standardized depression (HAMD) and mania (YMRS) rating scale scores, and confirmed diagnostic classifications for mood disorder subtypes."
     },
     "extraction": {
       "status": "completed",
@@ -11035,15 +10998,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Regional, circuit and network heterogeneity of brain abnormalities in psychiatric disorder",
-      "one_sentence_description": null,
+      "short_description": "A multiscale normative modeling analysis of gray matter volume heterogeneity across six psychiatric disorders and healthy controls using structural MRI data from multiple independent cohorts.",
       "dataset_features_summary": [
         "T1-weighted structural MRI scans aggregated from 14 independent datasets across 25 scan sites",
         "Voxel-based morphometry (CAT12 pipeline) used to estimate regional gray matter volume",
         "Cross-sectional sample comprising patients with ADHD, ASD, bipolar disorder, MDD, OCD, schizophrenia, and matched healthy controls",
         "Resting-state fMRI data from the Human Connectome Project utilized for mapping functional circuit connectivity"
       ],
-      "short_description": "A multiscale normative modeling analysis of gray matter volume heterogeneity across six psychiatric disorders and healthy controls using structural MRI data from multiple independent cohorts."
+      "plain_text_summary": "This study analyzed T1-weighted MRI scans from 3,746 individuals across six psychiatric disorders (ADHD, ASD, bipolar disorder, major depressive disorder, OCD, and schizophrenia) and healthy controls to characterize regional gray matter volume heterogeneity. Using normative modeling, the authors found that while brain deviations are highly localized and variable between individuals with the same diagnosis, these deviations often aggregate within common functional circuits and networks. Replication would require access to harmonized T1-weighted structural MRI data from multiple clinical cohorts, healthy control scans for normative baseline modeling, and rs-fMRI data to map functional connectivity contexts."
     },
     "extraction": {
       "status": "completed",
@@ -11079,8 +11041,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Cognitive behavioral therapy for antenatal depression in a pilot randomized controlled tri",
-      "one_sentence_description": null,
+      "short_description": "A perspective article summarizing a 5-year follow-up of a pilot RCT evaluating antenatal CBT for depression and its neurobiological, behavioral, and cognitive effects on offspring.",
       "dataset_features_summary": [
         "Anatomical and diffusion-weighted MRI scans of children aged 3-7 years",
         "DNA methylation profiling from child buccal swabs",
@@ -11088,7 +11049,7 @@
         "Child cognitive assessment using the WPPSI-III",
         "Longitudinal follow-up data spanning pregnancy to approximately 5 years postpartum"
       ],
-      "short_description": "A perspective article summarizing a 5-year follow-up of a pilot RCT evaluating antenatal CBT for depression and its neurobiological, behavioral, and cognitive effects on offspring."
+      "plain_text_summary": "This study followed children aged 3–7 years whose mothers participated in a pilot randomized controlled trial of antenatal Cognitive Behavioral Therapy (CBT) for depression and anxiety. Researchers assessed offspring brain morphology via MRI, DNA methylation profiles from buccal swabs, cognitive performance using the WPPSI-III, and maternal mood scales over multiple time points. Replication would require access to longitudinal maternal mental health data, child neuroimaging scans, epigenetic profiling results, and standardized cognitive assessment scores."
     },
     "extraction": {
       "status": "completed",
@@ -11644,8 +11605,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Right external globus pallidus changes are associated with altered causal awareness in you",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional study investigating the relationship between right external globus pallidus structural integrity and causal awareness in youth with depression.",
       "dataset_features_summary": [
         "T1-weighted MRI scans from 43 depressed youth and 21 healthy controls",
         "Voxel-based morphometry and shape analysis of subcortical structures",
@@ -11653,7 +11613,7 @@
         "Causal awareness task performance data",
         "Medication status records"
       ],
-      "short_description": "A cross-sectional study investigating the relationship between right external globus pallidus structural integrity and causal awareness in youth with depression."
+      "plain_text_summary": "This cross-sectional study examined T1-weighted MRI scans from 43 young adults with unipolar depression and 21 healthy controls to assess the relationship between brain structure and causal awareness. Participants completed a behavioral task measuring their ability to judge action-outcome contingencies, alongside clinical ratings using the Hamilton Depression Rating Scale and social functioning assessments. Replication would require access to raw T1-weighted MRI data, subcortical segmentation tools, and the specific causal awareness behavioral task protocol along with depression severity scores."
     },
     "extraction": {
       "status": "completed",
@@ -11689,8 +11649,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "The temptation of suicide: striatal gray matter, discounting of delayed rewards, and suici",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional study examining the association between striatal gray matter volume, delay discounting behavior, and suicide attempts in elderly patients with major depression compared to healthy controls.",
       "dataset_features_summary": [
         "T1-weighted MRI scans of basal ganglia structures",
         "Major Depressive Disorder patient group with suicide attempt history",
@@ -11700,7 +11659,7 @@
         "Dementia Rating Scale (DRS) and pre-morbid IQ (WTAR) cognitive assessments",
         "Monetary Choice Questionnaire (MCQ) delay discounting data"
       ],
-      "short_description": "A cross-sectional study examining the association between striatal gray matter volume, delay discounting behavior, and suicide attempts in elderly patients with major depression compared to healthy controls."
+      "plain_text_summary": "This study analyzed baseline T1-weighted MRI scans, depression severity scores, and cognitive test results from 33 elderly patients with major depression (including suicide attempters) and 19 healthy controls. The main result showed that lower putamen gray matter voxel counts in suicide attempters were associated with a stronger preference for immediate rewards (delay discounting). Replication would require access to raw T1-weighted MRI data, HAMD-17 scores, medication history records, and behavioral delay discounting task data from late-life depression cohorts."
     },
     "extraction": {
       "status": "completed",
@@ -11816,15 +11775,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "The orbitofrontal cortex gray matter is associated with the interaction between insomnia a",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional structural MRI study investigating the interaction between insomnia and depression on orbitofrontal cortex gray matter volume in MDD and primary insomnia patients.",
       "dataset_features_summary": [
         "3D T1-weighted MRI scans acquired from 65 MDD and 67 PI patients",
         "Standardized clinical rating scales used (HAMD, SDS, HAMA, SAS, PSQI)",
         "Medication status recorded as inclusion criterion (naïve or washout period)",
         "Cross-sectional design explicitly excluding healthy controls"
       ],
-      "short_description": "A cross-sectional structural MRI study investigating the interaction between insomnia and depression on orbitofrontal cortex gray matter volume in MDD and primary insomnia patients."
+      "plain_text_summary": "This cross-sectional study used structural MRI to examine brain structure in 65 patients with major depressive disorder and 67 patients with primary insomnia. The researchers found that co-occurring depression and insomnia was associated with decreased gray matter volume in the right orbitofrontal cortex, while main effects of depression and insomnia were observed in other cortical regions. Replication would require access to raw T1-weighted MRI scans, clinical rating scale scores (HAMD, SDS, HAMA, SAS), and detailed medication history for both patient groups."
     },
     "extraction": {
       "status": "completed",
@@ -11900,8 +11858,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Transdiagnostic subgroups of cognitive impairment in early affective and psychotic illness",
-      "one_sentence_description": null,
+      "short_description": "This study identifies transdiagnostic cognitive impairment subgroups in early psychosis, depression, and clinical high-risk populations using neuroimaging and neuropsychological data.",
       "dataset_features_summary": [
         "T1-weighted MRI (sMRI) for gray matter volume analysis",
         "Resting-state fMRI for functional connectivity mapping",
@@ -11910,7 +11867,7 @@
         "Global Assessment of Functioning (GAF) scores",
         "Antipsychotic medication history/equivalents"
       ],
-      "short_description": "This study identifies transdiagnostic cognitive impairment subgroups in early psychosis, depression, and clinical high-risk populations using neuroimaging and neuropsychological data."
+      "plain_text_summary": "The study analyzed baseline structural and resting-state functional neuroimaging data from patients with recent-onset psychosis, recent-onset depression, clinical high-risk for psychosis, and healthy controls. Researchers identified cognitively impaired and spared subgroups that differed in symptom profiles, functioning, and brain connectivity patterns. Replication would require access to raw MRI scans, detailed neuropsychological test scores, standardized psychiatric rating scales, and medication tracking data."
     },
     "extraction": {
       "status": "completed",
@@ -11986,8 +11943,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Exposure to parental verbal abuse is associated with increased gray matter volume in super",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional neuroimaging study investigating the association between childhood exposure to parental verbal abuse and regional gray matter volume in young adults.",
       "dataset_features_summary": [
         "High-resolution T1-weighted MRI data from 40 right-handed young adult volunteers",
         "Voxel-based morphometry (VBM) analysis of whole-brain gray matter volume",
@@ -11996,7 +11952,7 @@
         "Cognitive and memory assessments including WAIS-III and Memory Assessment Scale",
         "Medication status recorded (all participants unmedicated)"
       ],
-      "short_description": "A cross-sectional neuroimaging study investigating the association between childhood exposure to parental verbal abuse and regional gray matter volume in young adults."
+      "plain_text_summary": "This study analyzed T1-weighted MRI scans from 40 young adults to examine how childhood exposure to parental verbal abuse relates to brain structure. Researchers found significantly increased gray matter volume in the left superior temporal gyrus among individuals with higher abuse exposure, which correlated strongly with maternal and paternal verbal aggression scores. Replication would require access to raw structural MRI data, detailed retrospective trauma/abuse history questionnaires, standardized psychiatric symptom scales, cognitive test results, and confirmation of unmedicated status from a matched community sample."
     },
     "extraction": {
       "status": "completed",
@@ -12032,8 +11988,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Altered cerebral blood flow in Alzheimer’s disease with depression",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional study investigating cerebral perfusion characteristics in Alzheimer’s disease patients with and without depression using arterial spin labeling MRI.",
       "dataset_features_summary": [
         "T1-weighted MRI scans",
         "Arterial Spin Labeling (ASL) for regional cerebral blood flow measurement",
@@ -12041,7 +11996,7 @@
         "MMSE and MoCA cognitive assessment scores",
         "Healthy control group matched with AD patients"
       ],
-      "short_description": "A cross-sectional study investigating cerebral perfusion characteristics in Alzheimer’s disease patients with and without depression using arterial spin labeling MRI."
+      "plain_text_summary": "This cross-sectional study compared 21 Alzheimer’s disease patients (9 with depression, 12 without) to 21 healthy controls using T1-weighted MRI and arterial spin labeling to measure regional cerebral blood flow. Depressive symptoms were assessed via the Hamilton Depression Rating Scale, while cognitive function was evaluated using MMSE and MoCA scores. Replication would require access to raw T1w and ASL MRI data from AD patients stratified by depression status, along with corresponding HAMD, MMSE, and MoCA clinical scores."
     },
     "extraction": {
       "status": "completed",
@@ -12317,8 +12272,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Structural brain changes as biomarkers and outcome predictors in patients with late-life d",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional and prospective MRI study examining structural brain changes as biomarkers for treatment response in elderly patients with late-life depression.",
       "dataset_features_summary": [
         "T1-weighted MRI scans from 30 depressed elderly patients and 22 healthy controls",
         "Voxel-based morphometry (VBM) analysis of grey matter volume",
@@ -12327,7 +12281,7 @@
         "Antidepressant medication status recorded",
         "Prospective follow-up over 24 weeks to assess remission"
       ],
-      "short_description": "A cross-sectional and prospective MRI study examining structural brain changes as biomarkers for treatment response in elderly patients with late-life depression."
+      "plain_text_summary": "This study used T1-weighted MRI scans from 30 elderly patients with late-life depression and 22 healthy controls to examine grey matter volume differences. Patients were followed prospectively for 24 weeks while receiving antidepressant treatment, with clinical outcomes measured using standardized depression scales (HAM-D, MADRS) and cognitive assessments (MMSE). Replication would require access to baseline T1-weighted MRI scans, monthly depression rating scale scores, cognitive test results, and medication history data."
     },
     "extraction": {
       "status": "completed",
@@ -12563,8 +12517,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "A longitudinal, randomized experimental pilot study to investigate the effects of airborne",
-      "one_sentence_description": null,
+      "short_description": "A longitudinal randomized controlled pilot study investigating the effects of long-term airborne infrasound exposure on brain structure, cognition, and mental health in healthy volunteers.",
       "dataset_features_summary": [
         "T1-weighted structural MRI scans acquired pre- and post-exposure",
         "Voxel-based morphometry (VBM) analysis of regional grey matter volume changes",
@@ -12572,7 +12525,7 @@
         "Computerized cognitive performance assessments (TAP battery, spatial n-back task)",
         "Longitudinal pre-post design with 28-night bedroom exposure period"
       ],
-      "short_description": "A longitudinal randomized controlled pilot study investigating the effects of long-term airborne infrasound exposure on brain structure, cognition, and mental health in healthy volunteers."
+      "plain_text_summary": "This study assessed 38 healthy young volunteers who were exposed to either engineered airborne infrasound or a sham condition in their bedrooms for 28 nights. Researchers collected pre- and post-exposure T1-weighted MRI scans, standardized depression and anxiety symptom scores, sleep quality measures, and computerized cognitive test results. Replication would require access to raw structural MRI data, validated psychological and cognitive assessment tools, and the ability to engineer or source controlled infrasound exposure devices for long-term bedroom use."
     },
     "extraction": {
       "status": "completed",
@@ -12888,8 +12841,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Early and late effects of electroconvulsive therapy associated with different temporal lob",
-      "one_sentence_description": null,
+      "short_description": "Longitudinal MRI study examining regional gray matter volume changes and clinical symptom improvement in major depressive disorder patients undergoing electroconvulsive therapy.",
       "dataset_features_summary": [
         "3-Tesla T1-weighted structural MRI scans acquired at three time points (pre-ECT, mid-ECT, post-ECT)",
         "Voxel-based morphometry analysis of gray matter volume changes",
@@ -12897,7 +12849,7 @@
         "Mini-Mental State Examination (MMSE) scores for cognitive function",
         "Detailed medication history and status for all participants"
       ],
-      "short_description": "Longitudinal MRI study examining regional gray matter volume changes and clinical symptom improvement in major depressive disorder patients undergoing electroconvulsive therapy."
+      "plain_text_summary": "This longitudinal study assessed 14 patients with major depressive disorder using serial 3-Tesla T1-weighted MRI scans at three time points during electroconvulsive therapy (ECT). The main results indicated that early antipsychotic effects were associated with gray matter volume increases in the left superior and middle temporal gyrus, while late antidepressant effects correlated with volume changes in the left hippocampus. Replication would require access to raw T1-weighted MRI data, HDRS and MMSE clinical scores collected at baseline, mid-treatment, and post-treatment time points, and detailed medication history for each participant."
     },
     "extraction": {
       "status": "completed",
@@ -13093,15 +13045,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Linking menopause-related factors, history of depression, APOE ε4, and proxies of biologic",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional UK Biobank study examining the interplay between menopause-related factors, lifetime depression history, APOE ε4 genotype, and proxies of cellular (LTL) and brain aging (BAG) in females.",
       "dataset_features_summary": [
         "T1-weighted MRI and diffusion imaging data from 13,780 UK Biobank females",
         "Leukocyte telomere length (LTL) measured via quantitative PCR on blood samples",
         "APOE ε4 genotype derived from imputed genetic data",
         "Self-reported menopause history, lifetime broad depression phenotype, and medication/MHT use"
       ],
-      "short_description": "A cross-sectional UK Biobank study examining the interplay between menopause-related factors, lifetime depression history, APOE ε4 genotype, and proxies of cellular (LTL) and brain aging (BAG) in females."
+      "plain_text_summary": "This study analyzed T1-weighted MRI scans, diffusion imaging, leukocyte telomere length (LTL), APOE ε4 genotype, and self-reported menopause and depression data from 13,780 females in the UK Biobank. Postmenopausal status and older age at natural menopause were associated with longer LTL and lower brain age gap, with lifetime depression history and APOE ε4 genotype significantly influencing these aging proxies. Replication would require access to raw MRI scans, leukocyte telomere length measurements, APOE ε4 genotype data, and detailed self-reported menopause and depression history variables."
     },
     "extraction": {
       "status": "completed",
@@ -13617,8 +13568,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Structural abnormalities associated with poor outcome of a major depressive episode: The r",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional study with a 6-month follow-up examining baseline grey matter volume differences between treatment responders and non-responders in patients with major depressive episodes.",
       "dataset_features_summary": [
         "3D T1-weighted MRI scans acquired at baseline",
         "Voxel-based morphometry (VBM) analysis of grey matter volume",
@@ -13629,7 +13579,7 @@
         "6-month longitudinal clinical follow-up data",
         "Medication load and psychotropic history records"
       ],
-      "short_description": "A cross-sectional study with a 6-month follow-up examining baseline grey matter volume differences between treatment responders and non-responders in patients with major depressive episodes."
+      "plain_text_summary": "This study analyzed baseline T1-weighted MRI scans from 57 patients with a major depressive episode to compare grey matter volume between those who responded and those who did not respond to personalized treatment after six months. The main result indicated that non-responders had significantly smaller grey matter volumes in the bilateral thalami compared to responders at baseline, alongside higher baseline anxiety scores. Replication would require access to raw structural MRI data, detailed clinical assessment scores (including MADRS, HAMA, and CGI-I), medication history, and longitudinal follow-up data to classify treatment response."
     },
     "extraction": {
       "status": "completed",
@@ -13785,15 +13735,14 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Baseline clinical and neuroimaging biomarkers of treatment response to high-frequency rTMS",
-      "one_sentence_description": null,
+      "short_description": "A retrospective study investigating clinical and structural neuroimaging biomarkers to predict treatment response to high-frequency rTMS in patients with treatment-resistant depression.",
       "dataset_features_summary": [
         "Baseline T1-weighted MRI scans from 95 patients",
         "Longitudinal MADRS and BDI scores at baseline, post-treatment (Day 14), and 1-month follow-up (Day 45)",
         "Detailed medication history and treatment resistance stage data",
         "FreeSurfer-derived whole-brain volumetric and cortical thickness metrics"
       ],
-      "short_description": "A retrospective study investigating clinical and structural neuroimaging biomarkers to predict treatment response to high-frequency rTMS in patients with treatment-resistant depression."
+      "plain_text_summary": "This study analyzed T1-weighted MRI scans and clinical assessments from 95 patients with treatment-resistant depression to identify biomarkers predicting response to high-frequency rTMS over the left DLPFC. Depression severity, bipolar diagnosis, female gender, and lower resistance stage were associated with better outcomes, while responders exhibited smaller gray matter volumes in specific left frontal regions. Replication would require access to baseline structural MRI data, longitudinal depression rating scale scores (MADRS/BDI), detailed medication history, and FreeSurfer-processed cortical thickness/volume metrics."
     },
     "extraction": {
       "status": "completed",
@@ -13989,8 +13938,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Magnetic resonance imaging in late-life depression: Vascular and glucocorticoid cascade hy",
-      "one_sentence_description": null,
+      "short_description": "A cross-sectional MRI study examining the relationship between age at onset and structural brain measures in patients with late-life depression.",
       "dataset_features_summary": [
         "T1-weighted MRI scans",
         "Voxel-based morphometry analysis",
@@ -14000,7 +13948,7 @@
         "Cognitive assessment scores (ACE-R, MMSE, CANTAB)",
         "Medication status and history"
       ],
-      "short_description": "A cross-sectional MRI study examining the relationship between age at onset and structural brain measures in patients with late-life depression."
+      "plain_text_summary": "This cross-sectional study analyzed T1-weighted MRI and diffusion tensor imaging data from 36 patients with late-life depression to examine how age at onset correlates with grey and white matter brain measures. The results showed that later age at onset was associated with reduced white matter integrity in frontal tracts, while earlier age at onset correlated with smaller hippocampal volumes. Replication would require access to raw T1-weighted MRI scans, DTI data, depression rating scale scores (HRSD/GDS), cognitive test results, and detailed medication histories for late-life depression patients."
     },
     "extraction": {
       "status": "completed",
@@ -14076,8 +14024,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Structural brain plasticity and inflammation are independently related to changes in depre",
-      "one_sentence_description": null,
+      "short_description": "A six-month longitudinal study examining changes in gray matter volume and peripheral inflammation markers following electroconvulsive therapy for treatment-resistant depression.",
       "dataset_features_summary": [
         "T1-weighted structural MRI scans acquired at two time points",
         "Voxel-based morphometry analysis of gray matter volume changes",
@@ -14085,7 +14032,7 @@
         "Peripheral blood biomarkers (IL-6, IL-8, TNFα, CRP) measured via immunoassay",
         "Medication and maintenance ECT status recorded for all participants"
       ],
-      "short_description": "A six-month longitudinal study examining changes in gray matter volume and peripheral inflammation markers following electroconvulsive therapy for treatment-resistant depression."
+      "plain_text_summary": "This study followed 20 patients with treatment-resistant depression who received an index course of electroconvulsive therapy, collecting structural MRI scans and peripheral blood inflammatory markers at baseline and six months later. The results showed widespread decreases in gray matter volume over the follow-up period, with specific volumetric reductions correlating with worsening depressive symptoms, while decreased IL-8 levels correlated with symptom improvement. Replication would require access to longitudinal T1-weighted MRI data, standardized depression rating scales (HAM-D), and peripheral blood samples for cytokine analysis from ECT-treated patients."
     },
     "extraction": {
       "status": "completed",
@@ -14121,14 +14068,13 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Glial fibrillary acidic protein in late life major depressive disorder: An immunocytochemi",
-      "one_sentence_description": null,
+      "short_description": "A postmortem immunocytochemical study measuring glial fibrillary acidic protein (GFAP) levels in the dorsolateral prefrontal cortex and anterior cingulate cortex of elderly patients with major depressive disorder compared to age-matched controls.",
       "dataset_features_summary": [
         "Postmortem brain tissue from 20 elderly MDD patients and 20 age-matched healthy controls",
         "Immunocytochemical staining and quantitative image analysis for GFAP in cortical grey matter and white matter regions",
         "Clinical diagnosis based on DSM-IV criteria with exclusion of dementia and other major psychiatric/neurological disorders"
       ],
-      "short_description": "A postmortem immunocytochemical study measuring glial fibrillary acidic protein (GFAP) levels in the dorsolateral prefrontal cortex and anterior cingulate cortex of elderly patients with major depressive disorder compared to age-matched controls."
+      "plain_text_summary": "This study analyzed formalin-fixed postmortem brain tissue from 20 elderly patients with a history of major depressive disorder and 20 age-matched healthy controls to quantify GFAP immunoreactivity in the dorsolateral prefrontal cortex and anterior cingulate cortex. The researchers found significantly higher GFAP levels only in layer I of the DLPFC in depressed subjects, providing limited support for the vascular depression hypothesis. Replication would require access to postmortem brain tissue samples from elderly MDD patients and controls, standardized immunocytochemistry protocols for astrocytic markers, and image analysis software for quantifying stained areas."
     },
     "extraction": {
       "status": "completed",
@@ -14722,8 +14668,7 @@
       "population": null
     },
     "website_card": {
-      "short_title": "Social threat, fronto-cingulate-limbic morphometry, and symptom course in depressed adoles",
-      "one_sentence_description": null,
+      "short_description": "A longitudinal investigation examining how lifetime social threat severity relates to fronto-cingulate-limbic gray matter morphometry and depressive symptom trajectories in depressed adolescents.",
       "dataset_features_summary": [
         "Structural MRI data from 57 depressed adolescents (ages 13-18)",
         "Longitudinal depression and anxiety scale assessments over a 9-month period",
@@ -14731,7 +14676,7 @@
         "Antidepressant and psychotropic medication status recorded as covariates",
         "Gray matter volume and cortical surface area morphometry of amygdala, NAcc, hippocampus, and ACC"
       ],
-      "short_description": "A longitudinal investigation examining how lifetime social threat severity relates to fronto-cingulate-limbic gray matter morphometry and depressive symptom trajectories in depressed adolescents."
+      "plain_text_summary": "This longitudinal study assessed structural MRI scans and clinical data from 57 depressed adolescents to examine how lifetime exposure to social threat relates to gray matter morphometry in fronto-cingulate-limbic regions. Greater social threat severity was associated with smaller amygdala and nucleus accumbens volumes, as well as reduced anterior cingulate cortex surface area, which mediated the persistence of depressive symptoms over a 9-month period. Replication would require access to structural MRI scans, lifetime stressor inventory data (STRAIN), repeated depression/anxiety scale scores, and medication history for adolescent MDD patients."
     },
     "extraction": {
       "status": "completed",
