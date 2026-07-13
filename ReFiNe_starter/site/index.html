@@ -13,13 +13,19 @@
   </header>
 
   <section class="filters">
-    <h2>Filter by dataset features needed</h2>
+    <h2>Filter by replication requirements</h2>
+
+    <!-- Free-text search -->
     <div id="search-container">
       <input type="text" id="search-input" placeholder="Search papers by title, diagnosis, feature, or summary..." class="search-input">
       <button id="clear-search" class="clear-search-btn" style="display:none;" title="Clear search">&times;</button>
     </div>
-    <div id="filters"></div>
-    <button id="reset">Reset filters</button>
+
+    <!-- Grouped collapsible filter sections -->
+    <div id="filter-groups"></div>
+
+    <!-- Clear all filters button -->
+    <button id="clear-all-filters" class="clear-all-btn" style="display:none;">Clear all filters</button>
   </section>
 
   <section class="demo-actions">
@@ -31,6 +37,12 @@
     </div>
     <div id="export-output" class="export-output" style="display:none;"></div>
   </section>
+
+  <!-- Selected filter chips area -->
+  <div id="active-filters-bar" class="active-filters-bar" style="display:none;">
+    <span class="active-filters-label">Active filters:</span>
+    <div id="active-filters-chips"></div>
+  </div>
 
   <main>
     <div id="count"></div>

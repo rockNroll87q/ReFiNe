@@ -1,3 +1,104 @@
+// ============================================================
+// Tag-label mapping for filter_tags taxonomy
+// Uses exact internal tag values from paper.filter_tags
+// ============================================================
+const FILTER_GROUP_CONFIG = [
+  {
+    key: "imaging",
+    label: "Imaging",
+    tags: [
+      { value: "voxel_based_morphometry_t1w_mri", label: "Voxel-based morphometry (T1-weighted MRI)" },
+      { value: "parcellation_based_morphometry_t1w_mri", label: "Parcellation-based morphometry (T1-weighted MRI)" },
+      { value: "vertex_wise_morphometry_t1w_mri", label: "Vertex-wise morphometry (T1-weighted MRI)" },
+      { value: "voxel_wise_task_related_activity_tb_fmri", label: "Voxel-wise task-related activity (task-based fMRI)" },
+      { value: "seed_to_voxel_functional_connectivity_rs_fmri", label: "Seed-to-voxel functional connectivity (resting-state fMRI)" }
+    ]
+  },
+  {
+    key: "population",
+    label: "Population",
+    tags: [
+      { value: "healthy", label: "Healthy" },
+      { value: "clinical", label: "Clinical" },
+      { value: "mixed_clinical_and_healthy_controls", label: "Mixed clinical and healthy controls" }
+    ]
+  },
+  {
+    key: "clinical_group",
+    label: "Clinical group",
+    tags: [
+      { value: "mood_affective_disorders", label: "Mood / affective disorders" },
+      { value: "anxiety_stress_ocd_disorders", label: "Anxiety-, stress-, and OCD-related disorders" },
+      { value: "psychotic_disorders", label: "Psychotic disorders" },
+      { value: "neurodevelopmental_disorders", label: "Neurodevelopmental disorders" },
+      { value: "neurological_disorders", label: "Neurological disorders" },
+      { value: "dementia_neurodegenerative_disorders", label: "Dementia / neurodegenerative disorders" },
+      { value: "other_clinical_group", label: "Other clinical group" }
+    ]
+  },
+  {
+    key: "age_group",
+    label: "Age group",
+    tags: [
+      { value: "children", label: "Children" },
+      { value: "adolescents", label: "Adolescents" },
+      { value: "young_adults", label: "Young adults" },
+      { value: "adults", label: "Adults" },
+      { value: "older_adults", label: "Older adults" },
+      { value: "mixed_lifespan", label: "Mixed lifespan" }
+    ]
+  },
+  {
+    key: "study_design",
+    label: "Study design",
+    tags: [
+      { value: "cross_sectional", label: "Cross-sectional" },
+      { value: "longitudinal", label: "Longitudinal" },
+      { value: "intervention_treatment", label: "Intervention / treatment" },
+      { value: "case_control", label: "Case-control" },
+      { value: "cohort_population_based", label: "Cohort / population-based" }
+    ]
+  },
+  {
+    key: "associated_data",
+    label: "Associated data required",
+    tags: [
+      { value: "depression_severity", label: "Depression severity" },
+      { value: "anxiety_severity", label: "Anxiety severity" },
+      { value: "general_psychopathology", label: "General psychopathology" },
+      { value: "diagnosis_clinical_status", label: "Diagnosis / clinical status" },
+      { value: "illness_duration", label: "Illness duration" },
+      { value: "age_of_onset", label: "Age of onset" },
+      { value: "episode_history", label: "Episode history" },
+      { value: "comorbidity", label: "Comorbidity" },
+      { value: "medication_status", label: "Medication status" },
+      { value: "psychotherapy", label: "Psychotherapy" },
+      { value: "treatment_response", label: "Treatment response" },
+      { value: "remission_relapse", label: "Remission / relapse" },
+      { value: "childhood_trauma", label: "Childhood trauma" },
+      { value: "stressful_life_events", label: "Stressful life events" },
+      { value: "social_relationships", label: "Social relationships" },
+      { value: "socioeconomic_adversity", label: "Socioeconomic adversity" },
+      { value: "iq", label: "IQ" },
+      { value: "executive_function", label: "Executive function" },
+      { value: "memory", label: "Memory" },
+      { value: "behavioural_scales", label: "Behavioural scales" },
+      { value: "genetics", label: "Genetics" },
+      { value: "blood_biomarkers", label: "Blood biomarkers" },
+      { value: "cortisol_endocrine_markers", label: "Cortisol / endocrine markers" },
+      { value: "microbiome", label: "Microbiome" },
+      { value: "other_omics", label: "Other omics" },
+      { value: "smoking", label: "Smoking" },
+      { value: "physical_activity", label: "Physical activity" },
+      { value: "sleep", label: "Sleep" },
+      { value: "education", label: "Education" },
+      { value: "employment", label: "Employment" },
+      { value: "socioeconomic_status", label: "Socioeconomic status" }
+    ]
+  }
+];
+
+// Legacy REFINE_FEATURES kept for volunteer/claim rendering (not used as main filter)
 const REFINE_FEATURES = [
   ["t1w_mri", "T1w MRI"],
   ["vbm_or_voxelwise_morphometry", "VBM / voxel-wise morphometry"],
@@ -13,10 +114,6 @@ const REFINE_FEATURES = [
   ["cognitive_data", "Cognitive data"],
   ["blood_or_biomarker_data", "Blood / biomarker data"]
 ];
-
-function getFeatureKeys() {
-  return REFINE_FEATURES.map(f => f[0]);
-}
 
 function getFeatureLabel(key) {
   const found = REFINE_FEATURES.find(f => f[0] === key);
@@ -39,7 +136,6 @@ const REPLICATION_LABELS = {
 const STORAGE_KEY = "refine_demo_claims";
 
 let papers = [];
-// claims is now an array of all claim objects (multiple per paper_id allowed)
 let claims = [];
 
 // Load static claims from claims.json (returns array)
@@ -88,7 +184,6 @@ function saveDemoClaims(claimsArray) {
 
 // Merge static claims and demo claims into a single array
 function mergeClaims(staticClaims, demoClaims) {
-  // Combine both arrays; demo claims come last so they appear at the end when rendering
   return [...staticClaims, ...demoClaims];
 }
 
@@ -158,7 +253,6 @@ function renderVolunteerList(claimsArray) {
 
   let html = `<div class="volunteer-list">`;
 
-  // Show volunteer names/institutions in a collapsed details block
   html += `<details>`;
   html += `<summary>View ${claimsArray.length} volunteer group${claimsArray.length > 1 ? "s" : ""}</summary>`;
   html += `<div class="volunteer-list-inner">`;
@@ -200,6 +294,21 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+// ============================================================
+// Get display label for a filter tag value using the config
+// ============================================================
+function getTagLabel(tagValue) {
+  for (const group of FILTER_GROUP_CONFIG) {
+    const found = group.tags.find(t => t.value === tagValue);
+    if (found) return found.label;
+  }
+  // Fallback: convert snake_case to readable
+  return tagValue.replace(/_/g, " ");
+}
+
+// ============================================================
+// Render paper card with Summary + Replication requirements tags
+// ============================================================
 function renderCard(paper) {
   const paperClaims = getClaimsForPaper(paper.paper_id);
   const activeCount = paperClaims.filter(c => c.status?.toLowerCase() === "selected" || c.status?.toLowerCase() === "volunteer_pending").length;
@@ -215,23 +324,35 @@ function renderCard(paper) {
 
   let card = `<div class="card" data-paper-id="${paper.paper_id}">`;
   card += `<h3>${escapeHtml(paper.title)} <span class="status-badge ${status.class}">${status.label}</span></h3>`;
-  card += `<div class="meta">${escapeHtml(paper.authors)} · ${paper.year}</div>`;
-  card += `<div class="meta">DOI: <a href="${paper.doi}" target="_blank">${paper.doi}</a></div>`;
+  card += `<div class="meta">${escapeHtml(paper.authors || "Unknown authors")} · ${paper.year}</div>`;
+  card += `<div class="meta">DOI: <a href="${paper.doi}" target="_blank">${paper.doi || "N/A"}</a></div>`;
 
   // Summary section (only if available)
   if (summaryText !== null) {
     card += `<div class="summary-section"><h4>Summary</h4><p>${escapeHtml(summaryText)}</p></div>`;
   }
 
-  // Dataset features needed
-  card += `<div class="features-section">`;
-  card += `<h4>Dataset features needed</h4>`;
-  card += `<div class="badges">`;
-  for (const [key, label] of REFINE_FEATURES) {
-    const val = paper.dataset_features_needed?.[key] || "unclear";
-    card += `<span class="badge ${val}">${label}: ${val}</span>`;
+  // Replication requirements section (from filter_tags, NOT old yes/no badges)
+  const filterTags = paper.filter_tags || {};
+  const hasFilterTags = Object.values(filterTags).some(arr => Array.isArray(arr) && arr.length > 0);
+
+  if (hasFilterTags) {
+    card += `<div class="replication-requirements">`;
+    card += `<h4>Replication requirements</h4>`;
+    for (const group of FILTER_GROUP_CONFIG) {
+      const tags = filterTags[group.key] || [];
+      if (tags.length > 0) {
+        card += `<div class="req-group"><span class="req-group-label">${escapeHtml(group.label)}:</span> `;
+        card += `<div class="req-chips">`;
+        for (const tag of tags) {
+          const label = getTagLabel(tag);
+          card += `<span class="req-chip">${escapeHtml(label)}</span>`;
+        }
+        card += `</div></div>`;
+      }
+    }
+    card += `</div>`;
   }
-  card += `</div></div>`;
 
   // Coverage line
   const coverage = computeCoverageForPaper(paper.paper_id);
@@ -239,10 +360,8 @@ function renderCard(paper) {
 
   // Volunteer section
   if (activeCount === 0) {
-    // No volunteers: show available badge and volunteer button
     card += `<button class="volunteer-btn" onclick="openVolunteerModal('${paper.paper_id}')">Volunteer to replicate this paper</button>`;
   } else {
-    // One or more volunteers: show list and "Add another group" button
     card += renderVolunteerList(paperClaims);
     card += `<button class="volunteer-btn add-another-btn" onclick="openVolunteerModal('${paper.paper_id}')">Add another group</button>`;
   }
@@ -251,12 +370,13 @@ function renderCard(paper) {
   return card;
 }
 
+// ============================================================
+// Search matching (unchanged logic, combined with filters via AND)
+// ============================================================
 function matchesSearch(paper, query) {
-  // Normalize: lowercase and trim
   const q = query.toLowerCase().trim();
   if (!q) return true;
 
-  // Helper to check if a string or array contains the query (case-insensitive)
   function textMatch(text) {
     if (!text) return false;
     return String(text).toLowerCase().includes(q);
@@ -267,38 +387,128 @@ function matchesSearch(paper, query) {
     return arr.some(item => String(item).toLowerCase().includes(q));
   }
 
-  // Search across paper fields
-  // paper_id, title, year, doi
   if (textMatch(paper.paper_id)) return true;
   if (textMatch(paper.title)) return true;
   if (textMatch(paper.year)) return true;
   if (textMatch(paper.doi)) return true;
-
-  // authors from citation field
   if (paper.citation && textMatch(paper.citation)) return true;
-
-  // disease/family/diagnosis fields if present
   if (textMatch(paper.disease)) return true;
   if (textMatch(paper.family)) return true;
   if (textMatch(paper.diagnosis)) return true;
 
-  // website_card fields
   const wc = paper.website_card || {};
   if (textMatch(wc.short_description)) return true;
   if (textMatch(wc.plain_text_summary)) return true;
   if (arrayMatch(wc.dataset_features_summary)) return true;
 
-  // dataset feature labels, especially when the feature value is "yes"
-  const features = paper.dataset_features_needed || {};
-  for (const [key, val] of Object.entries(features)) {
-    // Match on the feature key (label) or the value "yes"
-    if (val === "yes" && textMatch(key)) return true;
-    if (textMatch(val)) return true;
+  // Also search within filter_tags for richer text matching
+  const ft = paper.filter_tags || {};
+  for (const catTags of Object.values(ft)) {
+    if (Array.isArray(catTags)) {
+      for (const tag of catTags) {
+        if (textMatch(tag)) return true;
+      }
+    }
   }
 
   return false;
 }
 
+// ============================================================
+// Filter logic: grouped multi-select with AND across groups, OR within groups
+// ============================================================
+function getActiveFilters() {
+  // Returns array of { groupKey, tagValue } for all selected tags
+  const active = [];
+  for (const group of FILTER_GROUP_CONFIG) {
+    for (const tag of group.tags) {
+      const checkbox = document.getElementById(`filter-${group.key}-${tag.value}`);
+      if (checkbox && checkbox.checked) {
+        active.push({ groupKey: group.key, tagValue: tag.value });
+      }
+    }
+  }
+  return active;
+}
+
+function paperMatchesFilters(paper, activeFilters) {
+  // If no filters selected, show all papers (including those without filter_tags)
+  if (activeFilters.length === 0) {
+    return true;
+  }
+
+  const paperTags = paper.filter_tags || {};
+
+  // Group active filters by group key for OR logic within groups
+  const filtersByGroup = {};
+  for (const f of activeFilters) {
+    if (!filtersByGroup[f.groupKey]) {
+      filtersByGroup[f.groupKey] = [];
+    }
+    filtersByGroup[f.groupKey].push(f.tagValue);
+  }
+
+  // For each group, check if paper has at least one matching tag (OR logic within group)
+  for (const [groupKey, requiredTags] of Object.entries(filtersByGroup)) {
+    const paperGroupTags = paperTags[groupKey] || [];
+
+    // If the filter group requires a tag that the paper doesn't have any tags for, exclude
+    // Papers without filter_tags should be excluded when filters are active
+    if (paperGroupTags.length === 0) {
+      return false;
+    }
+
+    // Check OR logic: at least one of requiredTags must match
+    const hasMatch = requiredTags.some(tag => paperGroupTags.includes(tag));
+    if (!hasMatch) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// ============================================================
+// Render active filter chips above results
+// ============================================================
+function renderActiveFilterChips(activeFilters) {
+  const bar = document.getElementById("active-filters-bar");
+  const chipsContainer = document.getElementById("active-filters-chips");
+  const clearBtn = document.getElementById("clear-all-filters");
+
+  if (activeFilters.length === 0) {
+    bar.style.display = "none";
+    clearBtn.style.display = "none";
+    return;
+  }
+
+  bar.style.display = "flex";
+  clearBtn.style.display = "inline-block";
+
+  let html = "";
+  for (const f of activeFilters) {
+    const label = getTagLabel(f.tagValue);
+    html += `<span class="filter-chip" data-group="${f.groupKey}" data-tag="${f.tagValue}">`;
+    html += `${escapeHtml(label)} <button class="chip-remove" onclick="removeFilterChip('${f.groupKey}','${f.tagValue}')">&times;</button>`;
+    html += `</span>`;
+  }
+  chipsContainer.innerHTML = html;
+}
+
+// ============================================================
+// Remove a single filter chip (called from inline onclick)
+// ============================================================
+function removeFilterChip(groupKey, tagValue) {
+  const checkbox = document.getElementById(`filter-${groupKey}-${tagValue}`);
+  if (checkbox) {
+    checkbox.checked = false;
+    render();
+  }
+}
+
+// ============================================================
+// Main render function
+// ============================================================
 function render() {
   // Get search query
   const searchInput = document.getElementById("search-input");
@@ -310,56 +520,53 @@ function render() {
     clearBtn.style.display = searchQuery.trim() ? "inline-block" : "none";
   }
 
-  // Collect active filter values keyed by feature key
-  const activeFilters = {};
-  for (const [key] of REFINE_FEATURES) {
-    const sel = document.querySelector(`.filter select[data-key="${key}"]`);
-    if (sel && sel.value !== "any") {
-      activeFilters[key] = sel.value;
-    }
-  }
+  // Collect active filters
+  const activeFilters = getActiveFilters();
 
+  // Render active filter chips
+  renderActiveFilterChips(activeFilters);
+
+  // Filter papers: text search AND grouped filters combined with AND logic
   const filtered = papers.filter(p => {
-    // First apply text search filter
+    // Text search (AND)
     if (!matchesSearch(p, searchQuery)) return false;
 
-    // Then apply feature filters
-    const features = p.dataset_features_needed || {};
-    for (const [key, filterVal] of Object.entries(activeFilters)) {
-      const paperVal = features[key] || "unclear";
-      // If filter is "yes", only show papers with yes
-      if (filterVal === "yes" && paperVal !== "yes") return false;
-      // If filter is "no", only show papers with no
-      if (filterVal === "no" && paperVal !== "no") return false;
-      // If filter is "unclear", only show papers with unclear
-      if (filterVal === "unclear" && paperVal !== "unclear") return false;
-      // If filter is "not_applicable", only show papers with not_applicable
-      if (filterVal === "not_applicable" && paperVal !== "not_applicable") return false;
-    }
+    // Grouped tag filters (AND across groups, OR within groups)
+    if (!paperMatchesFilters(p, activeFilters)) return false;
+
     return true;
   });
 
   document.getElementById("count").textContent = `Showing ${filtered.length} of ${papers.length} papers`;
-
   document.getElementById("cards").innerHTML = filtered.map(renderCard).join("");
 }
 
-function buildFilters() {
-  const container = document.getElementById("filters");
+// ============================================================
+// Build grouped collapsible filter sections from FILTER_GROUP_CONFIG
+// ============================================================
+function buildFilterGroups() {
+  const container = document.getElementById("filter-groups");
   let html = "";
-  for (const [key, label] of REFINE_FEATURES) {
-    html += `<div class="filter">`;
-    html += `<label>${escapeHtml(label)}</label>`;
-    html += `<select class="filter" data-key="${key}">`;
-    html += `<option value="any">Any</option>`;
-    html += `<option value="yes">Yes only</option>`;
-    html += `<option value="no">No only</option>`;
-    html += `<option value="unclear">Unclear only</option>`;
-    html += `</select>`;
-    html += `</div>`;
+
+  for (const group of FILTER_GROUP_CONFIG) {
+    html += `<div class="filter-group">`;
+    html += `<details id="details-${group.key}"><summary>${escapeHtml(group.label)}</summary>`;
+    html += `<div class="filter-group-tags">`;
+
+    for (const tag of group.tags) {
+      const checkboxId = `filter-${group.key}-${tag.value}`;
+      html += `<label class="filter-chip-input" for="${checkboxId}">`;
+      html += `<input type="checkbox" id="${checkboxId}" data-group="${group.key}" data-tag="${tag.value}">`;
+      html += `<span class="chip-label">${escapeHtml(tag.label)}</span>`;
+      html += `</label>`;
+    }
+
+    html += `</div></details></div>`;
   }
+
   container.innerHTML = html;
 
+  // Listen for checkbox changes
   container.addEventListener("change", () => render());
 }
 
@@ -374,12 +581,14 @@ async function init() {
   const merged = mergeClaims(staticClaims, demoClaims);
   claims = merged;
 
-  buildFilters();
+  buildFilterGroups();
   render();
 
-  // Setup reset button
-  document.getElementById("reset").addEventListener("click", () => {
-    document.querySelectorAll(".filter select").forEach(s => s.value = "any");
+  // Setup clear all filters button
+  document.getElementById("clear-all-filters").addEventListener("click", () => {
+    document.querySelectorAll("#filter-groups input[type=checkbox]").forEach(cb => cb.checked = false);
+    const searchInput = document.getElementById("search-input");
+    if (searchInput) searchInput.value = "";
     render();
   });
 
