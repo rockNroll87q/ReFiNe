@@ -94,7 +94,7 @@
       "genetic_data": "yes",
       "depression_scale": "yes",
       "anxiety_scale": "yes",
-      "clinical_outcomes": "yes",
+      "clinical_outcomes": "no",
       "longitudinal_data": "no",
       "medication_status": "yes",
       "trauma_or_life_stress": "no",
@@ -106,23 +106,39 @@
       "population": null
     },
     "website_card": {
-      "short_description": "A cross-sectional VBM study investigating the association between FKBP5 gene polymorphisms, amygdala volume, and mood states in 112 healthy controls.",
+      "short_description": "A cross-sectional voxel-based morphometry study examining FKBP5 genetic variants and their association with amygdala volume and mood states in healthy volunteers.",
       "dataset_features_summary": [
-        "T1-weighted MRI scans",
-        "Voxel-based morphometry (VBM) analysis",
-        "FKBP5 SNP genotype data from blood samples",
-        "Beck Depression Inventory (BDI) scores",
-        "State-Trait Anxiety Inventory (STAI) scores",
-        "Profile of Mood States (POMS) scores"
+        "T1-weighted MRI scans processed using voxel-based morphometry",
+        "FKBP5 SNP genotype data derived from blood samples",
+        "Standardized depression (BDI) and anxiety (STAI-S/T) scale scores",
+        "Mood state assessments via the Profile of Mood States (POMS)"
       ],
-      "plain_text_summary": "This cross-sectional study analyzed T1-weighted MRI scans and FKBP5 genetic variants in 112 healthy Japanese volunteers to examine their relationship with brain structure and mood. The results showed that specific FKBP5 SNPs were significantly associated with gray matter volume in the right amygdala and orbitofrontal cortex, which correlated with depression-dejection and anxiety scores. Replication would require access to raw T1-weighted MRI data, FKBP5 SNP genotype information, and standardized psychological scale scores (BDI, STAI, POMS) from a healthy control cohort without psychiatric history or medication use."
+      "plain_text_summary": "This cross-sectional study analyzed T1-weighted MRI scans and FKBP5 genetic data from 112 healthy volunteers to investigate brain structure and psychological stress. The results demonstrated that specific FKBP5 gene variants were significantly associated with variations in right amygdala volume and correlated with depression and anxiety scores. Replication would require access to raw T1-weighted MRI scans, FKBP5 SNP genotype data, and standardized psychological scale scores for mood and anxiety."
     },
     "extraction": {
       "status": "completed",
-      "notes": "All features explicitly reported in the text. Trauma/stress explicitly not assessed. Longitudinal data explicitly cross-sectional. MDD patients excluded. Medication status recorded as none."
+      "notes": null
     },
     "extraction_status": "completed",
-    "extraction_notes": "All features explicitly reported in the text. Trauma/stress explicitly not assessed. Longitudinal data explicitly cross-sectional. MDD patients excluded. Medication status recorded as none."
+    "extraction_notes": null,
+    "filter_tags": {
+      "imaging": [
+        "voxel_based_morphometry_t1w_mri"
+      ],
+      "population": [
+        "healthy"
+      ],
+      "clinical_group": [],
+      "age_group": [],
+      "study_design": [
+        "cross_sectional"
+      ],
+      "associated_data": [
+        "depression_severity",
+        "anxiety_severity",
+        "genetics"
+      ]
+    }
   },
   {
     "paper_id": "REFINE-0004",
@@ -132,43 +148,66 @@
     "doi_url": "https://doi.org/10.1016/j.nicl.2014.01.001",
     "citation": "Walsh, N. D., Dalgleish, T., Lombardo, M. v., Dunn, V. J., van Harmelen, A. L., Ban, M., & Goodyer, I. M. (2014). General and specific effects of early-life psychosocial adversities on adolescent grey matter volume. NeuroImage: Clinical, 4, 308–318. https://doi.org/10.1016/j.nicl.2014.01.001",
     "dataset_features_needed": {
-      "t1w_mri": "yes",
+      "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "no",
       "healthy_controls": "yes",
       "genetic_data": "yes",
-      "depression_scale": "yes",
-      "anxiety_scale": "no",
+      "depression_scale": "unclear",
+      "anxiety_scale": "unclear",
       "clinical_outcomes": "yes",
       "longitudinal_data": "yes",
       "medication_status": "yes",
       "trauma_or_life_stress": "yes",
       "cognitive_data": "yes",
-      "blood_or_biomarker_data": "no"
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
       "population": null
     },
     "website_card": {
-      "short_description": "A cross-sectional neuroimaging study examining the association between childhood adversities, recent negative life events, and grey matter volume in currently healthy adolescents.",
+      "short_description": "A structural MRI study investigating the impact of early-life psychosocial adversities on adolescent grey matter volume in a healthy community cohort.",
       "dataset_features_summary": [
-        "T1-weighted structural MRI scans",
-        "Voxel-based morphometry (VBM) analysis",
-        "Saliva-derived 5-HTTLPR genotype data",
-        "Mood and Feelings Questionnaire (MFQ) for depressive symptoms",
-        "Childhood adversity and recent negative life event assessments",
-        "Wechsler Abbreviated Scale of Intelligence (IQ scores)",
-        "Medication status exclusion criteria"
+        "Structural MRI data (grey matter volume)",
+        "5-HTTLPR genotype information",
+        "Childhood adversity and negative life event assessments",
+        "Longitudinal psychiatric history and depressive symptom scores",
+        "IQ/cognitive screening data"
       ],
-      "plain_text_summary": "This study used T1-weighted MRI scans from 58 currently healthy adolescents to examine how childhood adversities and recent negative life events relate to grey matter volume. Participants were genotyped for the 5-HTTLPR polymorphism, assessed for depressive symptoms using the Mood and Feelings Questionnaire, and evaluated for past psychiatric history and family functioning. Replication would require access to raw structural MRI data, saliva-based genetic samples, standardized depression and life event scales, and detailed demographic/clinical covariates including IQ and medication status."
+      "plain_text_summary": "This study examined structural MRI scans from a community sample of currently healthy late adolescents to determine how early-life psychosocial adversities correlate with grey matter volume. Researchers collected 5-HTTLPR genotype data, assessed childhood trauma and negative life events, and recorded longitudinal psychiatric history alongside depressive symptom scores. Replication would require access to raw structural MRI data, childhood adversity interview records, serotonin transporter genotype information, and longitudinal clinical assessments from the ROOTS cohort."
     },
     "extraction": {
       "status": "completed",
-      "notes": "All features were explicitly reported in the text. MDD patients were excluded; healthy community adolescents served as the comparison group. Longitudinal data refers to assessments collected at ages 14 and 17 from the ROOTS cohort, though imaging analysis was cross-sectional. No blood/biomarker or anxiety scale data was collected."
+      "notes": "Extracted features based on explicit mentions of GMV analysis, 5-HTTLPR genotype, childhood adversity assessments, and longitudinal cohort design. T1w MRI not explicitly named but implied by structural imaging; depression scale not specified."
     },
     "extraction_status": "completed",
-    "extraction_notes": "All features were explicitly reported in the text. MDD patients were excluded; healthy community adolescents served as the comparison group. Longitudinal data refers to assessments collected at ages 14 and 17 from the ROOTS cohort, though imaging analysis was cross-sectional. No blood/biomarker or anxiety scale data was collected."
+    "extraction_notes": "Extracted features based on explicit mentions of GMV analysis, 5-HTTLPR genotype, childhood adversity assessments, and longitudinal cohort design. T1w MRI not explicitly named but implied by structural imaging; depression scale not specified.",
+    "filter_tags": {
+      "imaging": [
+        "voxel_based_morphometry_t1w_mri"
+      ],
+      "population": [
+        "healthy"
+      ],
+      "clinical_group": [],
+      "age_group": [
+        "adolescents"
+      ],
+      "study_design": [
+        "cross_sectional",
+        "longitudinal"
+      ],
+      "associated_data": [
+        "depression_severity",
+        "diagnosis_clinical_status",
+        "childhood_trauma",
+        "stressful_life_events",
+        "genetics",
+        "iq",
+        "medication_status"
+      ]
+    }
   },
   {
     "paper_id": "REFINE-0005",

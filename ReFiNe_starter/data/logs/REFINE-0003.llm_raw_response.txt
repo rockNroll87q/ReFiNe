@@ -10,7 +10,7 @@
     "genetic_data": "yes",
     "depression_scale": "yes",
     "anxiety_scale": "yes",
-    "clinical_outcomes": "yes",
+    "clinical_outcomes": "no",
     "longitudinal_data": "no",
     "medication_status": "yes",
     "trauma_or_life_stress": "no",
@@ -18,17 +18,33 @@
     "blood_or_biomarker_data": "yes"
   },
   "website_card": {
-    "short_description": "A cross-sectional VBM study investigating the association between FKBP5 gene polymorphisms, amygdala volume, and mood states in 112 healthy controls.",
+    "short_description": "A cross-sectional voxel-based morphometry study examining FKBP5 genetic variants and their association with amygdala volume and mood states in healthy volunteers.",
     "dataset_features_summary": [
-      "T1-weighted MRI scans",
-      "Voxel-based morphometry (VBM) analysis",
-      "FKBP5 SNP genotype data from blood samples",
-      "Beck Depression Inventory (BDI) scores",
-      "State-Trait Anxiety Inventory (STAI) scores",
-      "Profile of Mood States (POMS) scores"
+      "T1-weighted MRI scans processed using voxel-based morphometry",
+      "FKBP5 SNP genotype data derived from blood samples",
+      "Standardized depression (BDI) and anxiety (STAI-S/T) scale scores",
+      "Mood state assessments via the Profile of Mood States (POMS)"
     ],
-    "plain_text_summary": "This cross-sectional study analyzed T1-weighted MRI scans and FKBP5 genetic variants in 112 healthy Japanese volunteers to examine their relationship with brain structure and mood. The results showed that specific FKBP5 SNPs were significantly associated with gray matter volume in the right amygdala and orbitofrontal cortex, which correlated with depression-dejection and anxiety scores. Replication would require access to raw T1-weighted MRI data, FKBP5 SNP genotype information, and standardized psychological scale scores (BDI, STAI, POMS) from a healthy control cohort without psychiatric history or medication use."
+    "plain_text_summary": "This cross-sectional study analyzed T1-weighted MRI scans and FKBP5 genetic data from 112 healthy volunteers to investigate brain structure and psychological stress. The results demonstrated that specific FKBP5 gene variants were significantly associated with variations in right amygdala volume and correlated with depression and anxiety scores. Replication would require access to raw T1-weighted MRI scans, FKBP5 SNP genotype data, and standardized psychological scale scores for mood and anxiety."
+  },
+  "filter_tags": {
+    "imaging": [
+      "voxel_based_morphometry_t1w_mri"
+    ],
+    "population": [
+      "healthy"
+    ],
+    "clinical_group": [],
+    "age_group": [],
+    "study_design": [
+      "cross_sectional"
+    ],
+    "associated_data": [
+      "depression_severity",
+      "anxiety_severity",
+      "genetics"
+    ]
   },
   "extraction_status": "completed",
-  "extraction_notes": "All features explicitly reported in the text. Trauma/stress explicitly not assessed. Longitudinal data explicitly cross-sectional. MDD patients excluded. Medication status recorded as none."
+  "extraction_notes": null
 }

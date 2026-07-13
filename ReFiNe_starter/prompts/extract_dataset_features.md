@@ -34,6 +34,13 @@ Return a JSON object with these keys:
     2. Main broad result (e.g., "FKBP5 genotypes were associated with grey matter volume in the amygdala.").
     3. Key data requirements useful for replication (e.g., "Replication would require access to raw MRI scans, FKBP5 SNP genotype data, and mood/anxiety scale scores.").
     - Do NOT include detailed statistics, p-values, coordinates, or overly technical model details.
+- `filter_tags` (object): Structured filter tags for the replication-target catalogue. Each category is an array of strings. Only assign tags when explicitly supported by the paper text. Use empty arrays if no tag applies.
+  - `imaging`: One or more from: "voxel_based_morphometry_t1w_mri", "parcellation_based_morphometry_t1w_mri", "vertex_wise_morphometry_t1w_mri", "voxel_wise_task_related_activity_task_fmri", "seed_to_voxel_functional_connectivity_resting_fmri"
+  - `population`: One of: "healthy", "clinical", "mixed_clinical_and_healthy_controls"
+  - `clinical_group`: One level only (no subgroups): "mood_affective_disorders", "anxiety_stress_ocd_related_disorders", "psychotic_disorders", "neurodevelopmental_disorders", "neurological_disorders", "dementia_neurodegenerative_disorders", "other_clinical_group"
+  - `age_group`: One of: "children", "adolescents", "young_adults", "adults", "older_adults", "mixed_lifespan"
+  - `study_design`: One or more from: "cross_sectional", "longitudinal", "intervention_treatment", "case_control", "cohort_population_based"
+  - `associated_data`: Zero or more from: "depression_severity", "anxiety_severity", "general_psychopathology", "diagnosis_clinical_status", "illness_duration", "age_of_onset", "episode_history", "comorbidity", "medication_status", "psychotherapy", "treatment_response", "remission_relapse", "childhood_trauma", "stressful_life_events", "social_relationships", "socioeconomic_adversity", "iq", "executive_function", "memory", "behavioural_scales", "genetics", "blood_biomarkers", "cortisol_endocrine_markers", "microbiome", "other_omics", "smoking", "physical_activity", "sleep", "education", "employment", "socioeconomic_status"
 - `extraction_status` (string): "completed" if you extracted features from the paper text.
 - `extraction_notes` (string or null): Brief notes about your extraction.
 

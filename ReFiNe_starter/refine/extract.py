@@ -783,6 +783,16 @@ def _merge_into_papers(
     # Merge dataset_features_needed
     record["dataset_features_needed"] = extracted.dataset_features_needed
 
+    # Merge filter_tags
+    ft = extracted.filter_tags
+    if hasattr(ft, "model_dump"):
+        ft_dict = ft.model_dump()
+    elif isinstance(ft, dict):
+        ft_dict = ft
+    else:
+        ft_dict = {}
+    record["filter_tags"] = ft_dict
+
     # Merge website_card - replace entirely when extracted data is available
     wc = _as_dict(extracted.website_card)
     if wc:
