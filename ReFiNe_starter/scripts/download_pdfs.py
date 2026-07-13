@@ -52,6 +52,8 @@ STATUS_ALREADY_EXISTS = "already_exists"
 STATUS_DRY_RUN = "dry_run"
 STATUS_PUBLISHER_403 = "publisher_403"
 STATUS_INVALID_PDF = "invalid_pdf"
+STATUS_INVALID_PDF_TITLE_MISMATCH = "invalid_pdf_title_mismatch"
+STATUS_INVALID_PDF_WRONG_DOCUMENT = "invalid_pdf_wrong_document"
 STATUS_NO_OA_LOCATION = "no_oa_location"
 STATUS_LANDING_PAGE_UNRESOLVED = "landing_page_unresolved"
 STATUS_REPOSITORY_LANDING_PAGE = "repository_landing_page"
@@ -68,6 +70,8 @@ SUCCESS_STATUSES = {STATUS_DOWNLOADED, STATUS_PMC_PDF_DOWNLOADED, STATUS_ALREADY
 MANUAL_STATUSES = {
     STATUS_PUBLISHER_403,
     STATUS_INVALID_PDF,
+    STATUS_INVALID_PDF_TITLE_MISMATCH,
+    STATUS_INVALID_PDF_WRONG_DOCUMENT,
     STATUS_NO_OA_LOCATION,
     STATUS_LANDING_PAGE_UNRESOLVED,
     STATUS_REPOSITORY_LANDING_PAGE,
@@ -417,6 +421,228 @@ def validate_pdf_or_landing(session: requests.Session, url: str) -> Tuple[str, s
         return "error", str(exc), b""
 
 
+def _extract_text_from_pdf(pdf_path: Path, max_pages: int = 2) -> Optional[str]:
+    """Extract text from the first max_pages pages of a PDF.
+
+    Tries pymupdf (fitz), then pypdf, returns None if both fail.
+    """
+    # Try pymupdf first
+    try:
+        import fitz  # type: ignore  # noqa: F811
+
+        doc = fitz.open(str(pdf_path))
+        parts: List[str] = []
+        for i in range(min(max_pages, len(doc))):
+            page_text = doc.load_page(i).get_text("text")
+            if page_text.strip():
+                parts.append(page_text)
+        doc.close()
+        if parts:
+            return "\n".join(parts)
+    except Exception:
+        pass
+
+    # Try pypdf fallback
+    try:
+        import io as _io  # noqa
+        from pypdf import PdfReader  # type: ignore  # noqa: F401
+
+        reader = PdfReader(str(pdf_path))
+        parts: List[str] = []
+        for i in range(min(max_pages, len(reader.pages))):
+            page_text = reader.pages[i].extract_text()
+            if page_text and page_text.strip():
+                parts.append(page_text)
+        if parts:
+            return "\n".join(parts)
+    except Exception:
+        pass
+
+    return None
+
+
+def _get_pdf_metadata_doi(pdf_path: Path) -> Optional[str]:
+    """Extract DOI from PDF metadata (pypdf or pymupdf). Returns lowercase stripped string or None."""
+    # Try pypdf first
+    try:
+        from pypdf import PdfReader  # type: ignore
+
+        reader = PdfReader(str(pdf_path))
+        meta = reader.metadata
+        if meta and meta.get("/DOI"):
+            return str(meta["/DOI"]).strip().lower()
+    except Exception:
+        pass
+
+    # Try pymupdf
+    try:
+        import fitz  # type: ignore
+
+        doc = fitz.open(str(pdf_path))
+        info = doc.metadata
+        if info and info.get("dc:identifier") or info.get("doi"):
+            val = (info.get("dc:identifier") or info.get("doi") or "").strip().lower()
+            doc.close()
+            if val:
+                return val
+        doc.close()
+    except Exception:
+        pass
+
+    return None
+
+
+def _title_similarity(expected_title: str, candidate_text: str) -> float:
+    """Compute title similarity score 0-100 using rapidfuzz or difflib.
+
+    Returns a score where 100 means exact match.
+    """
+    expected = expected_title.strip().lower()
+    if not expected:
+        return 0.0
+
+    # Try rapidfuzz first (fast, accurate)
+    try:
+        from rapidfuzz import fuzz  # type: ignore
+
+        # Use partial ratio against the full text (takes best substring match)
+        score = fuzz.ratio(expected, candidate_text.lower())
+        return float(score)
+    except Exception:
+        pass
+
+    # Fallback to difflib
+    try:
+        from difflib import SequenceMatcher  # type: ignore
+
+        # Compare against the first 2000 chars of text for a focused comparison
+        candidate = candidate_text[:2000].lower()
+        score = SequenceMatcher(None, expected, candidate).ratio() * 100
+        return float(score)
+    except Exception:
+        return 0.0
+
+
+def _extract_all_dois_from_pdf(pdf_path: Path) -> List[str]:
+    """Extract all DOI-like strings from the first 2 pages of a PDF.
+
+    Returns a list of lowercase stripped DOIs found in text content.
+    """
+    extracted_text = _extract_text_from_pdf(pdf_path, max_pages=2)
+    if not extracted_text:
+        return []
+    # Match DOI patterns like "10.xxxx/xxxxx" or "DOI: 10.xxxx/xxxxx"
+    dois = re.findall(r'10\.\d{4,}/[^\s;,\n]+', extracted_text)
+    return [d.strip().lower() for d in dois]
+
+
+def _has_suspect_keyword(candidate_text: str) -> Optional[str]:
+    """Check if text contains keywords suggesting a wrong document.
+
+    Returns the matched keyword or None. Even strong keywords are logged with
+    title similarity rather than used as sole rejection criteria.
+    """
+    # High-risk keywords (strong signal of non-content material)
+    high_risk = [
+        "acknowledgement list",
+        "acknowledgments list",
+        "author contribution list",
+    ]
+    # Medium-risk keywords (can appear in real papers, need title similarity context)
+    medium_risk = [
+        "supplementary material",
+        "supplemental material",
+        "supplementary figures",
+        "supplementary tables",
+        "data availability statement",
+        "checklist",
+        "protocol",
+        "conflict of interest",
+        "author contributions",
+        "additional information",
+    ]
+    text_lower = candidate_text.lower()
+    for pattern in high_risk:
+        if pattern in text_lower:
+            return pattern
+    for pattern in medium_risk:
+        if pattern in text_lower:
+            return pattern
+    return None
+
+
+def validate_downloaded_pdf(
+    pdf_path: Path,
+    expected_title: str,
+    expected_doi: str,
+) -> Tuple[bool, str]:
+    """Validate that a downloaded PDF matches the target paper.
+
+    Returns (accepted: bool, reason: str).
+    - If accepted: (True, "DOI verified") or (True, "title similarity XX.X%")
+    - If rejected:  (False, "invalid_pdf_title_mismatch"|"invalid_pdf_wrong_document")
+
+    Safety rules:
+    * Do NOT reject solely because a different DOI appears — combine with title sim.
+    * Do NOT reject solely based on keywords like 'supplementary', 'protocol' etc.
+      Use them only when title similarity is already low.
+    """
+    if not pdf_path.exists():
+        return False, "invalid_pdf_file_missing"
+
+    # Step 1: Extract text from first 2 pages
+    extracted_text = _extract_text_from_pdf(pdf_path, max_pages=2)
+    if not extracted_text or not extracted_text.strip():
+        return False, "invalid_pdf_could_not_extract_text"
+
+    expected_doi_clean = clean_doi(expected_doi)
+    sim_score = 0.0
+
+    # Step 2: Check DOI in PDF metadata
+    meta_doi = _get_pdf_metadata_doi(pdf_path)
+    if meta_doi and expected_doi_clean:
+        if meta_doi == expected_doi_clean:
+            return True, "DOI verified"
+        # DOI exists but doesn't match — do NOT reject alone; combine with title sim below
+
+    # Step 3: Check DOI in extracted text (some PDFs embed DOI in header/footer)
+    if expected_doi_clean and expected_doi_clean in extracted_text.lower():
+        return True, "DOI verified"
+
+    # Step 4: Extract all DOIs from text for reference analysis
+    all_dois = _extract_all_dois_from_pdf(pdf_path)
+    has_expected_doi_in_text = expected_doi_clean and expected_doi_clean in [d.strip() for d in all_dois]
+    if has_expected_doi_in_text:
+        return True, "DOI verified"
+
+    # Step 5: Title similarity check (primary decision factor when DOI doesn't match)
+    expected_title_stripped = expected_title.strip()
+    if expected_title_stripped:
+        sim_score = _title_similarity(expected_title_stripped, extracted_text)
+
+        # High similarity → accept regardless of other DOIs found
+        if sim_score >= 85.0:
+            return True, f"title similarity {sim_score:.1f}%"
+
+        # Low similarity → use keywords as additional signal
+        suspect_keyword = _has_suspect_keyword(extracted_text)
+        if suspect_keyword and sim_score < 70.0:
+            logger.info("[%s] Keyword '%s' found in PDF, title similarity %.1f%%", pdf_path.name, suspect_keyword, sim_score)
+            return False, "invalid_pdf_wrong_document"
+
+        # Low similarity without keyword signal — still reject (wrong paper)
+        if sim_score < 70.0:
+            logger.info("[%s] Title similarity too low (%.1f%%), rejecting", pdf_path.name, sim_score)
+            return False, "invalid_pdf_title_mismatch"
+
+    # Step 6: If no title but DOI mismatch — check for other DOIs + low similarity
+    if not expected_doi_clean and (not expected_title_stripped or sim_score < 70.0):
+        return False, "invalid_pdf_title_mismatch"
+
+    # Fallback accept if we can't determine it's wrong
+    return True, f"title similarity {sim_score:.1f}%"
+
+
 def download_pdf(session: requests.Session, url: str, dest_path: Path, min_bytes: int = MIN_PDF_BYTES) -> Tuple[str, str]:
     """Download a complete PDF to disk.
 
@@ -572,11 +798,13 @@ def resolve_landing_page(session: requests.Session, url: str, content: bytes) ->
         ) or ("/pmc/articles/" in url_path)
 
         if is_pmc_article_page:
-            # When links is empty on a PMC article page, we cannot confirm that a PMCID
-            # exists (nor that both the OA service and page parsing were checked).  The
-            # more honest classification is pmc_fulltext_no_pdf — the full text is
-            # available as HTML but no downloadable PDF link was found in the page.
-            return STATUS_PMC_FULLTEXT_NO_PDF, "", "PMC full-text available as HTML; no downloadable PDF link found"
+            # All PMC full-text article pages should be classified as pmc_fulltext_no_pdf
+            # regardless of whether PDF links were extracted (they may all be invalid).
+            if not links:
+                reason = "PMC full-text available as HTML; no downloadable PDF link found"
+            else:
+                reason = "PMC full-text available but all extracted PDF links were invalid"
+            return STATUS_PMC_FULLTEXT_NO_PDF, "", reason
 
         # Generic NCBI/PubMed landing pages that are not PMC article pages
         # (e.g., search pages, tool pages). Classify as unresolved rather than
@@ -605,6 +833,8 @@ def try_url_attempt(
     paper_id: str,
     pdf_path: Path,
     dry_run: bool,
+    expected_title: str = "",
+    expected_doi: str = "",
 ) -> Tuple[Optional[Dict[str, str]], Optional[Tuple[str, str, str]]]:
     """Try one URL attempt.
 
@@ -632,8 +862,17 @@ def try_url_attempt(
         dl_status, dl_error = download_pdf(session, url, pdf_path)
         if dl_status == STATUS_DOWNLOADED:
             file_size = pdf_path.stat().st_size
+
+            # Validate the downloaded PDF against expected title/DOI
+            accepted, reason = validate_downloaded_pdf(pdf_path, expected_title, expected_doi)
+            if not accepted:
+                logger.warning("[%s] Candidate PDF rejected and deleted: %s", paper_id, reason)
+                pdf_path.unlink(missing_ok=True)
+                return None, (STATUS_INVALID_PDF_TITLE_MISMATCH, url, f"Candidate PDF rejected: {reason}")
+
+            logger.info("[%s] Candidate PDF accepted: DOI/title verified — %s", paper_id, reason)
             source_display = attempt.source
-            logger.info("[%s] Downloaded PMC PDF: %s, size = %d bytes", paper_id, pdf_path, file_size)
+            logger.info("[%s] Downloaded PDF: %s, size = %d bytes", paper_id, pdf_path, file_size)
             return {
                 "status": STATUS_DOWNLOADED,
                 "source_used": source_display,
@@ -661,6 +900,15 @@ def try_url_attempt(
                 dl_status, dl_error = download_pdf(session, pdf_url, pdf_path)
                 if dl_status == STATUS_DOWNLOADED:
                     file_size = pdf_path.stat().st_size
+
+                    # Validate the downloaded PDF against expected title/DOI
+                    accepted, reason = validate_downloaded_pdf(pdf_path, expected_title, expected_doi)
+                    if not accepted:
+                        logger.warning("[%s] Candidate PDF rejected and deleted: %s", paper_id, reason)
+                        pdf_path.unlink(missing_ok=True)
+                        return None, (STATUS_INVALID_PDF_TITLE_MISMATCH, pdf_url, f"Candidate PDF rejected: {reason}")
+
+                    logger.info("[%s] Candidate PDF accepted: DOI/title verified — %s", paper_id, reason)
                     logger.info("[%s] Downloaded PDF via landing page: %s, size = %d bytes", paper_id, pdf_url[:120], file_size)
                     return {
                         "status": STATUS_DOWNLOADED,
@@ -680,7 +928,7 @@ def try_url_attempt(
 
     # For .pdf URLs that failed %PDF validation, classify as invalid_pdf (NOT landing_page).
     if url.lower().endswith(".pdf"):
-        logger.info("[%s] PMC PDF validation failed: %s", paper_id, error)
+        logger.info("[%s] PDF validation failed: %s", paper_id, error)
         return None, (STATUS_INVALID_PDF, url, error)
 
     # Default fallback for unrecognized status values
@@ -1092,7 +1340,7 @@ def process_paper(
         if not attempts:
             failures.append((STATUS_NO_OA_LOCATION, "", "OpenAlex returned no OA PDF/location URL"))
         for attempt in attempts:
-            result, failure = try_url_attempt(session, attempt, paper_id, pdf_path, dry_run)
+            result, failure = try_url_attempt(session, attempt, paper_id, pdf_path, dry_run, expected_title=title, expected_doi=doi)
             if result is not None:
                 return build_manifest_row(
                     row,
@@ -1125,7 +1373,7 @@ def process_paper(
         if not attempts:
             failures.append((STATUS_NO_OA_LOCATION, "", "Semantic Scholar returned no openAccessPdf.url"))
         for attempt in attempts:
-            result, failure = try_url_attempt(session, attempt, paper_id, pdf_path, dry_run)
+            result, failure = try_url_attempt(session, attempt, paper_id, pdf_path, dry_run, expected_title=title, expected_doi=doi)
             if result is not None:
                 return build_manifest_row(
                     row,
@@ -1158,7 +1406,7 @@ def process_paper(
     pmc_url = pubmed_meta.get("pmc_url", "")
 
     for attempt in pubmed_attempts:
-        result, failure = try_url_attempt(session, attempt, paper_id, pdf_path, dry_run)
+        result, failure = try_url_attempt(session, attempt, paper_id, pdf_path, dry_run, expected_title=title, expected_doi=doi)
         if result is not None:
             # If PubMed/PMC found a valid direct PDF URL and downloaded it successfully,
             # return status 'downloaded' with source_used='pubmed_pmc'.
@@ -1188,13 +1436,19 @@ def process_paper(
     _secondary_status: str = ""
     _secondary_error: str = ""
 
+    # Track title-mismatch rejections separately from generic invalid_pdf
+    title_mismatch_rejected = False
+
     if pubmed_status == "pubmed_not_found":
         failures.append((STATUS_PUBMED_NOT_FOUND, pubmed_url, "No PubMed/PMC record found from DOI/title"))
-        # Only set secondary if we haven't already captured a more specific outcome.
-        if not _secondary_status:
-            _secondary_status = STATUS_PUBMED_NOT_FOUND
-            _secondary_error = "No PubMed/PMC record found from DOI/title"
-    elif pubmed_status == "pubmed_metadata_only":
+
+    # Track title-mismatch rejections from earlier phases
+    for status, url_val, error_msg in failures:
+        if status == STATUS_INVALID_PDF_TITLE_MISMATCH:
+            title_mismatch_rejected = True
+
+    # Set secondary status based on pubmed_status outcome.
+    if pubmed_status == "pubmed_metadata_only":
         failures.append((STATUS_PUBMED_METADATA_ONLY, pubmed_url, "PubMed record found but no PMCID/PMC full text"))
         if not _secondary_status:
             _secondary_status = STATUS_PUBMED_METADATA_ONLY
@@ -1214,6 +1468,8 @@ def process_paper(
     # Specific PubMed/PMC statuses are preferred over generic landing_page statuses.
     priority = [
         STATUS_PUBLISHER_403,
+        STATUS_INVALID_PDF_TITLE_MISMATCH,
+        STATUS_INVALID_PDF_WRONG_DOCUMENT,
         STATUS_INVALID_PDF,
         STATUS_PMC_PDF_NOT_FOUND,
         STATUS_PMC_FULLTEXT_NO_PDF,
@@ -1412,6 +1668,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "repository_landing_page",
         "landing_page_unresolved",
         "invalid_pdf",
+        "invalid_pdf_title_mismatch",
+        "invalid_pdf_wrong_document",
         "no_oa_location",
         "error",
         "already_exists",
