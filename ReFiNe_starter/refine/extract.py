@@ -674,16 +674,20 @@ def extract_paper(paper_id: str) -> None:
 # extract-all
 # ---------------------------------------------------------------------------
 
-def extract_all(limit: int | None = None) -> None:
-    """Extract broad dataset features for the first N papers that have a local PDF
-    and do not already have a completed extraction.
+def extract_all(limit: int | None = None, force: bool = False) -> None:
+    """Extract broad dataset features for the first N papers that have a local PDF.
 
     Args:
         limit: Maximum number of papers to process. If None, processes all eligible papers.
+        force: If True, re-extract even if features already exist (overwrites them).
     """
     # Default to processing all eligible papers when no limit specified
     if limit is None:
         limit = 10000  # Large default to effectively process all papers
+
+    if force:
+        console.print("Force mode enabled: will re-extract all eligible papers regardless of existing files.")
+
     papers = _load_papers_json()
     processed = 0
     skipped = 0
@@ -697,15 +701,15 @@ def extract_all(limit: int | None = None) -> None:
             skipped += 1
             continue
 
-        # Skip if already extracted
+        # Skip if no local PDF
         pdf_path = PDFS_DIR / f"{paper_id}.pdf"
         if not pdf_path.exists():
             skipped += 1
             continue
 
-        # Check if already has a completed extraction
+        # Check if already has a completed extraction (skip unless force mode)
         features_path = EXTRACTED_DIR / f"{paper_id}.features.json"
-        if features_path.exists():
+        if features_path.exists() and not force:
             try:
                 existing = json.loads(features_path.read_text(encoding="utf-8"))
                 if existing.get("extraction_status") == "completed":

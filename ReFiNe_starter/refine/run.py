@@ -68,12 +68,15 @@ def _cmd_extract_all(args: argparse.Namespace) -> None:
     from .extract import extract_all
 
     limit = args.limit
+    force = getattr(args, "force", False)
     console.print("ReFiNe Extraction Pipeline (batch)")
     console.print(f"  Limit: {limit}")
+    if force:
+        console.print("  Force mode: enabled")
     console.print()
 
     _ensure_paths()
-    extract_all(limit=limit)
+    extract_all(limit=limit, force=force)
 
 
 # ---------------------------------------------------------------------------
@@ -107,6 +110,12 @@ def build_parser() -> argparse.ArgumentParser:
         type=int,
         default=None,
         help="Maximum number of papers to process (default: all eligible papers)",
+    )
+    p_extract_all.add_argument(
+        "--force",
+        action="store_true",
+        default=False,
+        help="Force re-extraction even if features already exist",
     )
     p_extract_all.set_defaults(handler=_cmd_extract_all)
 

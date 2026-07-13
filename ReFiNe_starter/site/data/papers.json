@@ -87,7 +87,7 @@
     "doi_url": "https://doi.org/10.3109/13651501.2016.1144772",
     "citation": "Hirakawa, H., Akiyoshi, J., Muronaga, M., Tanaka, Y., Ishitobi, Y., Inoue, A., Oshita, H., Aizawa, S., Masuda, K., Higuma, H., Kanehisa, M., Ninomiya, T., & Kawano, Y. (2016). FKBP5 is associated with amygdala volume in the human brain and mood state: A voxel-based morphometry (VBM) study. International Journal of Psychiatry in Clinical Practice, 20(2), 106–115. https://doi.org/10.3109/13651501.2016.1144772",
     "dataset_features_needed": {
-      "t1w_mri": "unclear",
+      "t1w_mri": "yes",
       "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "no",
       "healthy_controls": "yes",
@@ -96,10 +96,10 @@
       "anxiety_scale": "yes",
       "clinical_outcomes": "yes",
       "longitudinal_data": "no",
-      "medication_status": "unclear",
+      "medication_status": "yes",
       "trauma_or_life_stress": "no",
       "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear"
+      "blood_or_biomarker_data": "yes"
     },
     "sample_summary": {
       "sample_size": null,
@@ -109,21 +109,22 @@
       "short_title": "FKBP5 is associated with amygdala volume in the human brain and mood state: A voxel-based ",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "Structural MRI data analyzed via VBM",
-        "FKBP5 SNP genotype data (rs3800373, rs992105, rs1360780, rs9470080)",
-        "Beck Depression Inventory scores",
-        "State and Trait Anxiety Inventory (STAI) scores",
-        "Profile of Mood States (POMS) scores"
+        "T1-weighted MRI scans from 112 healthy volunteers",
+        "FKBP5 SNP genotype data (rs3800373, rs992105, rs1360780, rs9470080, etc.)",
+        "Depression scale scores (Beck Depression Inventory)",
+        "Anxiety scale scores (STAI-S and STAI-T)",
+        "Mood state scores (Profile of Mood States)",
+        "Medication status and psychiatric exclusion criteria"
       ],
       "plain_text_summary": "This VBM study used 3D T1-weighted MRI from 112 healthy Japanese volunteers, alongside FKBP5 SNP genotyping from blood samples and mood/anxiety measures including BDI, STAI and POMS. The study reported associations between FKBP5 variants and grey matter volume in the right amygdala and orbitofrontal cortex, with additional links between amygdala volume and mood/anxiety scores.",
-      "short_description": "A cross-sectional voxel-based morphometry study examining the association between FKBP5 genetic variants, amygdala volume, and mood states in healthy controls."
+      "short_description": "A cross-sectional VBM study investigating associations between FKBP5 genotypes, amygdala volume, and mood states in 112 healthy controls."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Features extracted strictly from abstract and text. T1-weighted specification not explicitly stated but implied by VBM methodology. Trauma/stress explicitly noted as not evaluated in this sample. Cross-sectional design confirmed. No blood/biomarker collection or cognitive testing reported for the study cohort."
+      "notes": "Features extracted directly from abstract, methods, and results sections. Trauma/stress explicitly noted as not evaluated in this specific cohort. Cognitive data not mentioned. All other features confirmed via explicit text statements."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Features extracted strictly from abstract and text. T1-weighted specification not explicitly stated but implied by VBM methodology. Trauma/stress explicitly noted as not evaluated in this sample. Cross-sectional design confirmed. No blood/biomarker collection or cognitive testing reported for the study cohort."
+    "extraction_notes": "Features extracted directly from abstract, methods, and results sections. Trauma/stress explicitly noted as not evaluated in this specific cohort. Cognitive data not mentioned. All other features confirmed via explicit text statements."
   },
   {
     "paper_id": "REFINE-0004",
@@ -133,19 +134,19 @@
     "doi_url": "https://doi.org/10.1016/j.nicl.2014.01.001",
     "citation": "Walsh, N. D., Dalgleish, T., Lombardo, M. v., Dunn, V. J., van Harmelen, A. L., Ban, M., & Goodyer, I. M. (2014). General and specific effects of early-life psychosocial adversities on adolescent grey matter volume. NeuroImage: Clinical, 4, 308–318. https://doi.org/10.1016/j.nicl.2014.01.001",
     "dataset_features_needed": {
-      "t1w_mri": "unclear",
+      "t1w_mri": "yes",
       "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "no",
-      "healthy_controls": "unclear",
+      "healthy_controls": "yes",
       "genetic_data": "yes",
-      "depression_scale": "unclear",
+      "depression_scale": "yes",
       "anxiety_scale": "unclear",
-      "clinical_outcomes": "yes",
-      "longitudinal_data": "yes",
+      "clinical_outcomes": "unclear",
+      "longitudinal_data": "unclear",
       "medication_status": "yes",
       "trauma_or_life_stress": "yes",
       "cognitive_data": "yes",
-      "blood_or_biomarker_data": "unclear"
+      "blood_or_biomarker_data": "no"
     },
     "sample_summary": {
       "sample_size": null,
@@ -155,22 +156,21 @@
       "short_title": "General and specific effects of early-life psychosocial adversities on adolescent grey mat",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "Structural brain imaging analyzed via voxel-based morphometry",
-        "5-HTTLPR genetic data for all participants",
-        "Childhood adversity assessments using the CAMEEI interview",
-        "Longitudinal psychosocial scores (negative life events at ages 14 and 17)",
-        "Current depressive symptom measurements",
-        "IQ scores from the Weschler Abbreviated Scale of Intelligence",
-        "Retrospective psychiatric history records"
+        "T1-weighted MRI scans",
+        "Voxel-based morphometry analysis",
+        "5-HTTLPR genotype data",
+        "Mood and Feelings Questionnaire (MFQ) scores",
+        "Childhood adversity and recent negative life event assessments",
+        "IQ measurements"
       ],
-      "short_description": "A structural MRI study examining how childhood adversity and serotonin transporter genotype relate to grey matter volume in currently healthy adolescents."
+      "short_description": "A cross-sectional neuroimaging study examining the association between childhood adversities, recent negative life events, and grey matter volume in currently healthy adolescents."
     },
     "extraction": {
       "status": "completed",
-      "notes": null
+      "notes": "Features extracted based on explicit mentions in methods and results sections. Longitudinal data status marked unclear as the imaging study was cross-sectional but drew from a longitudinal cohort. Anxiety scales and clinical outcomes were not explicitly reported."
     },
     "extraction_status": "completed",
-    "extraction_notes": null
+    "extraction_notes": "Features extracted based on explicit mentions in methods and results sections. Longitudinal data status marked unclear as the imaging study was cross-sectional but drew from a longitudinal cohort. Anxiety scales and clinical outcomes were not explicitly reported."
   },
   {
     "paper_id": "REFINE-0005",
