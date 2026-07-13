@@ -55,7 +55,6 @@ STATUS_INVALID_PDF = "invalid_pdf"
 STATUS_NO_OA_LOCATION = "no_oa_location"
 STATUS_LANDING_PAGE_UNRESOLVED = "landing_page_unresolved"
 STATUS_REPOSITORY_LANDING_PAGE = "repository_landing_page"
-STATUS_PMC_LANDING_PAGE = "pmc_landing_page"
 STATUS_EUROPEPMC_BAD_PDF_URL = "europepmc_bad_pdf_url"
 STATUS_ERROR = "error"
 STATUS_PMC_PDF_DOWNLOADED = "pmc_pdf_downloaded"
@@ -1205,6 +1204,11 @@ def process_paper(
         if not _secondary_status:
             _secondary_status = STATUS_PMC_FULLTEXT_NO_PDF
             _secondary_error = "PMC full text found but no valid PDF link discovered"
+    elif pubmed_status == "pmc_pdf_not_found":
+        failures.append((STATUS_PMC_PDF_NOT_FOUND, pmc_url, "PMCID found but no valid PDF URL from PMC OA service or page parsing"))
+        if not _secondary_status:
+            _secondary_status = STATUS_PMC_PDF_NOT_FOUND
+            _secondary_error = "PMCID found but no valid PDF URL from PMC OA service or page parsing"
 
     # Choose the most informative final failure.
     # Specific PubMed/PMC statuses are preferred over generic landing_page statuses.
