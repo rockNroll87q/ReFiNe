@@ -213,34 +213,25 @@ function renderCard(paper) {
     summaryText = paper.website_card.short_description;
   }
 
-  // Build card body content (features + optional summary)
-  let bodyContent = "";
-
-  // Left column: Dataset features needed
-  bodyContent += `<div class="card-column card-column-features">`;
-  bodyContent += `<h4 class="column-heading">Dataset features needed</h4>`;
-  bodyContent += `<div class="badges">`;
-  for (const [key, label] of REFINE_FEATURES) {
-    const val = paper.dataset_features_needed?.[key] || "unclear";
-    bodyContent += `<span class="badge ${val}">${label}: ${val}</span>`;
-  }
-  bodyContent += `</div></div>`;
-
-  // Right column: Plain-text summary (only if available)
-  if (summaryText !== null) {
-    bodyContent += `<div class="card-column card-column-summary">`;
-    bodyContent += `<h4 class="column-heading">Plain-text summary</h4>`;
-    bodyContent += `<div class="summary-box">${escapeHtml(summaryText)}</div>`;
-    bodyContent += `</div>`;
-  }
-
   let card = `<div class="card" data-paper-id="${paper.paper_id}">`;
   card += `<h3>${escapeHtml(paper.title)} <span class="status-badge ${status.class}">${status.label}</span></h3>`;
   card += `<div class="meta">${escapeHtml(paper.authors)} · ${paper.year}</div>`;
   card += `<div class="meta">DOI: <a href="${paper.doi}" target="_blank">${paper.doi}</a></div>`;
 
-  // Two-column body content
-  card += `<div class="card-body">${bodyContent}</div>`;
+  // Summary section (only if available)
+  if (summaryText !== null) {
+    card += `<div class="summary-section"><h4>Summary</h4><p>${escapeHtml(summaryText)}</p></div>`;
+  }
+
+  // Dataset features needed
+  card += `<div class="features-section">`;
+  card += `<h4>Dataset features needed</h4>`;
+  card += `<div class="badges">`;
+  for (const [key, label] of REFINE_FEATURES) {
+    const val = paper.dataset_features_needed?.[key] || "unclear";
+    card += `<span class="badge ${val}">${label}: ${val}</span>`;
+  }
+  card += `</div></div>`;
 
   // Coverage line
   const coverage = computeCoverageForPaper(paper.paper_id);
