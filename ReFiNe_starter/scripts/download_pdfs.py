@@ -1276,7 +1276,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--manifest", type=Path, default=Path("data/input/pdf_download_manifest.csv"))
     parser.add_argument("--manual-queue", type=Path, default=None)
     parser.add_argument("--limit", type=int, default=None)
-    parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--overwrite", action="store_true", help="Overwrite existing PDF files")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--manual-only", action="store_true")
     parser.add_argument("--api-key", default=None, help="OpenAlex API key; overrides OPENALEX_API_KEY")
@@ -1284,6 +1284,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--ncbi-email", default=None, help="NCBI email; overrides NCBI_EMAIL")
     parser.add_argument("--ncbi-api-key", default=None, help="NCBI API key; overrides NCBI_API_KEY")
     parser.add_argument("--sleep", type=float, default=1.0, help="Seconds between papers; default 1.0")
+    parser.add_argument("--checkpoint-every", type=int, default=5, help="Write manifest/manual-queue checkpoints every N papers (default: 5)")
+    parser.add_argument("--skip-existing-manifest-successes", action="store_true", help="Skip papers whose manifest status is already downloaded/already_exists/dry_run")
     parser.add_argument("-v", "--verbose", action="store_true")
     return parser
 
@@ -1335,7 +1337,25 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     session = requests.Session()
     session.headers.update(DEFAULT_HEADERS)
 
+    # Determine which papers to skip based on --skip-existing-manifest-successes.
+    if args.skip_existing_manifest_successes:
+        success_statuses = {"downloaded", "already_exists", "dry_run"}
+        skipped_count = 0
+        filtered_papers: List[Dict[str, str]] = []
+        for p in papers:
+            existing = manifest_by_id.get(p["paper_id"])
+            if existing and existing.get("status") in success_statuses:
+                skipped_count += 1
+                continue
+            filtered_papers.append(p)
+        papers = filtered_papers
+        logger.info(
+            "Skipped %d papers with existing successful manifest status (--skip-existing-manifest-successes)",
+            skipped_count,
+        )
+
     stats: Dict[str, int] = {}
+    checkpoint_counter = 0
     for idx, row in enumerate(papers, start=1):
         paper_id = row["paper_id"]
         logger.info("[%d/%d] Processing %s", idx, len(papers), paper_id)
@@ -1366,9 +1386,17 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         if status not in SUCCESS_STATUSES:
             stats[status] = stats.get(status, 0) + 1
 
+        checkpoint_counter += 1
+        if checkpoint_counter >= args.checkpoint_every:
+            write_manifest(manifest_by_id, paper_order, args.manifest)
+            write_manual_queue(manifest_by_id, manual_queue)
+            logger.info("Checkpoint written after %d/%d papers", idx, len(papers))
+            checkpoint_counter = 0
+
         if args.sleep and idx < len(papers):
             time.sleep(args.sleep)
 
+    # Final write to ensure manifest is up-to-date at the end.
     write_manifest(manifest_by_id, paper_order, args.manifest)
     write_manual_queue(manifest_by_id, manual_queue)
 
