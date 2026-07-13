@@ -480,77 +480,128 @@ def extract_paper(paper_id: str) -> None:
 
     # --- 4. LLM extraction with section-aware text packing ---
     prompt_template = _load_prompt_template()
-    
-    # Read context length from environment, default to 32768 (LM Studio's safe default)
-    MAX_CONTEXT_TOKENS = int(os.environ.get("REFINE_MAX_CONTEXT_TOKENS", "32768"))
+
+    # ------------------------------------------------------------------
+    # Context length: read from environment variables (priority order).
+    #   1. REFINE_LLM_CONTEXT_LENGTH  (paper-specific override)
+    #   2. LLM_CONTEXT_LENGTH         (global, shared with other modules)
+    #   3. Default 32768
+    # ------------------------------------------------------------------
+    _ctx_env_names = ["REFINE_LLM_CONTEXT_LENGTH", "LLM_CONTEXT_LENGTH"]
+    _context_length: int | None = None
+    for env_name in _ctx_env_names:
+        val = os.environ.get(env_name)
+        if val is not None:
+            try:
+                _context_length = int(val)
+                break
+            except ValueError:
+                logger.warning("Invalid value for %s: %r", env_name, val)
+
+    MAX_CONTEXT_TOKENS = _context_length if _context_length is not None else 32768
+
+    # ------------------------------------------------------------------
+    # Paper-text token budget.
+    #   If REFINE_LLM_TEXT_TOKEN_BUDGET is set, use it directly.
+    #   Otherwise compute from context length minus overhead minus reserve.
+    # ------------------------------------------------------------------
+    _raw_text_budget = os.environ.get("REFINE_LLM_TEXT_TOKEN_BUDGET")
+    if _raw_text_budget is not None:
+        try:
+            TEXT_TOKEN_BUDGET = int(_raw_text_budget)
+            text_budget_from_env = True
+        except ValueError:
+            logger.warning("Invalid value for REFINE_LLM_TEXT_TOKEN_BUDGET: %r; computing automatically", _raw_text_budget)
+            text_budget_from_env = False
+    else:
+        TEXT_TOKEN_BUDGET = None
+        text_budget_from_env = False
+
     TOKEN_CHAR_RATIO = 4.0  # Approximate characters per token
-    
+
     # Measure the full prompt overhead: system_prompt + template with minimal placeholders
     min_id = "R"  # single char to minimize placeholder size impact
     min_placeholder_text = ""  # empty text to measure pure overhead
     measured_full_prompt = SYSTEM_PROMPT + "\n\n" + prompt_template.replace("{{PAPER_ID}}", min_id).replace("{{PAPER_TEXT}}", min_placeholder_text)
-    
+
     # Total tokens for the full prompt with zero text content (system + template overhead)
     overhead_tokens = int(len(measured_full_prompt) / TOKEN_CHAR_RATIO)
-    
+
     # Reserve extra space for LLM response (minimum 2048 chars / ~512 tokens safety margin)
     reserved_chars = 2048
-    
-    # Calculate max text chars: what's left after subtracting prompt overhead and response reserve
-    available_for_text_tokens = MAX_CONTEXT_TOKENS - overhead_tokens - int(reserved_chars / TOKEN_CHAR_RATIO)
-    
-    if available_for_text_tokens < 0:
-        available_for_text_tokens = 1000  # fallback minimum
-    
-    max_text_chars = int(available_for_text_tokens * TOKEN_CHAR_RATIO)
+
+    if not text_budget_from_env:
+        # Compute paper-text budget from context length minus overhead and reserve
+        available_for_text_tokens = MAX_CONTEXT_TOKENS - overhead_tokens - int(reserved_chars / TOKEN_CHAR_RATIO)
+        if available_for_text_tokens < 0:
+            available_for_text_tokens = 256  # fallback minimum (very conservative)
+        TEXT_TOKEN_BUDGET = max(available_for_text_tokens, 256)
+
+    # Convert token budget → char budget for the packing function
+    max_text_chars = int(TEXT_TOKEN_BUDGET * TOKEN_CHAR_RATIO)
     
     # Ensure minimum text length for meaningful content
     min_text_chars = 10000  # Keep at least 10K chars (~2.5K tokens)
     max_text_chars = max(max_text_chars, min_text_chars)
-    
+
     original_text_len = len(text)
+    original_text_tokens = int(original_text_len / TOKEN_CHAR_RATIO)
     was_packed = False
-    
+
     # Re-derive max_text_tokens for display purposes
     max_text_tokens = int(max_text_chars / TOKEN_CHAR_RATIO)
-    
+
+    # ------------------------------------------------------------------
+    # Diagnostics: print before extraction so the user can see what's
+    # happening regardless of whether packing is triggered.
+    # ------------------------------------------------------------------
+    console.print(f"\n--- Extraction Context Budget ---")
+    console.print(f"  Context length (max input tokens):   {MAX_CONTEXT_TOKENS}")
+    if text_budget_from_env:
+        console.print(f"  Text token budget (env override):     {TEXT_TOKEN_BUDGET}")
+    else:
+        console.print(f"  Paper text token budget:             {TEXT_TOKEN_BUDGET}  (computed from context {MAX_CONTEXT_TOKENS} - overhead {overhead_tokens} - reserve {int(reserved_chars / TOKEN_CHAR_RATIO)})")
+    console.print(f"  Original paper text length:          {original_text_len} chars (~{original_text_tokens} tokens)")
+    console.print("--- End Context Budget ---\n")
+
     if len(text) > max_text_chars:
-        console.print(f"Text exceeds context limit ({len(text)} chars ≈ {len(text)//TOKEN_CHAR_RATIO} tokens > {max_text_tokens} text tokens). Using section-aware text packing...")
-        
+        console.print(f"Text exceeds text budget ({len(text)} chars ≈ {len(text)//TOKEN_CHAR_RATIO:.0f} tokens > {max_text_tokens} text tokens). Using section-aware text packing...")
+
         # Build a section-aware text pack
         packed_text, was_packed = _build_text_pack(text, record, max_text_chars)
-        
+
         # Save the actual packed text to disk for debugging/inspection
         LOGS_DIR.mkdir(parents=True, exist_ok=True)
         text_pack_path = LOGS_DIR / f"{paper_id}.llm_text_pack.txt"
         text_pack_path.write_text(packed_text, encoding="utf-8")
         console.print(f"  Saved LLM text pack to: {text_pack_path}")
-        
+
         prompt = prompt_template.replace("{{PAPER_ID}}", paper_id).replace("{{PAPER_TEXT}}", packed_text)
     else:
         packed_text = text
         was_packed = False
-        
+
         # Still save the text pack even when no packing needed
         LOGS_DIR.mkdir(parents=True, exist_ok=True)
         text_pack_path = LOGS_DIR / f"{paper_id}.llm_text_pack.txt"
         text_pack_path.write_text(packed_text, encoding="utf-8")
-        
+
         prompt = prompt_template.replace("{{PAPER_ID}}", paper_id).replace("{{PAPER_TEXT}}", text)
 
-    # Print diagnostics
+    # Print post-packing diagnostics
     packed_len = len(packed_text)
-    
+    packed_tokens = int(packed_len / TOKEN_CHAR_RATIO)
+
     # Estimate total prompt size that will be sent to LLM
     full_prompt_for_llm = SYSTEM_PROMPT + "\n\n" + prompt_template.replace("{{PAPER_ID}}", paper_id).replace("{{PAPER_TEXT}}", packed_text)
     estimated_total_tokens = int(len(full_prompt_for_llm) / TOKEN_CHAR_RATIO)
-    
-    console.print(f"\n--- Text Pack Diagnostics ---")
-    console.print(f"  Original text length: {original_text_len} chars ({original_text_len // TOKEN_CHAR_RATIO:.0f} tokens)")
-    console.print(f"  Packed text length:   {packed_len} chars ({packed_len // TOKEN_CHAR_RATIO:.0f} tokens)")
-    console.print(f"  Packing used:         {'Yes' if was_packed else 'No'}")
-    console.print(f"  Estimated total prompt tokens (system + user): {estimated_total_tokens}")
-    console.print(f"  Context window limit: {MAX_CONTEXT_TOKENS} tokens")
+
+    console.print(f"\n--- Packing Diagnostics ---")
+    console.print(f"  Original text length:          {original_text_len} chars (~{original_text_tokens} tokens)")
+    console.print(f"  Packed text length:            {packed_len} chars (~{packed_tokens} tokens)")
+    console.print(f"  Packing applied:               {'Yes' if was_packed else 'No'}")
+    console.print(f"  Estimated total prompt tokens: {estimated_total_tokens}")
+    console.print(f"  Context window limit:          {MAX_CONTEXT_TOKENS} tokens")
     console.print("--- End Diagnostics ---\n")
 
     raw_response, llm_metadata = call_llm(prompt, SYSTEM_PROMPT, paper_id=paper_id)
