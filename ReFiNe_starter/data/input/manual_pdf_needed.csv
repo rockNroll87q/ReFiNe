@@ -5,7 +5,7 @@ REFINE-0005,Reduced prefrontal cortical gray matter volume in young adults expos
 REFINE-0006,Obesity and major depression: Body-mass index (BMI) is associated with a severe course of disease and specific neurostructural alterations,10.1016/j.psyneuen.2014.10.001,DOI landing page unresolved
 REFINE-0007,Dissociable morphometric profiles of the affective and cognitive dimensions of alexithymia,10.1016/j.cortex.2014.02.017,Repository landing page unresolved
 REFINE-0008,Electroconvulsive therapy increases temporal gray matter volume and cortical thickness,10.1016/j.euroneuro.2015.12.036,DOI landing page unresolved
-REFINE-0009,Examining the relationship between gray matter volume and a continuous measure of bipolarity in unmedicated unipolar and bipolar depression,10.1016/j.jad.2020.10.071,PMC full-text available as HTML; no downloadable PDF link found
+REFINE-0009,Examining the relationship between gray matter volume and a continuous measure of bipolarity in unmedicated unipolar and bipolar depression,10.1016/j.jad.2020.10.071,PMC full-text available but all extracted PDF links were invalid
 REFINE-0010,Subthreshold depression may exist on a spectrum with major depressive disorder: Evidence from gray matter volume and morphological brain network,10.1016/j.jad.2020.01.135,DOI landing page unresolved
 REFINE-0011,Neural biomarker of functional disability in major depressive disorder: A structural neuroimaging study,10.1016/j.pnpbp.2021.110337,DOI landing page unresolved
 REFINE-0012,Adverse childhood experiences influence the detrimental effect of bipolar disorder and schizophrenia on cortico-limbic grey matter volumes,10.1016/j.jad.2015.09.049,DOI landing page unresolved
@@ -13,10 +13,13 @@ REFINE-0013,Neuroanatomical correlates of attitudes toward suicide in a large he
 REFINE-0014,Voxel-based morphometry study of the insular cortex in female patients with current and remitted depression,10.1016/j.neuroscience.2013.12.058,DOI landing page unresolved
 REFINE-0015,Distinct associations of insula and cingulate volume with the cognitive and affective dimensions of alexithymia,10.1016/j.neuropsychologia.2013.12.006,Repository landing page unresolved
 REFINE-0016,The contribution of regional gray/white matter volume in preclinical depression assessed by the Automatic Thoughts Questionnaire: A voxel-based morphometry study,10.1097/wnr.0000000000000222,DOI landing page unresolved
+REFINE-0018,“Brain morphometric biomarkers distinguishing unipolar and bipolar depression: A voxel-based morphometry–pattern classification approach”: Correction,,Publisher HTTP 403: escholarship.org
 REFINE-0019,Specificity of abnormal brain volume in major depressive disorder: A comparison with borderline personality disorder,10.1016/j.jad.2014.11.059,Publisher HTTP 403: hdl.handle.net
 REFINE-0021,Brain structure associated with automatic thoughts predicted depression symptoms in healthy individuals,10.1016/j.pscychresns.2015.03.002,DOI landing page unresolved
+REFINE-0022,The reflection of self-esteem on the brain structure: A voxel based morphometry study in healthy young adults,,Candidate PDF rejected: invalid_pdf_title_mismatch
 REFINE-0023,Altered gray matter volumes and plasma IL-6 level in major depressive disorder patients with suicidal ideation,10.1016/j.nicl.2023.103403,Publisher HTTP 403: doaj.org
 REFINE-0024,The gray matter volume of the right insula mediates the relationship between symptoms of depression/anxiety and sleep quality among college students,10.1177/1359105319869977,Publisher HTTP 403: doi.org
+REFINE-0025,Neurostructural correlates of hope: Dispositional hope mediates the impact of the SMA gray matter volume on subjective well-being in late adolescence,10.1093/scan/nsaa046,Publisher HTTP 403: academic.oup.com
 REFINE-0026,Brain morphometry and connectivity differs between adolescent- and adult-onset major depressive disorder,10.1002/da.23254,Publisher HTTP 403: doi.org
 REFINE-0027,Insular volume reductions in patients with major depressive disorder,10.1016/j.npbr.2019.06.002,Repository landing page unresolved
 REFINE-0028,Shared Transdiagnostic Neuroanatomical Signatures Across First-episode Patients with Major Psychiatric Diseases and Individuals at Familial Risk,10.1016/j.nicl.2022.103074,Publisher HTTP 403: doaj.org
@@ -69,6 +72,7 @@ REFINE-0091,Regional gray matter reductions are associated with genetic liabilit
 REFINE-0092,Cerebral amyloid accumulation is associated with distinct structural and functional alterations in the brain of depressed elders with mild cognitive impairment,10.1016/j.jad.2020.12.049,DOI landing page unresolved
 REFINE-0093,The effect of trait anxiety on risk‐taking: Functional coupling between right hippocampus and left insula,10.1111/psyp.13629,Publisher HTTP 403: doi.org
 REFINE-0094,"Right dorsolateral prefrontal cortex volumetric reduction is associated with antidepressant effect of low-dose ketamine infusion: A randomized, double-blind, midazolam-controlled PET-MRI clinical trial",10.1016/j.jad.2023.05.024,DOI landing page unresolved
+REFINE-0095,Altered gray matter volume and white matter integrity in college students with mobile phone dependence,,Candidate PDF rejected: invalid_pdf_title_mismatch
 REFINE-0096,Male elderly subthreshold depression patients have smaller volume of medial part of prefrontal cortex and precentral gyrus compared with age-matched normal subjects: A voxel-based morphometry,10.1016/j.jad.2005.08.003,DOI landing page unresolved
 REFINE-0097,Neuroinflammation in the amygdala is associated with recent depressive symptoms,10.1016/j.bpsc.2023.04.011,DOI landing page unresolved
 REFINE-0098,"A subtle grey-matter increase in first-episode, drug-naive major depressive disorder with panic disorder after 6 weeks’ duloxetine therapy",10.1017/s1461145710000829,Publisher HTTP 403: academic.oup.com
@@ -103,19 +107,23 @@ REFINE-0133,Influence of the topography of brain damage on depression and fatigu
 REFINE-0134,Neural correlates of the association between depression and high density lipoprotein cholesterol change,10.1016/j.jpsychires.2020.07.012,DOI landing page unresolved
 REFINE-0136,The neural substrates responsible for how trait anxiety affects delay discounting: Right hippocampal and cerebellar connectivity with bistable right inferior parietal lobule,10.1111/psyp.13495,Publisher HTTP 403: doi.org
 REFINE-0137,Maternal prenatal lead levels and neonatal brain volumes: Testing moderations by maternal depressive symptoms and family income,10.1016/j.ntt.2024.107322,Publisher HTTP 403: www.sciencedirect.com
+REFINE-0139,Structural and functional differences in the cingulate cortex relate to disease severity in anorexia nervosa,,Publisher HTTP 403: doaj.org
 REFINE-0140,In vivo relationship between serotonin 1A receptor binding and gray matter volume in the healthy brain and in major depressive disorder,10.1007/s00429-018-1649-6,PMC full-text available as HTML; no downloadable PDF link found
+REFINE-0141,Biochemical abnormalities of the medial temporal lobe and medial prefrontal cortex in late-life depression,10.1016/j.pscychresns.2008.07.001,Candidate PDF rejected: invalid_pdf_wrong_document
 REFINE-0142,Brain structural correlates of depressive symptoms in Parkinson’s disease patients at different disease stage,10.1016/j.pscychresns.2019.111029,DOI landing page unresolved
 REFINE-0143,Structural correlates of apathy in Alzheimer’s disease: a multimodal MRI study,10.1002/gps.4548,Publisher HTTP 403: doi.org
 REFINE-0144,Short-term group cognitive behavior therapy contributes to recovery from mild depression: Evidence from functional and structural MRI,10.1016/j.pscychresns.2016.04.010,DOI landing page unresolved
 REFINE-0145,Subcortical lesion severity and orbitofrontal cortex volume in geriatric depression,10.1016/s0006-3223(03)00063-5,DOI landing page unresolved
 REFINE-0146,Imaging correlates of apathy and depression in Parkinson’s disease,10.1016/j.jns.2011.07.006,DOI landing page unresolved
 REFINE-0147,Social cognition and frontal lobe pathology in schizophrenia: A voxel-based morphometric study,10.1016/j.neuroimage.2006.10.046,DOI landing page unresolved
+REFINE-0148,Altered gray matter volumes in post-stroke depressive patients after subcortical stroke,10.1016/j.nicl.2020.102224,Publisher HTTP 403: doaj.org
 REFINE-0149,Apoptotic Proteins in the Temporal Cortex in Schizophrenia: High Bax/Bcl-2 Ratio Without Caspase-3 Activation,10.1176/appi.ajp.161.1.109,Publisher HTTP 403: doi.org
 REFINE-0150,Cortical thickness predicts the first onset of major depression in adolescence,10.1016/j.ijdevneu.2015.07.007,Publisher HTTP 403: doi.org
 REFINE-0152,Prepartum and postpartum maternal depressive symptoms are related to children’s brain structure in preschool,10.1016/j.biopsych.2015.12.004,Repository landing page unresolved
 REFINE-0153,Cerebral Benzodiazepine Receptors in Depressed Patients Measured with [123I]iomazenil SPECT,10.1016/s0006-3223(02)01788-2,DOI landing page unresolved
 REFINE-0155,Orbitofrontal cortex grey matter volume is related to children’s depressive symptoms,10.1016/j.nicl.2020.102395,Publisher HTTP 403: doaj.org
 REFINE-0158,Subthreshold depression and regional brain volumes in young community adolescents,10.1016/j.jaac.2015.07.006,PMC full-text available as HTML; no downloadable PDF link found
+REFINE-0160,Cognitive-behavioral therapy increases prefrontal cortex gray matter in patients with chronic pain,10.1016/j.jpain.2013.07.020,Publisher HTTP 403: www.jpain.org
 REFINE-0161,Reduced thalamic volume in men with antisocial personality disorder or schizophrenia and a history of serious violence and childhood abuse,10.1016/j.eurpsy.2012.03.002,Publisher HTTP 403: orca.cardiff.ac.uk
 REFINE-0162,Morphometric changes of gray matter in Parkinson’s disease with depression: A voxel-based morphometry study,10.1002/mds.21765,Publisher HTTP 403: doi.org
 REFINE-0163,Depression is associated with hippocampal volume loss in adults with HIV,10.1002/hbm.25451,Publisher HTTP 403: onlinelibrary.wiley.com
@@ -143,6 +151,8 @@ REFINE-0189,Amygdala grey matter volume increase in gambling disorder with depre
 REFINE-0190,Anatomic location and laterality of MRI signal hyperintensities in late-life depression,10.1016/s0022-3999(02)00425-7,DOI landing page unresolved
 REFINE-0191,Antidepressant Exposure May Protect Against Decrement in Frontal Gray Matter Volumes in Geriatric Depression,10.4088/jcp.v66n0801,DOI landing page unresolved
 REFINE-0193,Brain density in depression: Methodological and psychopathological aspects,10.1111/j.1600-0447.1988.tb06392.x,Publisher HTTP 403: doi.org
+REFINE-0194,Structural and functional improvement of amygdala sub-regions in postpartum depression after acupuncture,10.3389/fnhum.2023.1163746,Publisher HTTP 403: doaj.org
+REFINE-0195,Hippocampal and parahippocampal volume and function predict antidepressant response in patients with major depression: A multimodal neuroimaging study,10.1177/02698811231190859,Publisher HTTP 403: journals.sagepub.com
 REFINE-0196,Bidirectional associations between perinatal allopregnanolone and depression severity with postpartum gray matter volume in adult women,10.1111/acps.13723,Publisher HTTP 403: doi.org
 REFINE-0197,Neutrophil to lymphocyte ratio is a transdiagnostic biomarker of depression and structural and functional brain alterations in older adults,10.1016/j.jneuroim.2022.577831,PMC full-text available as HTML; no downloadable PDF link found
 REFINE-0198,Neuromodulation in response to electroconvulsive therapy in schizophrenia and major depression,10.1016/j.brs.2017.01.578,Publisher HTTP 403: doaj.org
@@ -152,10 +162,12 @@ REFINE-0201,Hyperconnectivity and altered interactions of a nucleus accumbens ne
 REFINE-0202,Neuroanatomical predictors of response to subcallosal cingulate deep brain stimulation for treatment-resistant depression,10.1503/jpn.180207,Publisher HTTP 403: doi.org
 REFINE-0203,Effects of the BDNF Val66Met Polymorphism on Gray Matter Volume in Typically Developing Children and Adolescents,10.1093/cercor/bhw020,Publisher HTTP 403: academic.oup.com
 REFINE-0204,"Comparison of brain structural variables, neuropsychological factors, and treatment outcome in early-onset versus late-onset late-life depression",10.1016/j.jagp.2013.02.005,PMC full-text available as HTML; no downloadable PDF link found
+REFINE-0205,Neural Correlates of the Cortisol Awakening Response in Humans,10.1038/npp.2015.77,Candidate PDF rejected: invalid_pdf_title_mismatch
 REFINE-0206,Patterns of reduced cortical thickness in late-life depression and relationship to psychotherapeutic response,10.1016/j.jagp.2013.01.013,Publisher HTTP 403: escholarship.org
 REFINE-0207,Prefrontal cortex and amygdala volume in first minor or major depressive episode after cancer diagnosis,10.1016/j.biopsych.2005.08.018,DOI landing page unresolved
 REFINE-0208,Neuropsychological functioning and MRI signal hyperintensities in geriatric depression,,Publisher HTTP 403: www.ahajournals.org
 REFINE-0210,Cortical changes associated with depression and antidepressant use in Alzheimer and Lewy body dementia: An MRI surface-based morphometric study,10.1016/j.jagp.2013.02.004,Publisher HTTP 403: www.ajgponline.org
+REFINE-0211,Major Depression and Suicidality Following Brain Injury,,Publisher HTTP 403: www.ajpmonline.org
 REFINE-0212,In vivo structural and functional abnormalities of the striatums is related to decreased astrocytic BDNF in Itpr2-/- mice exhibiting depressive-like behavior,10.1155/2020/8830670,Publisher HTTP 403: downloads.hindawi.com
 REFINE-0214,"Early childhood cumulative risk is associated with decreased global brain measures, cortical thickness, and cognitive functioning in school‐age children",10.1002/dev.21956,Publisher HTTP 403: doi.org
 REFINE-0215,Depression symptoms moderate the relationship between gray matter volumes and cognitive function in patients with mild cognitive impairment,10.1016/j.jpsychires.2022.05.017,DOI landing page unresolved
@@ -223,6 +235,7 @@ REFINE-0296,Neuroanatomical characteristics of geriatric apathy and depression: 
 REFINE-0297,Depression in dementia with Lewy bodies: A critical update,10.1007/s00702-023-02669-8,DOI landing page unresolved
 REFINE-0298,Neuroanatomy in monozygotic twins with Asperger disorder discordant for comorbid depression,10.1212/01.wnl.0000172360.99310.3f,Publisher HTTP 403: doi.org
 REFINE-0299,Mapping Brain Size and Cortical Gray Matter Changes in Elderly Depression,10.1016/j.biopsych.2003.09.004,DOI landing page unresolved
+REFINE-0300,Cortical alterations are associated with depression in subcortical vascular mild cognitive impairment revealed by surface-based morphometry,,Publisher HTTP 403: doi.org
 REFINE-0302,Alterations of brain volumes in women with early life maltreatment and their associations with oxytocin,10.1016/j.yhbeh.2017.11.005,DOI landing page unresolved
 REFINE-0303,"Altruistic Social Activity, Depressive Symptoms, and Brain Regional Gray Matter Volume: Voxel-Based Morphometry Analysis From 8,695 Old Adults",10.1093/gerona/glac093,Publisher HTTP 403: doi.org
 REFINE-0304,Atrophy of right inferior frontal orbital gyrus and frontoparietal functional connectivity abnormality in depressed suicide attempters,10.1007/s11682-019-00206-4,DOI landing page unresolved
@@ -237,6 +250,7 @@ REFINE-0313,The serotonin transporter genotype modulates the relationship betwee
 REFINE-0314,Imaging the neuroplastic effects of ketamine with VBM and the necessity of placebo control,10.1016/j.neuroimage.2016.12.032,DOI landing page unresolved
 REFINE-0316,Variant in oxytocin receptor gene is associated with amygdala volume,10.1016/j.psyneuen.2010.12.004,PMC full-text available as HTML; no downloadable PDF link found
 REFINE-0317,"Cumulative adversity and smaller gray matter volume in medial prefrontal, anterior cingulate, and insula regions",10.1016/j.biopsych.2011.11.022,PMCID found but no valid PDF URL from PMC OA service or page parsing
+REFINE-0318,"Association of cerebral amyloidosis, blood pressure, and neuronal injury with late-life onset depression",,Publisher HTTP 403: doaj.org
 REFINE-0319,Associations between parental depression and anxiety symptom severity and their offspring’s cortical thickness and subcortical volume,10.1016/j.jpsychires.2023.09.014,DOI landing page unresolved
 REFINE-0321,Regional brain volume in depression and anxiety disorders,10.1001/archgenpsychiatry.2010.121,Publisher HTTP 403: doi.org
 REFINE-0322,Cortical volume reductions in men transitioning to first-time fatherhood reflect both parenting engagement and mental health risk,10.1093/cercor/bhae126,Publisher HTTP 403: academic.oup.com
@@ -262,6 +276,7 @@ REFINE-0347,Effects of erythropoietin on hippocampal volume and memory in mood d
 REFINE-0348,Coverage of blood vessels by astrocytic endfeet is reduced in major depressive disorder,10.1016/j.biopsych.2012.09.024,PMC full-text available as HTML; no downloadable PDF link found
 REFINE-0349,Anterior cingulate gyrus acts as a moderator of the relationship between problematic mobile phone use and depressive symptoms in college students,10.1093/scan/nsab016,Publisher HTTP 403: academic.oup.com
 REFINE-0350,"Association of type 2 diabetes with depression, brain atrophy, and reduced fine motor speed in a 60- to 64-year-old community sample",10.1097/jgp.0b013e31818b40fc,Repository landing page unresolved
+REFINE-0351,"Inflammation, negative affect, and amyloid burden in Alzheimer’s disease: Insights from the kynurenine pathway",10.1016/j.bbi.2021.03.019,Candidate PDF rejected: invalid_pdf_wrong_document
 REFINE-0352,Ventricular enlargement and caudate hyperdensity in elderly depressives,10.1016/0006-3223(91)90306-7,DOI landing page unresolved
 REFINE-0353,Brain-gut microbiota multimodal predictive model in patients with bipolar depression,10.1016/j.jad.2022.11.026,DOI landing page unresolved
 REFINE-0354,Gray matter volume and white matter lesions in chronic kidney disease: Exploring the association with depressive symptoms,10.1016/j.genhosppsych.2016.02.005,Repository landing page unresolved
