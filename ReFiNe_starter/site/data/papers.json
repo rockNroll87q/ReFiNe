@@ -4168,21 +4168,18 @@
     "citation": "Suffren, S., la Buissonnière-Ariza, V., Tucholka, A., Nassim, M., Séguin, J. R., Boivin, M., Kaur Singh, M., Foland-Ross, L. C., Lepore, F., Gotlib, I. H., Tremblay, R. E., & Maheu, F. S. (2022). Prefrontal cortex and amygdala anatomy in youth with persistent levels of harsh parenting practices and subclinical anxiety symptoms over time during childhood. Development and Psychopathology, 34(3), 957–968. https://doi.org/10.1017/S0954579420001716",
     "dataset_features_needed": {
       "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
+      "vbm_or_voxelwise_morphometry": "yes",
+      "mdd_patients": "no",
       "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
       "genetic_data": "unclear",
       "depression_scale": "unclear",
-      "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
+      "anxiety_scale": "yes",
+      "clinical_outcomes": "no",
+      "longitudinal_data": "yes",
+      "medication_status": "yes",
+      "trauma_or_life_stress": "yes",
       "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -4191,13 +4188,20 @@
     "website_card": {
       "short_title": "Prefrontal cortex and amygdala anatomy in youth with persistent levels of harsh parenting ",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "Anatomical MRI analyzed with voxel-based morphometry (VBM) and FreeSurfer",
+        "Longitudinal assessment of anxiety symptoms from ages 2.5 to 9 years",
+        "Assessment of harsh parenting/coercive practices over time",
+        "Medication status recorded (no history reported at time of MRI)"
+      ],
+      "short_description": "Longitudinal study examining associations between persistent harsh parenting, subclinical anxiety symptoms, and prefrontal cortex and amygdala anatomy in youth using voxel-based morphometry."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Features extracted strictly from explicit text. T1w MRI not explicitly specified but anatomical images/VBM used. No MDD patients or clinical outcomes reported; community cohort divided by anxiety/parenting trajectories. Medication status and longitudinal data explicitly confirmed. Trauma/life stress assessed via harsh parenting measures."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Features extracted strictly from explicit text. T1w MRI not explicitly specified but anatomical images/VBM used. No MDD patients or clinical outcomes reported; community cohort divided by anxiety/parenting trajectories. Medication status and longitudinal data explicitly confirmed. Trauma/life stress assessed via harsh parenting measures."
   },
   {
     "paper_id": "REFINE-0104",
@@ -4247,22 +4251,19 @@
     "doi_url": "https://doi.org/10.1186/s12888-016-0928-0",
     "citation": "Zhou, H., Li, R., Ma, Z., Rossi, S., Zhu, X., & Li, J. (2016a). Smaller gray matter volume of hippocampus/parahippocampus in elderly people with subthreshold depression: A cross-sectional study. BMC Psychiatry, 16(1). https://doi.org/10.1186/s12888-016-0928-0",
     "dataset_features_needed": {
-      "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
+      "t1w_mri": "yes",
+      "vbm_or_voxelwise_morphometry": "yes",
+      "mdd_patients": "no",
+      "healthy_controls": "yes",
       "genetic_data": "unclear",
-      "depression_scale": "unclear",
+      "depression_scale": "yes",
       "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
       "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "longitudinal_data": "no",
+      "medication_status": "unclear",
+      "trauma_or_life_stress": "unclear",
+      "cognitive_data": "yes",
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -4271,13 +4272,22 @@
     "website_card": {
       "short_title": "Smaller gray matter volume of hippocampus/parahippocampus in elderly people with subthresh",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "T1-weighted MRI acquisition",
+        "Voxel-based morphometry (VBM) analysis",
+        "Subthreshold depression participants",
+        "Healthy age-matched controls",
+        "CES-D depression scale assessment",
+        "MMSE cognitive screening"
+      ],
+      "short_description": "Cross-sectional study examining hippocampal/parahippocampal gray matter volume differences between elderly individuals with subthreshold depression and healthy controls using T1-weighted MRI and VBM."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Features extracted directly from paper text. MDD patients explicitly excluded; study focuses on subthreshold depression. Cross-sectional design confirmed. MMSE used for exclusion criteria. Other features not reported."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Features extracted directly from paper text. MDD patients explicitly excluded; study focuses on subthreshold depression. Cross-sectional design confirmed. MMSE used for exclusion criteria. Other features not reported."
   },
   {
     "paper_id": "REFINE-0106",
@@ -4808,13 +4818,13 @@
     "citation": "Ye, J., Wu, C., Chu, X., Wen, Y., Li, P., Cheng, B., Cheng, S., Liu, L., Zhang, L., Ma, M., Qi, X., Liang, C., Kafle, O. P., Jia, Y., Wang, S., Wang, X., Ning, Y., & Zhang, F. (2020). Evaluating the effect of birth weight on brain volumes and depression: An observational and genetic study using UK Biobank cohort. European Psychiatry, 63. https://doi.org/10.1192/j.eurpsy.2020.74",
     "dataset_features_needed": {
       "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "no",
+      "vbm_or_voxelwise_morphometry": "unclear",
       "mdd_patients": "unclear",
       "healthy_controls": "unclear",
       "genetic_data": "yes",
       "depression_scale": "yes",
       "anxiety_scale": "unclear",
-      "clinical_outcomes": "no",
+      "clinical_outcomes": "unclear",
       "longitudinal_data": "no",
       "medication_status": "unclear",
       "trauma_or_life_stress": "unclear",
@@ -4829,19 +4839,17 @@
       "short_title": "Evaluating the effect of birth weight on brain volumes and depression: An observational an",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "UK Biobank population cohort study (cross-sectional)",
-        "Polygenic risk scores for birth weight calculated from individual-level genotype data",
-        "Depression status assessed using PHQ-9 and CIDI-SF criteria",
-        "Brain volumes analyzed including gray matter, white matter, thalamus, accumbens, and frontal pole",
-        "Mediation analysis performed between birth weight, brain volume, and depression"
-      ]
+        "genetic_data",
+        "depression_scale"
+      ],
+      "short_description": "Observational and genetic study using UK Biobank cohort to evaluate associations between birth weight, brain volumes, and depression."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Extracted features strictly from explicit text. Study is a cross-sectional UK Biobank cohort analysis. Genetic data (PRS) and depression scales (PHQ-9/CIDI-SF) are explicitly reported. MRI modality not specified as T1w. No longitudinal, medication, trauma, cognitive, or biomarker data mentioned. VBM/voxel-wise morphometry not performed; predefined UK Biobank volume codes were used."
+      "notes": "Extracted features based on explicit mentions in the text. Many demographic and clinical covariates were not reported, leading to unclear classifications per instructions."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Extracted features strictly from explicit text. Study is a cross-sectional UK Biobank cohort analysis. Genetic data (PRS) and depression scales (PHQ-9/CIDI-SF) are explicitly reported. MRI modality not specified as T1w. No longitudinal, medication, trauma, cognitive, or biomarker data mentioned. VBM/voxel-wise morphometry not performed; predefined UK Biobank volume codes were used."
+    "extraction_notes": "Extracted features based on explicit mentions in the text. Many demographic and clinical covariates were not reported, leading to unclear classifications per instructions."
   },
   {
     "paper_id": "REFINE-0120",
@@ -4971,22 +4979,19 @@
     "doi_url": "https://doi.org/10.1503/jpn.100140",
     "citation": "Haller, S., Xekardaki, A., Delaloye, C., Canuto, A., Lövblad, K. O., Gold, G., & Giannakopoulos, P. (2011a). Combined analysis of grey matter voxel-based morphometry and white matter tract-based spatial statistics in late-life bipolar disorder. Journal of Psychiatry and Neuroscience, 36(6), 391–399. https://doi.org/10.1503/jpn.100140",
     "dataset_features_needed": {
-      "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
+      "t1w_mri": "yes",
+      "vbm_or_voxelwise_morphometry": "yes",
+      "mdd_patients": "no",
+      "healthy_controls": "yes",
       "genetic_data": "unclear",
-      "depression_scale": "unclear",
+      "depression_scale": "yes",
       "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
       "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "longitudinal_data": "no",
+      "medication_status": "unclear",
+      "trauma_or_life_stress": "unclear",
+      "cognitive_data": "yes",
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -4995,13 +5000,20 @@
     "website_card": {
       "short_title": "Combined analysis of grey matter voxel-based morphometry and white matter tract-based spat",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "T1-weighted MRI acquired",
+        "Voxel-based morphometry performed",
+        "Bipolar disorder patients and healthy controls included",
+        "Geriatric Depression Scale used",
+        "Neuropsychological/cognitive assessments conducted"
+      ]
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Extracted features directly from paper text. Study focuses on late-life bipolar disorder using T1 MRI, VBM, and DTI/TBSS. Cognitive data and depression scales were explicitly reported. Genetic, anxiety, clinical outcome, longitudinal, medication history, trauma, and biomarker data were not explicitly detailed or assessed."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Extracted features directly from paper text. Study focuses on late-life bipolar disorder using T1 MRI, VBM, and DTI/TBSS. Cognitive data and depression scales were explicitly reported. Genetic, anxiety, clinical outcome, longitudinal, medication history, trauma, and biomarker data were not explicitly detailed or assessed."
   },
   {
     "paper_id": "REFINE-0124",
@@ -5131,22 +5143,19 @@
     "doi_url": "https://doi.org/10.1017/S003329171300247X",
     "citation": "Sprengelmeyer, R., Orth, M., Müller, H. P., Wolf, R. C., Grön, G., Depping, M. S., Kassubek, J., Justo, D., Rees, E. M., Haider, S., Cole, J. H., Hobbs, N. Z., Roos, R. A. C., Dürr, A., Tabrizi, S. J., Süssmuth, S. D., & Landwehrmeyer, G. B. (2014). The neuroanatomy of subthreshold depressive symptoms in Huntington’s disease: A combined diffusion tensor imaging (DTI) and voxel-based morphometry (VBM) study. Psychological Medicine, 44(9), 1867–1878. https://doi.org/10.1017/S003329171300247X",
     "dataset_features_needed": {
-      "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
+      "t1w_mri": "yes",
+      "vbm_or_voxelwise_morphometry": "yes",
+      "mdd_patients": "no",
+      "healthy_controls": "yes",
       "genetic_data": "unclear",
-      "depression_scale": "unclear",
+      "depression_scale": "yes",
       "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
+      "clinical_outcomes": "yes",
+      "longitudinal_data": "yes",
       "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "trauma_or_life_stress": "unclear",
+      "cognitive_data": "yes",
+      "blood_or_biomarker_data": "no"
     },
     "sample_summary": {
       "sample_size": null,
@@ -5155,13 +5164,21 @@
     "website_card": {
       "short_title": "The neuroanatomy of subthreshold depressive symptoms in Huntington’s disease: A combined d",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "T1-weighted MRI and voxel-based morphometry (VBM) were acquired and analyzed.",
+        "Study included 61 early-stage Huntington's disease participants and 40 matched healthy controls.",
+        "Depressive symptoms assessed using the Hospital Anxiety and Depression Scale depression subscore.",
+        "Cognitive testing was performed alongside neuroimaging and motor assessments.",
+        "Participants were assessed at three time points, though only baseline cross-sectional data is reported in this paper."
+      ],
+      "short_description": "Cross-sectional neuroimaging study examining the neuroanatomy of subthreshold depressive symptoms in early-stage Huntington's disease using VBM and DTI, compared with healthy controls."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Features extracted strictly from explicit statements in the provided text. MDD patients were explicitly excluded from the study focus in favor of subthreshold symptoms. Longitudinal data collection occurred but was not analyzed here. Genetic, medication, trauma/stress, and biomarker details are not explicitly reported in the provided excerpt."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Features extracted strictly from explicit statements in the provided text. MDD patients were explicitly excluded from the study focus in favor of subthreshold symptoms. Longitudinal data collection occurred but was not analyzed here. Genetic, medication, trauma/stress, and biomarker details are not explicitly reported in the provided excerpt."
   },
   {
     "paper_id": "REFINE-0128",
@@ -5251,15 +5268,15 @@
     "doi_url": "https://doi.org/10.3389/fnhum.2017.00232",
     "citation": "Kanayama, N., Asai, T., Nakao, T., Makita, K., Kozuma, R., Uyama, T., Yamane, T., Kadota, H., & Yamawaki, S. (2017). Subjectivity of the anomalous sense of self is represented in gray matter volume in the brain. Frontiers in Human Neuroscience, 11. https://doi.org/10.3389/fnhum.2017.00232",
     "dataset_features_needed": {
-      "t1w_mri": "yes",
+      "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "yes",
-      "mdd_patients": "unclear",
+      "mdd_patients": "no",
       "healthy_controls": "yes",
       "genetic_data": "unclear",
       "depression_scale": "unclear",
       "anxiety_scale": "unclear",
       "clinical_outcomes": "unclear",
-      "longitudinal_data": "unclear",
+      "longitudinal_data": "no",
       "medication_status": "unclear",
       "trauma_or_life_stress": "unclear",
       "cognitive_data": "unclear",
@@ -5273,17 +5290,18 @@
       "short_title": "Subjectivity of the anomalous sense of self is represented in gray matter volume in the br",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted MRI data acquired using MP-RAGE sequence",
-        "Voxel-based morphometry (VBM) analysis performed on gray matter volume",
-        "Study included 96 healthy control participants"
-      ]
+        "MRI data acquired",
+        "Voxel-based morphometry performed",
+        "Healthy controls included"
+      ],
+      "short_description": "Cross-sectional study of 96 healthy individuals examining correlations between gray matter volume and self-related malfunctions using MRI and voxel-based morphometry."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Features extracted directly from the provided text. T1w MRI and VBM are explicitly reported. Healthy controls are confirmed. Other features (MDD patients, genetic data, scales, longitudinal/clinical/blood measures) are not mentioned in the text."
+      "notes": "Extracted features strictly from explicit text. VBM and healthy controls are confirmed. Other clinical, genetic, or longitudinal data not reported in the provided text."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Features extracted directly from the provided text. T1w MRI and VBM are explicitly reported. Healthy controls are confirmed. Other features (MDD patients, genetic data, scales, longitudinal/clinical/blood measures) are not mentioned in the text."
+    "extraction_notes": "Extracted features strictly from explicit text. VBM and healthy controls are confirmed. Other clinical, genetic, or longitudinal data not reported in the provided text."
   },
   {
     "paper_id": "REFINE-0131",
@@ -5293,7 +5311,7 @@
     "doi_url": "https://doi.org/10.3389/fnhum.2016.00622",
     "citation": "Stuke, H., Hanken, K., Hirsch, J., Klein, J., Wittig, F., Kastrup, A., & Hildebrandt, H. (2016). Cross-sectional and longitudinal relationships between depressive symptoms and brain atrophy in MS patients. Frontiers in Human Neuroscience, 10. https://doi.org/10.3389/fnhum.2016.00622",
     "dataset_features_needed": {
-      "t1w_mri": "yes",
+      "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "no",
       "healthy_controls": "no",
@@ -5302,7 +5320,7 @@
       "anxiety_scale": "unclear",
       "clinical_outcomes": "yes",
       "longitudinal_data": "yes",
-      "medication_status": "yes",
+      "medication_status": "unclear",
       "trauma_or_life_stress": "unclear",
       "cognitive_data": "unclear",
       "blood_or_biomarker_data": "unclear"
@@ -5315,20 +5333,19 @@
       "short_title": "Cross-sectional and longitudinal relationships between depressive symptoms and brain atrop",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted MRI data acquired",
-        "Voxel-based morphometry analysis performed",
-        "Depressive symptoms measured with BDI",
-        "Longitudinal follow-up data collected",
-        "Medication status documented"
+        "Voxel-based morphometry (VBM) analysis",
+        "Beck Depression Inventory (BDI) scores",
+        "Expanded Disability Status Scale (EDSS)",
+        "Longitudinal follow-up over 17 months"
       ],
-      "short_description": "Prospective study of 44 MS patients examining cross-sectional and longitudinal relationships between depressive symptoms and regional brain atrophy over a 17-month interval using T1 MRI and VBM."
+      "short_description": "Prospective study examining cross-sectional and longitudinal relationships between depressive symptoms and brain atrophy in MS patients using structural MRI and VBM."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Extracted features directly from methods, results, and Table 1. Study focused exclusively on MS patients with depressive symptoms; MDD patients and healthy controls were not included. Genetic, anxiety, trauma, cognitive, and biomarker data were not reported in the text."
+      "notes": "Extracted features strictly from explicit text. T1w MRI not explicitly specified. MDD patients excluded per author statement. No healthy controls, genetic, anxiety, medication, trauma, cognitive, or blood data reported."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Extracted features directly from methods, results, and Table 1. Study focused exclusively on MS patients with depressive symptoms; MDD patients and healthy controls were not included. Genetic, anxiety, trauma, cognitive, and biomarker data were not reported in the text."
+    "extraction_notes": "Extracted features strictly from explicit text. T1w MRI not explicitly specified. MDD patients excluded per author statement. No healthy controls, genetic, anxiety, medication, trauma, cognitive, or blood data reported."
   },
   {
     "paper_id": "REFINE-0132",
@@ -5458,19 +5475,19 @@
     "doi_url": "https://doi.org/10.3758/s13415-016-0474-8",
     "citation": "Wu, D., Wang, K., Wei, D., Chen, Q., Du, X., Yang, J., & Qiu, J. (2017a). Perfectionism mediated the relationship between brain structure variation and negative emotion in a nonclinical sample. Cognitive, Affective and Behavioral Neuroscience, 17(1), 211–223. https://doi.org/10.3758/s13415-016-0474-8",
     "dataset_features_needed": {
-      "t1w_mri": "yes",
+      "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "no",
       "healthy_controls": "yes",
-      "genetic_data": "no",
+      "genetic_data": "unclear",
       "depression_scale": "yes",
       "anxiety_scale": "yes",
-      "clinical_outcomes": "no",
+      "clinical_outcomes": "unclear",
       "longitudinal_data": "no",
       "medication_status": "yes",
-      "trauma_or_life_stress": "no",
-      "cognitive_data": "no",
-      "blood_or_biomarker_data": "no"
+      "trauma_or_life_stress": "unclear",
+      "cognitive_data": "unclear",
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -5480,21 +5497,19 @@
       "short_title": "Perfectionism mediated the relationship between brain structure variation and negative emo",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted MRI acquired",
-        "Voxel-based morphometry (VBM) performed",
-        "Nonclinical/healthy volunteers (N=161)",
-        "Self-Rating Anxiety Scale (SAS) administered",
-        "Self-Rating Depression Scale (SDS) administered",
-        "Medication status recorded and used for exclusion"
+        "Nonclinical sample of 161 right-handed healthy volunteers (ages 17-26)",
+        "Voxel-based morphometry (VBM) analysis performed on brain structure",
+        "Self-Rating Anxiety Scale (SAS) and Self-Rating Depression Scale (SDS) administered",
+        "Medication status recorded to exclude psychiatric medication users"
       ],
-      "short_description": "Cross-sectional study investigating the association between perfectionism, anterior cingulate cortex gray matter volume, and negative emotion in a nonclinical sample of young adults."
+      "short_description": "Cross-sectional study examining associations between perfectionism, brain gray matter volume via VBM, and self-reported anxiety/depression in a nonclinical sample of healthy young adults."
     },
     "extraction": {
       "status": "completed",
-      "notes": "All features extracted directly from Methods, Results, and Discussion sections. Study is cross-sectional and nonclinical. No genetic, longitudinal, trauma, cognitive, or blood data were collected."
+      "notes": "Extracted strictly from explicit text. T1-weighted MRI not explicitly stated but implied by VBM methodology. No longitudinal, genetic, trauma, cognitive test, or blood biomarker data reported. Clinical outcomes not applicable to this nonclinical correlation design."
     },
     "extraction_status": "completed",
-    "extraction_notes": "All features extracted directly from Methods, Results, and Discussion sections. Study is cross-sectional and nonclinical. No genetic, longitudinal, trauma, cognitive, or blood data were collected."
+    "extraction_notes": "Extracted strictly from explicit text. T1-weighted MRI not explicitly stated but implied by VBM methodology. No longitudinal, genetic, trauma, cognitive test, or blood biomarker data reported. Clinical outcomes not applicable to this nonclinical correlation design."
   },
   {
     "paper_id": "REFINE-0136",
@@ -5585,21 +5600,18 @@
     "citation": "Jabbi, M., Arasappan, D., Eickhoff, S. B., Strakowski, S. M., Nemeroff, C. B., & Hofmann, H. A. (2020). Neuro-transcriptomic signatures for mood disorder morbidity and suicide mortality. Journal of Psychiatric Research, 127, 62–74. https://doi.org/10.1016/j.jpsychires.2020.05.013",
     "dataset_features_needed": {
       "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
+      "vbm_or_voxelwise_morphometry": "yes",
+      "mdd_patients": "yes",
+      "healthy_controls": "yes",
       "genetic_data": "unclear",
       "depression_scale": "unclear",
       "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
       "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
+      "longitudinal_data": "unclear",
+      "medication_status": "unclear",
+      "trauma_or_life_stress": "unclear",
       "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -5608,13 +5620,20 @@
     "website_card": {
       "short_title": "Neuro-transcriptomic signatures for mood disorder morbidity and suicide mortality",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "VBM meta-analysis of 47 publications (N=2387 living participants)",
+        "Postmortem anterior insula tissue from 100 donors with MDD, BD, or control history",
+        "RNA-sequencing and differential gene expression analysis",
+        "Correlation of transcriptomic profiles with psychiatric morbidity and suicide mortality factors"
+      ],
+      "short_description": "Neuro-transcriptomic signatures for mood disorder morbidity and suicide mortality combining VBM meta-analysis and postmortem RNA-sequencing."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Extracted features strictly from explicit text. VBM, MDD patients, and healthy controls were explicitly reported. RNA-sequencing was used but classified as unclear for genetic/genotypic data per strict definition. Clinical scales, longitudinal follow-up, medication status, trauma/stress assessments, cognitive measures, and blood/biomarker collection were not explicitly reported in the study design or methods."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Extracted features strictly from explicit text. VBM, MDD patients, and healthy controls were explicitly reported. RNA-sequencing was used but classified as unclear for genetic/genotypic data per strict definition. Clinical scales, longitudinal follow-up, medication status, trauma/stress assessments, cognitive measures, and blood/biomarker collection were not explicitly reported in the study design or methods."
   },
   {
     "paper_id": "REFINE-0139",
@@ -6104,7 +6123,7 @@
     "doi_url": "https://doi.org/10.3389/fnhum.2013.00648",
     "citation": "Kreifelts, B., Jacob, H., Brück, C., Erb, M., Ethofer, T., & Wildgruber, D. (2013). Non-verbal emotion communication training induces specific changes in brain function and structure. Frontiers in Human Neuroscience, 7. https://doi.org/10.3389/fnhum.2013.00648",
     "dataset_features_needed": {
-      "t1w_mri": "yes",
+      "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "no",
       "healthy_controls": "yes",
@@ -6126,20 +6145,19 @@
       "short_title": "Non-verbal emotion communication training induces specific changes in brain function and s",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted MRI data acquired",
-        "Voxel-based morphometry analysis performed",
-        "Healthy control participants included",
-        "Longitudinal data collected at pre- and post-training time points",
-        "Medication status recorded"
+        "fMRI and VBM study in healthy controls",
+        "Longitudinal design with pre- and post-training scans (T0/T1)",
+        "Medication status explicitly recorded as none",
+        "No clinical scales, genetic data, or biomarkers reported"
       ],
       "short_description": "A controlled fMRI and voxel-based morphometry study investigating the functional and structural brain changes induced by a four-week non-verbal emotion communication training in healthy individuals."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Extracted features strictly from explicit text. Biased toward 'unclear' for unreported measures (genetic data, depression/anxiety scales, trauma exposure, cognitive assessments, blood/biomarkers). MDD patients explicitly excluded via screening criteria. Medication status and longitudinal design are explicitly reported."
+      "notes": "Extracted features based on explicit mentions in the text. VBM is confirmed; T1w MRI not explicitly named but implied by VBM. Only healthy participants were studied. Longitudinal data collected at two time points. Medication status recorded as negative. Other clinical, genetic, and biomarker measures were not reported."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Extracted features strictly from explicit text. Biased toward 'unclear' for unreported measures (genetic data, depression/anxiety scales, trauma exposure, cognitive assessments, blood/biomarkers). MDD patients explicitly excluded via screening criteria. Medication status and longitudinal design are explicitly reported."
+    "extraction_notes": "Extracted features based on explicit mentions in the text. VBM is confirmed; T1w MRI not explicitly named but implied by VBM. Only healthy participants were studied. Longitudinal data collected at two time points. Medication status recorded as negative. Other clinical, genetic, and biomarker measures were not reported."
   },
   {
     "paper_id": "REFINE-0152",
@@ -6230,21 +6248,18 @@
     "citation": "Murray, A., McNeil, C., Salarirad, S., Deary, I., Phillips, L., Whalley, L., & Staff, R. (2016). Brain hyperintensity location determines outcome in the triad of impaired cognition, physical health and depressive symptoms: A cohort study in late life. Archives of Gerontology and Geriatrics, 63, 49–54. https://doi.org/10.1016/j.archger.2015.10.004",
     "dataset_features_needed": {
       "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
+      "vbm_or_voxelwise_morphometry": "no",
+      "mdd_patients": "no",
       "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
       "genetic_data": "unclear",
-      "depression_scale": "unclear",
+      "depression_scale": "yes",
       "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
+      "clinical_outcomes": "yes",
+      "longitudinal_data": "no",
       "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "trauma_or_life_stress": "unclear",
+      "cognitive_data": "yes",
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -6253,13 +6268,21 @@
     "website_card": {
       "short_title": "Brain hyperintensity location determines outcome in the triad of impaired cognition, physi",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "Brain MRI used for visual scoring of white matter, periventricular, grey matter, and infratentorial hyperintensities",
+        "Depressive symptoms assessed using the Hospital Anxiety and Depression Scale (HADS)",
+        "Cognitive ability measured via general intelligence factor/IQ",
+        "Physical health outcomes include walk time and peak expiratory flow rate",
+        "Study explicitly utilizes cross-sectional data rather than longitudinal follow-up"
+      ],
+      "short_description": "Cross-sectional analysis of the Aberdeen 1936 Birth Cohort examining how brain hyperintensity location relates to cognitive ability, physical health, and depressive symptoms."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Features extracted strictly from provided text. MRI sequence not specified. VBM explicitly noted as not used (visual scoring preferred). Cohort is non-demented/normal aging, not MDD patients or explicit healthy controls. No genetic, medication, trauma, or blood data reported. Depression and cognitive scales are confirmed."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Features extracted strictly from provided text. MRI sequence not specified. VBM explicitly noted as not used (visual scoring preferred). Cohort is non-demented/normal aging, not MDD patients or explicit healthy controls. No genetic, medication, trauma, or blood data reported. Depression and cognitive scales are confirmed."
   },
   {
     "paper_id": "REFINE-0155",
@@ -6309,8 +6332,8 @@
     "doi_url": "https://doi.org/10.1371/journal.pone.0064574",
     "citation": "Taren, A. A., Creswell, J. D., & Gianaros, P. J. (2013). Dispositional mindfulness co-varies with smaller amygdala and caudate volumes in community adults. PLoS ONE, 8(5). https://doi.org/10.1371/journal.pone.0064574",
     "dataset_features_needed": {
-      "t1w_mri": "yes",
-      "vbm_or_voxelwise_morphometry": "no",
+      "t1w_mri": "unclear",
+      "vbm_or_voxelwise_morphometry": "unclear",
       "mdd_patients": "no",
       "healthy_controls": "yes",
       "genetic_data": "unclear",
@@ -6320,7 +6343,7 @@
       "longitudinal_data": "no",
       "medication_status": "yes",
       "trauma_or_life_stress": "unclear",
-      "cognitive_data": "no",
+      "cognitive_data": "unclear",
       "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
@@ -6331,19 +6354,19 @@
       "short_title": "Dispositional mindfulness co-varies with smaller amygdala and caudate volumes in community",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted MRI acquired",
-        "Depression scale (BDI) used",
-        "Anxiety scale (STAI) used",
+        "Cross-sectional study of 155 healthy community adults",
+        "Structural MRI acquisition and volumetric brain analyses performed",
+        "Depression (BDI) and anxiety (STAI) rating scales administered",
         "Medication status recorded via exclusion criteria"
       ],
       "short_description": "Cross-sectional neuroimaging study assessing associations between dispositional mindfulness and subcortical gray matter volumes in healthy community adults."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Extracted features based on explicit mentions in the Methods and Results sections. VBM was not used; ROI segmentation with FIRST was employed. Study is cross-sectional with healthy community adults only."
+      "notes": "Extracted features strictly from explicit text in the provided excerpt. Several neuroimaging, genetic, trauma/stress, cognitive, and biomarker features marked unclear due to lack of explicit reporting in the available text."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Extracted features based on explicit mentions in the Methods and Results sections. VBM was not used; ROI segmentation with FIRST was employed. Study is cross-sectional with healthy community adults only."
+    "extraction_notes": "Extracted features strictly from explicit text in the provided excerpt. Several neuroimaging, genetic, trauma/stress, cognitive, and biomarker features marked unclear due to lack of explicit reporting in the available text."
   },
   {
     "paper_id": "REFINE-0157",
@@ -6355,20 +6378,17 @@
     "dataset_features_needed": {
       "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
+      "mdd_patients": "no",
       "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
-      "genetic_data": "unclear",
-      "depression_scale": "unclear",
-      "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
+      "genetic_data": "yes",
+      "depression_scale": "yes",
+      "anxiety_scale": "yes",
       "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
+      "longitudinal_data": "yes",
+      "medication_status": "unclear",
+      "trauma_or_life_stress": "unclear",
       "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -6377,13 +6397,18 @@
     "website_card": {
       "short_title": "Genetic patterning for child psychopathology is distinct from that for adults and implicat",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "Polygenic risk scores (PGS) for psychopathology traits",
+        "Longitudinal child cohort data from ABCD and Generation R studies",
+        "CBCL symptom scales measuring internalizing, externalizing, and anxiety/depression symptoms"
+      ]
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Extracted strictly from provided text. Study utilizes polygenic scores and longitudinal CBCL symptom data in child cohorts. MRI mentions cerebellar lobule volumes but does not explicitly state T1 acquisition or VBM methods. No explicit mention of clinical patient groups, medication status, trauma exposure, cognitive testing, or blood biomarkers."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Extracted strictly from provided text. Study utilizes polygenic scores and longitudinal CBCL symptom data in child cohorts. MRI mentions cerebellar lobule volumes but does not explicitly state T1 acquisition or VBM methods. No explicit mention of clinical patient groups, medication status, trauma exposure, cognitive testing, or blood biomarkers."
   },
   {
     "paper_id": "REFINE-0158",
@@ -6437,15 +6462,15 @@
       "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "no",
       "healthy_controls": "yes",
-      "genetic_data": "yes",
+      "genetic_data": "unclear",
       "depression_scale": "yes",
-      "anxiety_scale": "yes",
+      "anxiety_scale": "unclear",
       "clinical_outcomes": "unclear",
       "longitudinal_data": "no",
       "medication_status": "yes",
       "trauma_or_life_stress": "unclear",
       "cognitive_data": "yes",
-      "blood_or_biomarker_data": "yes"
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -6455,23 +6480,20 @@
       "short_title": "Depressive symptoms in cognitively unimpaired older adults are associated with lower struc",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted structural MRI acquired",
-        "Voxel-wise gray matter volume comparisons performed",
-        "Genetic data including APOEε4 carrier status collected",
-        "Depression assessed via GDS and MADRS",
-        "Anxiety assessed via STAI-B",
-        "Cognitive performance measured with MMSE, DRS, MoCA, CVLT, RAVLT",
-        "Medication history recorded as exclusion criterion",
-        "Neuroimaging biomarkers (amyloid PET, FDG-PET glucose metabolism) quantified"
+        "T1-weighted MRI acquired",
+        "Voxel-wise morphometric analysis performed",
+        "Depression assessed via GDS/MADRS",
+        "Cognitive data collected (MMSE, MoCA, DRS, CVLT/RAVLT)",
+        "Medication status recorded for exclusion criteria"
       ],
-      "short_description": "Cross-sectional analysis of brain structural and functional changes associated with subclinical depressive symptoms in cognitively unimpaired older adults using T1-weighted MRI, PET-derived biomarkers (amyloid burden, glucose metabolism), cognitive testing, and standardized depression/anxiety scales across two independent cohorts."
+      "short_description": "Cross-sectional analysis of subclinical depressive symptoms and brain structural/functional integrity in cognitively unimpaired older adults using multimodal neuroimaging."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Features extracted strictly from explicit text. Study is cross-sectional; MDD patients explicitly excluded. Healthy controls represented by cognitively unimpaired non-depressed older adults (NoDepS group). Biomarker data refers to PET-derived amyloid and glucose metabolism measures. Clinical outcomes and trauma/stress exposure not reported."
+      "notes": "Features extracted directly from Methods and Results. Study uses baseline cross-sectional data from Age-Well and ADNI cohorts. MDD patients were explicitly excluded. Genetic, anxiety, trauma, blood biomarker, and longitudinal clinical outcome data are not reported."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Features extracted strictly from explicit text. Study is cross-sectional; MDD patients explicitly excluded. Healthy controls represented by cognitively unimpaired non-depressed older adults (NoDepS group). Biomarker data refers to PET-derived amyloid and glucose metabolism measures. Clinical outcomes and trauma/stress exposure not reported."
+    "extraction_notes": "Features extracted directly from Methods and Results. Study uses baseline cross-sectional data from Age-Well and ADNI cohorts. MDD patients were explicitly excluded. Genetic, anxiety, trauma, blood biomarker, and longitudinal clinical outcome data are not reported."
   },
   {
     "paper_id": "REFINE-0160",
@@ -6721,16 +6743,16 @@
     "doi_url": "https://doi.org/10.1016/j.jagp.2020.12.028",
     "citation": "Wagenmakers, M. J., Vansteelandt, K., van Exel, E., Postma, R., Schouws, S. N. T. M., Obbels, J., Rhebergen, D., Bouckaert, F., Stek, M. L., Barkhof, F., Beekman, A. T. F., Veltman, D. J., Sienaert, P., Dols, A., & Oudega, M. L. (2021). Transient cognitive impairment and white matter hyperintensities in severely depressed older patients treated with electroconvulsive therapy. The American Journal of Geriatric Psychiatry, 29(11), 1117–1128. https://doi.org/10.1016/j.jagp.2020.12.028",
     "dataset_features_needed": {
-      "t1w_mri": "yes",
+      "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "no",
       "mdd_patients": "yes",
-      "healthy_controls": "no",
+      "healthy_controls": "unclear",
       "genetic_data": "unclear",
-      "depression_scale": "yes",
+      "depression_scale": "unclear",
       "anxiety_scale": "unclear",
       "clinical_outcomes": "yes",
       "longitudinal_data": "yes",
-      "medication_status": "yes",
+      "medication_status": "unclear",
       "trauma_or_life_stress": "unclear",
       "cognitive_data": "yes",
       "blood_or_biomarker_data": "unclear"
@@ -6743,21 +6765,19 @@
       "short_title": "Transient cognitive impairment and white matter hyperintensities in severely depressed old",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted MRI acquired for visual rating of brain structure",
-        "Severe late-life depression patient cohort studied",
-        "MADRS used to assess depression severity",
-        "Cognitive functioning tracked via MMSE across multiple time points",
-        "Medication status recorded during and prior to ECT",
-        "Clinical remission and response outcomes reported"
+        "MRI scans acquired pre-ECT",
+        "Visual rating scales used for WMH, MTA, GCA",
+        "MMSE administered at baseline, during ECT, and up to 6 months post-treatment",
+        "DSM-IV-TR diagnosed severe unipolar depression"
       ],
-      "short_description": "Prospective naturalistic study examining the association between structural brain alterations (WMH, MTA, GCA) and transient cognitive impairment in severely depressed older patients undergoing ECT."
+      "short_description": "Prospective naturalistic study examining the association between structural brain alterations and transient cognitive impairment in elderly patients with severe late-life depression treated with electroconvulsive therapy."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Features extracted directly from paper text. VBM explicitly noted as not used in favor of visual rating scales. Healthy controls were excluded; only LLD patients were included. Genetic, anxiety, trauma/stress, and biomarker data were not mentioned in the text."
+      "notes": "Features extracted strictly from provided text. MRI sequence not specified. Depression rating scale not explicitly named in methods section. No healthy controls, genetic, or blood data reported. Longitudinal cognitive and structural outcomes clearly documented."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Features extracted directly from paper text. VBM explicitly noted as not used in favor of visual rating scales. Healthy controls were excluded; only LLD patients were included. Genetic, anxiety, trauma/stress, and biomarker data were not mentioned in the text."
+    "extraction_notes": "Features extracted strictly from provided text. MRI sequence not specified. Depression rating scale not explicitly named in methods section. No healthy controls, genetic, or blood data reported. Longitudinal cognitive and structural outcomes clearly documented."
   },
   {
     "paper_id": "REFINE-0167",
@@ -7168,21 +7188,18 @@
     "citation": "Liu, P., Hayden, E. P., Dougherty, L. R., Leung, H.-C., Goldstein, B., & Klein, D. N. (2021b). The development of depressogenic self-schemas: Associations with children’s regional grey matter volume in ventrolateral prefrontal cortex. Development and Psychopathology. https://doi.org/10.1017/S0954579421000341",
     "dataset_features_needed": {
       "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
+      "vbm_or_voxelwise_morphometry": "yes",
+      "mdd_patients": "no",
       "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
       "genetic_data": "unclear",
       "depression_scale": "unclear",
       "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
       "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "longitudinal_data": "yes",
+      "medication_status": "unclear",
+      "trauma_or_life_stress": "unclear",
+      "cognitive_data": "yes",
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -7191,13 +7208,18 @@
     "website_card": {
       "short_title": "The development of depressogenic self-schemas: Associations with children’s regional grey ",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "Voxel-based morphometry applied to structural MRI data",
+        "Longitudinal data collection at ages 6, 9, and 12",
+        "Cognitive assessment via self-referent encoding task (SRET)"
+      ]
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Extracted strictly from explicit text. Structural MRI sequence not specified. MDD patients and clinical depression scales not reported for this specific cohort. Longitudinal design, VBM analysis, and cognitive task data are explicitly confirmed."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Extracted strictly from explicit text. Structural MRI sequence not specified. MDD patients and clinical depression scales not reported for this specific cohort. Longitudinal design, VBM analysis, and cognitive task data are explicitly confirmed."
   },
   {
     "paper_id": "REFINE-0178",
@@ -7207,19 +7229,19 @@
     "doi_url": "https://doi.org/10.3389/fnhum.2018.00168",
     "citation": "Ismaylova, E., di Sante, J., Gouin, J. P., Pomares, F. B., Vitaro, F., Tremblay, R. E., & Booij, L. (2018). Associations Between Daily Mood States and Brain Gray Matter Volume, Resting-State Functional Connectivity and Task-Based Activity in Healthy Adults. FRONTIERS IN HUMAN NEUROSCIENCE, 12. https://doi.org/10.3389/fnhum.2018.00168",
     "dataset_features_needed": {
-      "t1w_mri": "yes",
-      "vbm_or_voxelwise_morphometry": "yes",
+      "t1w_mri": "unclear",
+      "vbm_or_voxelwise_morphometry": "unclear",
       "mdd_patients": "no",
       "healthy_controls": "yes",
-      "genetic_data": "no",
+      "genetic_data": "unclear",
       "depression_scale": "yes",
-      "anxiety_scale": "no",
+      "anxiety_scale": "unclear",
       "clinical_outcomes": "unclear",
-      "longitudinal_data": "no",
-      "medication_status": "yes",
-      "trauma_or_life_stress": "no",
+      "longitudinal_data": "unclear",
+      "medication_status": "unclear",
+      "trauma_or_life_stress": "unclear",
       "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "no"
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -7229,21 +7251,20 @@
       "short_title": "Associations Between Daily Mood States and Brain Gray Matter Volume, Resting-State Functio",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted MRI acquired",
-        "Voxel-based morphometry performed",
-        "Healthy adult participants only",
-        "Beck Depression Inventory (BDI) used",
-        "Medication status screened/excluded",
-        "Daily mood diary collected over 5 days"
+        "42 healthy adults (19 men, 23 women)",
+        "Functional magnetic resonance imaging (fMRI) scan",
+        "5-day daily online diary of mood states",
+        "Beck Depression Inventory (BDI)",
+        "Neuroticism scale from EPQ"
       ],
-      "short_description": "Cross-sectional fMRI study of 42 healthy adults examining associations between daily mood states and brain structure, resting-state connectivity, and task-based activity."
+      "short_description": "Study examining associations between daily mood states and brain gray matter volume, resting-state functional connectivity, and task-based activity in healthy adults."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Extracted features based on explicit mentions in the text. MDD patients excluded; healthy controls only. Genetic, anxiety, trauma, and biomarker data not reported. Clinical outcomes and cognitive data ambiguous/not explicitly assessed beyond emotion task."
+      "notes": "Extracted strictly from provided text. MDD patients explicitly excluded; healthy controls included. BDI explicitly reported. Other features not mentioned or only implied, thus marked unclear."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Extracted features based on explicit mentions in the text. MDD patients excluded; healthy controls only. Genetic, anxiety, trauma, and biomarker data not reported. Clinical outcomes and cognitive data ambiguous/not explicitly assessed beyond emotion task."
+    "extraction_notes": "Extracted strictly from provided text. MDD patients explicitly excluded; healthy controls included. BDI explicitly reported. Other features not mentioned or only implied, thus marked unclear."
   },
   {
     "paper_id": "REFINE-0179",
@@ -7300,12 +7321,12 @@
       "genetic_data": "unclear",
       "depression_scale": "yes",
       "anxiety_scale": "unclear",
-      "clinical_outcomes": "yes",
+      "clinical_outcomes": "unclear",
       "longitudinal_data": "no",
-      "medication_status": "yes",
+      "medication_status": "unclear",
       "trauma_or_life_stress": "unclear",
       "cognitive_data": "yes",
-      "blood_or_biomarker_data": "yes"
+      "blood_or_biomarker_data": "no"
     },
     "sample_summary": {
       "sample_size": null,
@@ -7315,23 +7336,20 @@
       "short_title": "Patients with primary biliary cholangitis and fatigue present with depressive symptoms and",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted MRI acquired",
+        "T1-weighted cMRI acquired",
         "Voxel-based morphometry performed",
-        "Healthy controls included",
-        "Depression scale (BDI) used",
-        "Clinical outcomes reported",
-        "Medication status recorded",
-        "Cognitive data collected",
-        "Blood/biomarker data measured"
+        "Healthy age-matched controls included",
+        "Depression assessed via Beck Depression Inventory",
+        "Cognitive assessment conducted"
       ],
-      "short_description": "Case-control study assessing fatigue, cognitive deficits, and brain structure in primary biliary cholangitis patients using T1-weighted MRI, VBM, DTI, and neuropsychological testing."
+      "short_description": "Case-control study evaluating structural brain changes, cognitive deficits, and fatigue in primary biliary cholangitis patients compared to healthy controls using T1-weighted MRI and VBM."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Extracted features based on explicit mentions in the text. Cross-sectional design noted. Anxiety scale marked unclear as SCL-90-R is a general symptom checklist rather than a dedicated anxiety rating scale."
+      "notes": "Features extracted directly from Methods and Results. Study is cross-sectional with PBC patients and healthy controls. No genetic, longitudinal, or biomarker data reported for this cohort."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Extracted features based on explicit mentions in the text. Cross-sectional design noted. Anxiety scale marked unclear as SCL-90-R is a general symptom checklist rather than a dedicated anxiety rating scale."
+    "extraction_notes": "Features extracted directly from Methods and Results. Study is cross-sectional with PBC patients and healthy controls. No genetic, longitudinal, or biomarker data reported for this cohort."
   },
   {
     "paper_id": "REFINE-0181",
@@ -7503,20 +7521,17 @@
     "dataset_features_needed": {
       "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
+      "mdd_patients": "no",
       "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
       "genetic_data": "unclear",
       "depression_scale": "unclear",
       "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
       "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
+      "longitudinal_data": "yes",
+      "medication_status": "unclear",
+      "trauma_or_life_stress": "unclear",
       "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -7525,13 +7540,18 @@
     "website_card": {
       "short_title": "Brain morphometry points to emerging patterns of psychosis, depression, and anxiety vulner",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "longitudinal_data",
+        "mri_scans"
+      ],
+      "short_description": "Longitudinal neuroimaging study of youth from the ABCD cohort assessing symptom trajectories over a 2-year period."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Extracted features from provided abstract and introduction. Longitudinal design explicitly confirmed. Other specific measures (scales, T1W, VBM) not detailed in the provided text excerpt."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Extracted features from provided abstract and introduction. Longitudinal design explicitly confirmed. Other specific measures (scales, T1W, VBM) not detailed in the provided text excerpt."
   },
   {
     "paper_id": "REFINE-0186",
@@ -7781,19 +7801,19 @@
     "doi_url": "https://doi.org/10.1016/j.biopsych.2020.06.003",
     "citation": "Zhang, Z., Robinson, L., Jia, T., Quinlan, E. B., Tay, N., Chu, C., Barker, E. D., Banaschewski, T., Barker, G. J., Bokde, A. L. W., Flor, H., Grigis, A., Garavan, H., Gowland, P., Heinz, A., Ittermann, B., Martinot, J.-L., Stringaris, A., Penttilä, J., … Desrivières, S. (2021). Development of disordered eating behaviors and comorbid depressive symptoms in adolescence: Neural and psychopathological predictors. Biological Psychiatry, 90(12), 853–862. https://doi.org/10.1016/j.biopsych.2020.06.003",
     "dataset_features_needed": {
-      "t1w_mri": "yes",
+      "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "no",
       "healthy_controls": "yes",
       "genetic_data": "unclear",
-      "depression_scale": "yes",
-      "anxiety_scale": "yes",
+      "depression_scale": "unclear",
+      "anxiety_scale": "unclear",
       "clinical_outcomes": "yes",
       "longitudinal_data": "yes",
-      "medication_status": "yes",
+      "medication_status": "unclear",
       "trauma_or_life_stress": "unclear",
       "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear"
+      "blood_or_biomarker_data": "no"
     },
     "sample_summary": {
       "sample_size": null,
@@ -7803,21 +7823,19 @@
       "short_title": "Development of disordered eating behaviors and comorbid depressive symptoms in adolescence",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted structural MRI acquired across multiple sites",
-        "Voxel-based morphometry (VBM) performed to assess grey matter volume",
-        "Longitudinal assessments conducted at ages 14, 16, and 19",
-        "Standardized depression and anxiety severity measured via DAWBA bands",
-        "Medication status recorded using Timeline Followback Interview",
-        "Asymptomatic controls matched to symptom developers"
+        "Voxel-based morphometry (grey matter volume)",
+        "Longitudinal assessments at ages 14, 16, and 19",
+        "Asymptomatic controls compared to symptom developers",
+        "Psychopathological predictors including ADHD, conduct disorder, and emotional symptoms"
       ],
-      "short_description": "Longitudinal neuroimaging and psychopathology study of adolescent disordered eating and comorbid depressive symptoms using a normative cohort."
+      "short_description": "Longitudinal study of 1,386 European adolescents investigating neural and psychopathological predictors for disordered eating behaviors and comorbid depressive symptoms using voxel-based morphometry and standardized questionnaires."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Extracted features strictly from explicit statements in the Methods and Results sections. Genetic data, trauma/life stress exposure, cognitive assessments, and blood biomarkers were not explicitly reported in the provided text. MDD patients were not studied; a normative adolescent cohort was used to track symptom development."
+      "notes": "Extracted features based on explicit mentions in the abstract, methods, and results. VBM is explicitly stated. Longitudinal design and asymptomatic controls are confirmed. Specific depression/anxiety scales (HAM-D/BDI) and genetic/blood data are not reported in the provided text."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Extracted features strictly from explicit statements in the Methods and Results sections. Genetic data, trauma/life stress exposure, cognitive assessments, and blood biomarkers were not explicitly reported in the provided text. MDD patients were not studied; a normative adolescent cohort was used to track symptom development."
+    "extraction_notes": "Extracted features based on explicit mentions in the abstract, methods, and results. VBM is explicitly stated. Longitudinal design and asymptomatic controls are confirmed. Specific depression/anxiety scales (HAM-D/BDI) and genetic/blood data are not reported in the provided text."
   },
   {
     "paper_id": "REFINE-0193",
@@ -8473,22 +8491,19 @@
     "doi_url": "https://doi.org/10.1017/S0033291707000128",
     "citation": "Taylor, W. D., MacFall, J. R., Payne, M. E., McQuoid, D. R., Steffens, D. C., Provenzale, J. M., & Krishnan, K. R. R. (2007). Orbitofrontal cortex volume in late life depression: Influence of hyperintense lesions and genetic polymorphisms. Psychological Medicine, 37(12), 1763–1773. https://doi.org/10.1017/S0033291707000128",
     "dataset_features_needed": {
-      "t1w_mri": "unclear",
+      "t1w_mri": "yes",
       "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
-      "genetic_data": "unclear",
-      "depression_scale": "unclear",
+      "mdd_patients": "yes",
+      "healthy_controls": "yes",
+      "genetic_data": "yes",
+      "depression_scale": "yes",
       "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
       "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
+      "longitudinal_data": "no",
+      "medication_status": "yes",
+      "trauma_or_life_stress": "unclear",
       "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -8497,13 +8512,21 @@
     "website_card": {
       "short_title": "Orbitofrontal cortex volume in late life depression: Influence of hyperintense lesions and",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "T1-weighted MRI acquired",
+        "MDD patients and healthy controls included",
+        "Genetic data collected (5HTTLPR, APOE)",
+        "Depression scale used (MADRS)",
+        "Medication status recorded"
+      ],
+      "short_description": "Cross-sectional study examining orbitofrontal cortex volume in elderly depressed and non-depressed subjects, analyzing associations with genetic polymorphisms (5HTTLPR, APOE) and white-matter lesion severity."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Extracted features based on explicit mentions in the abstract and methods. Cross-sectional design noted. VBM not explicitly stated; anxiety, cognitive, blood/biomarker, trauma/stress, and clinical outcomes data are unclear or not assessed."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Extracted features based on explicit mentions in the abstract and methods. Cross-sectional design noted. VBM not explicitly stated; anxiety, cognitive, blood/biomarker, trauma/stress, and clinical outcomes data are unclear or not assessed."
   },
   {
     "paper_id": "REFINE-0210",
@@ -8655,21 +8678,22 @@
       "short_title": "Temporal lobe epilepsy and affective disorders: The role of the subgenual anterior cingula",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted volumetric MRI acquired for structural analysis",
-        "Voxel-based morphometry (VBM) performed on grey matter maps",
-        "Healthy volunteers included as control cohort",
-        "Beck Depression Inventory-Fast Screen and Beck Anxiety Inventory administered",
-        "Antiepileptic and psychotropic medication status recorded",
-        "Working memory performance measured via n-back task"
+        "T1-weighted MRI",
+        "Voxel-based morphometry (VBM)",
+        "Healthy volunteers",
+        "Beck Depression Inventory-Fast Screen (BDI-FS)",
+        "Beck Anxiety Inventory (BAI)",
+        "Working memory task (n-back)",
+        "Medication status"
       ],
-      "short_description": "Cross-sectional neuroimaging study comparing temporal lobe epilepsy patients with comorbid affective disorders to healthy controls, utilizing T1-weighted MRI, VBM, and fMRI during a working memory task alongside standardized depression and anxiety scales."
+      "short_description": "Cross-sectional fMRI and structural MRI study comparing TLE patients with and without affective history to healthy controls, assessing working memory network activation, VBM, and diffusion tensor imaging alongside depression/anxiety scales."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Features extracted strictly from Methods, Results, and Table 1. Longitudinal data explicitly absent (single scanning session). MDD status marked unclear as cohort focuses on TLE with comorbid affective history rather than primary MDD patients. Genetic, trauma, clinical outcomes, and biomarker data not reported in text."
+      "notes": "Features extracted directly from Methods and Results sections. Study is cross-sectional; no longitudinal follow-up reported. MDD not explicitly named but unipolar depression and affective disorders are documented."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Features extracted strictly from Methods, Results, and Table 1. Longitudinal data explicitly absent (single scanning session). MDD status marked unclear as cohort focuses on TLE with comorbid affective history rather than primary MDD patients. Genetic, trauma, clinical outcomes, and biomarker data not reported in text."
+    "extraction_notes": "Features extracted directly from Methods and Results sections. Study is cross-sectional; no longitudinal follow-up reported. MDD not explicitly named but unipolar depression and affective disorders are documented."
   },
   {
     "paper_id": "REFINE-0214",
@@ -9088,10 +9112,10 @@
       "anxiety_scale": "unclear",
       "clinical_outcomes": "unclear",
       "longitudinal_data": "unclear",
-      "medication_status": "yes",
+      "medication_status": "unclear",
       "trauma_or_life_stress": "unclear",
       "cognitive_data": "yes",
-      "blood_or_biomarker_data": "no"
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -9101,18 +9125,18 @@
       "short_title": "Cortical thickness and hippocampal volume in vascular and non-vascular depressed patients",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "Study focused on MDD patients aged 50+ undergoing structural MRI and antidepressant trial.",
-        "Cortical thickness and hippocampal volume assessed via ROI-based Freesurfer analysis (not VBM).",
-        "Depression severity measured with HRSD; cognitive function assessed via MMSE and neuropsychological evaluation.",
-        "No healthy controls, genetic data, anxiety scales, trauma assessments, or blood biomarkers were included."
-      ]
+        "Major Depressive Disorder patients",
+        "Hamilton Rating Scale for Depression (HRSD)",
+        "Neuropsychological/cognitive assessments"
+      ],
+      "short_description": "Cross-sectional structural MRI study comparing cortical thickness and hippocampal volume between vascular and non-vascular depressed older adults."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Features extracted strictly from explicit text. Healthy controls explicitly absent. VBM not used (ROI-based). MDD diagnosis and HRSD confirmed. Cognitive data and medication status reported. Other features lacked explicit mention or were noted as cross-sectional/limitations."
+      "notes": "Extracted features strictly from provided text. MRI was baseline-only structural imaging analyzed via ROI-based Freesurfer (not VBM). Only depressed patients were enrolled; no healthy controls reported. Depression scale and cognitive data explicitly mentioned. Other features not explicitly stated in the text."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Features extracted strictly from explicit text. Healthy controls explicitly absent. VBM not used (ROI-based). MDD diagnosis and HRSD confirmed. Cognitive data and medication status reported. Other features lacked explicit mention or were noted as cross-sectional/limitations."
+    "extraction_notes": "Extracted features strictly from provided text. MRI was baseline-only structural imaging analyzed via ROI-based Freesurfer (not VBM). Only depressed patients were enrolled; no healthy controls reported. Depression scale and cognitive data explicitly mentioned. Other features not explicitly stated in the text."
   },
   {
     "paper_id": "REFINE-0225",
@@ -9442,8 +9466,8 @@
     "doi_url": "https://doi.org/10.1038/s41380-023-02349-9",
     "citation": "Romo-Nava, F., Awosika, O. O., Basu, I., Blom, T. J., Welge, J., Datta, A., Guillen, A., Guerdjikova, A. I., Fleck, D. E., Georgiev, G., Mori, N., Patino, L. R., DelBello, M. P., McNamara, R. K., Buijs, R. M., Frye, M. A., & McElroy, S. L. (2024). Effect of non-invasive spinal cord stimulation in unmedicated adults with major depressive disorder: A pilot randomized controlled trial and induced current flow pattern. Molecular Psychiatry, 29(3), 580–589. https://doi.org/10.1038/s41380-023-02349-9",
     "dataset_features_needed": {
-      "t1w_mri": "no",
-      "vbm_or_voxelwise_morphometry": "no",
+      "t1w_mri": "unclear",
+      "vbm_or_voxelwise_morphometry": "unclear",
       "mdd_patients": "yes",
       "healthy_controls": "no",
       "genetic_data": "unclear",
@@ -9454,7 +9478,7 @@
       "medication_status": "yes",
       "trauma_or_life_stress": "unclear",
       "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "yes"
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -9464,20 +9488,20 @@
       "short_title": "Effect of non-invasive spinal cord stimulation in unmedicated adults with major depressive",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "Major Depressive Disorder (MDD) patients",
-        "Standardized depression scales (MADRS, PHQ-9)",
-        "Anxiety assessment via 4DSQ",
+        "MDD patients",
+        "Depression scales (MADRS, PHQ-9)",
+        "Anxiety assessment (4DSQ)",
         "Longitudinal clinical outcomes over 8 weeks",
-        "Medication status recorded (unmedicated cohort)",
-        "Blood biomarkers collected (adiponectin, leptin, cortisol, insulin, FGF-21, omega-3 fatty acids)"
-      ]
+        "Medication status recorded"
+      ],
+      "short_description": "Pilot randomized sham-controlled trial evaluating the antidepressant effects and tolerability of transcutaneous spinal direct current stimulation (tsDCS) in unmedicated adults with major depressive disorder."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Features extracted directly from the provided text. No participant MRI or VBM was performed; E-field simulation used a standard Duke anatomical model. Biomarkers and clinical scales were explicitly reported. Genetic, trauma, and cognitive data were not mentioned."
+      "notes": "Features extracted strictly from explicit text in Methods and Results. MRI, genetic, cognitive, trauma, and biomarker data not reported in the provided text. Healthy controls absent as study compares active vs sham tsDCS exclusively in MDD patients."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Features extracted directly from the provided text. No participant MRI or VBM was performed; E-field simulation used a standard Duke anatomical model. Biomarkers and clinical scales were explicitly reported. Genetic, trauma, and cognitive data were not mentioned."
+    "extraction_notes": "Features extracted strictly from explicit text in Methods and Results. MRI, genetic, cognitive, trauma, and biomarker data not reported in the provided text. Healthy controls absent as study compares active vs sham tsDCS exclusively in MDD patients."
   },
   {
     "paper_id": "REFINE-0234",
@@ -9490,19 +9514,16 @@
       "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "unclear",
       "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
-      "genetic_data": "unclear",
+      "healthy_controls": "yes",
+      "genetic_data": "yes",
       "depression_scale": "unclear",
       "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
       "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "longitudinal_data": "unclear",
+      "medication_status": "yes",
+      "trauma_or_life_stress": "unclear",
+      "cognitive_data": "yes",
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -9511,13 +9532,20 @@
     "website_card": {
       "short_title": "GWAS-identified risk variants for major depressive disorder: Preliminary support for an as",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "Genetic data",
+        "Healthy controls",
+        "Cognitive data (MMSE)",
+        "Medication status"
+      ],
+      "short_description": "Cross-sectional analysis of genetic variants and brain structural measures in an elderly cohort with and without clinical depressive symptoms."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Features extracted based on explicit mentions in the abstract, tables, and text. Several clinical scales and imaging modalities were not explicitly named but are implied by context."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Features extracted based on explicit mentions in the abstract, tables, and text. Several clinical scales and imaging modalities were not explicitly named but are implied by context."
   },
   {
     "paper_id": "REFINE-0235",
@@ -9591,20 +9619,19 @@
       "dataset_features_summary": [
         "T1-weighted MRI acquisition",
         "Voxel-based morphometry (VBM) analysis",
-        "Major Depressive Disorder (MDD) patient cohort",
-        "Healthy control cohort",
+        "MDD patient cohort with healthy control group",
         "Hamilton Depression Rating Scale (HAMD)",
-        "Longitudinal data collection at baseline and 3-month follow-up",
-        "Antidepressant medication status tracking"
+        "Longitudinal baseline and post-treatment data collection",
+        "Medication status and SSRI dosage tracking"
       ],
-      "short_description": "Investigates the relationship between hippocampal subfield gray matter volume, dynamic functional connectivity, and antidepressant treatment outcomes in MDD patients using longitudinal MRI data."
+      "short_description": "Study investigates hippocampal structure and dynamic functional connectivity in MDD patients undergoing 3-month antidepressant treatment, compared to healthy controls."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Features extracted directly from Methods, Results, and Tables. Explicitly reported features marked yes; unmentioned data types marked unclear per instructions."
+      "notes": "Features extracted directly from Methods, Results, and Table 1. Several clinical/biological measures not reported in the provided text are marked unclear per instructions."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Features extracted directly from Methods, Results, and Tables. Explicitly reported features marked yes; unmentioned data types marked unclear per instructions."
+    "extraction_notes": "Features extracted directly from Methods, Results, and Table 1. Several clinical/biological measures not reported in the provided text are marked unclear per instructions."
   },
   {
     "paper_id": "REFINE-0237",
@@ -9858,15 +9885,15 @@
       "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "no",
       "healthy_controls": "yes",
-      "genetic_data": "no",
+      "genetic_data": "unclear",
       "depression_scale": "yes",
-      "anxiety_scale": "no",
-      "clinical_outcomes": "yes",
+      "anxiety_scale": "unclear",
+      "clinical_outcomes": "unclear",
       "longitudinal_data": "no",
-      "medication_status": "yes",
-      "trauma_or_life_stress": "no",
+      "medication_status": "unclear",
+      "trauma_or_life_stress": "unclear",
       "cognitive_data": "yes",
-      "blood_or_biomarker_data": "no"
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -9876,19 +9903,20 @@
       "short_title": "Reduced frontal brain volume in non-treatment-seeking cocaine-dependent individuals: Explo",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted MRI acquisition",
-        "Voxel-based morphometry analysis",
-        "Healthy control group inclusion",
-        "Depression scale assessment (BDI)",
-        "Cognitive data collection (IQ/DART)"
-      ]
+        "T1-weighted MRI acquired",
+        "Voxel-based morphometry performed",
+        "Healthy controls included",
+        "Depression scale (BDI) used",
+        "Cognitive/behavioral assessments (BIS, DART) collected"
+      ],
+      "short_description": "Cross-sectional voxel-based morphometry study comparing frontal gray matter volume in non-treatment-seeking cocaine-dependent individuals versus healthy controls, assessing impulsivity and depressive symptoms."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Features extracted based on explicit mentions in Methods and Results sections. MDD patients were explicitly excluded from participation. No genetic, anxiety, trauma, or blood biomarker data reported. Study design is cross-sectional with single time-point scanning."
+      "notes": "Extracted features based on explicit mentions in Methods and Results. Bias toward unclear applied for unmentioned variables like anxiety scales, genetic data, trauma exposure, and biomarkers."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Features extracted based on explicit mentions in Methods and Results sections. MDD patients were explicitly excluded from participation. No genetic, anxiety, trauma, or blood biomarker data reported. Study design is cross-sectional with single time-point scanning."
+    "extraction_notes": "Extracted features based on explicit mentions in Methods and Results. Bias toward unclear applied for unmentioned variables like anxiety scales, genetic data, trauma exposure, and biomarkers."
   },
   {
     "paper_id": "REFINE-0244",
@@ -10041,22 +10069,22 @@
       "one_sentence_description": null,
       "dataset_features_summary": [
         "T1-weighted MRI acquisition",
-        "Voxel-based morphometry analysis",
-        "Major Depressive Disorder patient cohort",
+        "Voxel-based morphometry (VBM) analysis",
+        "Major Depressive Disorder (LLD) patient cohort",
         "Healthy control cohort",
-        "Depression rating scales (SIGH-D)",
-        "Longitudinal follow-up data collection",
-        "Medication status and imipramine-equivalent dosage tracking",
-        "Cognitive screening (MMSE)"
+        "SIGH-D depression rating scale",
+        "MMSE cognitive assessment",
+        "Longitudinal design with depressed and remitted phases",
+        "Medication status and imipramine-equivalent dosing recorded"
       ],
-      "short_description": "Longitudinal MRI study examining structural and functional connectivity abnormalities in later-life depression patients compared to healthy controls over a 1.5-year period."
+      "short_description": "Longitudinal neuroimaging study comparing structural and functional connectivity in later-life depression patients versus healthy controls across depressed and remitted phases."
     },
     "extraction": {
       "status": "completed",
-      "notes": "All features extracted directly from the provided manuscript text. Genetic, anxiety, trauma/life stress, and blood/biomarker data were not reported in the study."
+      "notes": "All features extracted directly from the provided text. Genetic, anxiety, trauma/stress, and biomarker data were not explicitly reported or analyzed in this study."
     },
     "extraction_status": "completed",
-    "extraction_notes": "All features extracted directly from the provided manuscript text. Genetic, anxiety, trauma/life stress, and blood/biomarker data were not reported in the study."
+    "extraction_notes": "All features extracted directly from the provided text. Genetic, anxiety, trauma/stress, and biomarker data were not explicitly reported or analyzed in this study."
   },
   {
     "paper_id": "REFINE-0248",
@@ -10088,21 +10116,22 @@
       "short_title": "Frontal-subcortical volumetric deficits in single episode, medication-naïve depressed pati",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted structural MRI acquired",
-        "Voxel-based morphometry (VBM) analysis performed",
-        "MDD patients and healthy controls included",
-        "Hamilton Depression Rating Scale (HDRS-17) used",
-        "Longitudinal design with baseline and 8-week follow-up",
-        "Medication-naïve status explicitly recorded"
+        "T1-weighted MRI acquisition",
+        "Voxel-based morphometry analysis",
+        "MDD patient cohort",
+        "Healthy control cohort",
+        "Depression rating scale (HDRS-17)",
+        "Longitudinal follow-up data",
+        "Medication-naïve status and treatment tracking"
       ],
-      "short_description": "A VBM-DARTEL study investigating frontal-subcortical gray matter volume deficits in single-episode, medication-naïve MDD patients and their changes after 8 weeks of fluoxetine treatment compared to healthy controls."
+      "short_description": "VBM-DARTEL study of T1-weighted MRI in medication-naïve MDD patients and healthy controls with an 8-week fluoxetine treatment follow-up."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Features extracted directly from the provided text. Genetic, anxiety, trauma/stress, cognitive, and blood/biomarker data were not mentioned in the paper."
+      "notes": "Extracted features directly from title, abstract, methods, and results sections. Features not explicitly mentioned or assessed in the provided text (genetic data, anxiety scales, trauma/stress exposure, cognitive assessments, blood/biomarkers) were marked unclear per instructions."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Features extracted directly from the provided text. Genetic, anxiety, trauma/stress, cognitive, and blood/biomarker data were not mentioned in the paper."
+    "extraction_notes": "Extracted features directly from title, abstract, methods, and results sections. Features not explicitly mentioned or assessed in the provided text (genetic data, anxiety scales, trauma/stress exposure, cognitive assessments, blood/biomarkers) were marked unclear per instructions."
   },
   {
     "paper_id": "REFINE-0249",
@@ -10113,21 +10142,18 @@
     "citation": "Wu, Y., Wu, X., Wei, Q., Wang, K., & Tian, Y. (2020). Differences in cerebral structure associated with depressive symptoms in the elderly with Alzheimer’s disease. Frontiers in Aging Neuroscience, 12. https://doi.org/10.3389/fnagi.2020.00107",
     "dataset_features_needed": {
       "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
+      "vbm_or_voxelwise_morphometry": "yes",
+      "mdd_patients": "no",
+      "healthy_controls": "yes",
       "genetic_data": "unclear",
-      "depression_scale": "unclear",
-      "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
+      "depression_scale": "yes",
+      "anxiety_scale": "yes",
+      "clinical_outcomes": "yes",
+      "longitudinal_data": "no",
       "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "trauma_or_life_stress": "unclear",
+      "cognitive_data": "yes",
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -10136,13 +10162,22 @@
     "website_card": {
       "short_title": "Differences in cerebral structure associated with depressive symptoms in the elderly with ",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "Voxel-based morphometry",
+        "Healthy controls",
+        "Depression scale (HDRS)",
+        "Anxiety scale (HAMA)",
+        "Clinical outcomes (MMSE, CDR, ADL)",
+        "Cognitive data"
+      ],
+      "short_description": "Cross-sectional study evaluating cerebral structural differences and depressive symptoms in elderly Alzheimer's disease patients compared to healthy controls using VBM/SBM, HDRS, HAMA, MMSE, CDR, and ADL."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Features extracted strictly from explicit text. MDD not studied; longitudinal, medication, genetic, and blood/biomarker data not reported in the provided text."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Features extracted strictly from explicit text. MDD not studied; longitudinal, medication, genetic, and blood/biomarker data not reported in the provided text."
   },
   {
     "paper_id": "REFINE-0250",
@@ -10193,21 +10228,18 @@
     "citation": "Bouckaert, F., de Winter, F. L., Emsell, L., Dols, A., Rhebergen, D., Wampers, M., Sunaert, S., Stek, M., Sienaert, P., & Vandenbulcke, M. (2016a). Grey matter volume increase following electroconvulsive therapy in patients with late life depression: A longitudinal MRI study. Journal of Psychiatry and Neuroscience, 41(2), 105–114. https://doi.org/10.1503/jpn.140322",
     "dataset_features_needed": {
       "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
+      "vbm_or_voxelwise_morphometry": "yes",
+      "mdd_patients": "yes",
+      "healthy_controls": "no",
       "genetic_data": "unclear",
-      "depression_scale": "unclear",
+      "depression_scale": "yes",
       "anxiety_scale": "unclear",
+      "clinical_outcomes": "yes",
+      "longitudinal_data": "yes",
+      "medication_status": "yes",
       "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "cognitive_data": "yes",
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -10216,13 +10248,22 @@
     "website_card": {
       "short_title": "Grey matter volume increase following electroconvulsive therapy in patients with late life",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "Voxel-based morphometry (VBM) analysis",
+        "Patients with major depressive disorder / late-life depression",
+        "Montgomery-Åsberg Depression Rating Scale (MADRS)",
+        "Mini Mental State Examination (MMSE) for cognition",
+        "Longitudinal design (baseline and post-treatment)",
+        "Medication status documented"
+      ],
+      "short_description": "Longitudinal structural MRI study assessing grey matter volume changes following electroconvulsive therapy in elderly patients with late-life depression."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Extracted features based on explicit mentions in the abstract, methods, and results. Healthy controls explicitly absent. Genetic, anxiety, trauma, and biomarker data not reported."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Extracted features based on explicit mentions in the abstract, methods, and results. Healthy controls explicitly absent. Genetic, anxiety, trauma, and biomarker data not reported."
   },
   {
     "paper_id": "REFINE-0252",
@@ -10312,22 +10353,19 @@
     "doi_url": "https://doi.org/10.1017/S0007125000161847",
     "citation": "Thomas, A. J., Ferrier, I. N., Kalaria, R. N., Davis, S., & O’Brien, J. T. (2002). Cell adhesion molecule expression in the dorsolateral prefrontal cortex and anterior cingulate cortex in major depression in the elderly. The British Journal of Psychiatry, 181(2), 129–134. https://doi.org/10.1017/S0007125000161847",
     "dataset_features_needed": {
-      "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
+      "t1w_mri": "no",
+      "vbm_or_voxelwise_morphometry": "no",
+      "mdd_patients": "yes",
+      "healthy_controls": "yes",
       "genetic_data": "unclear",
       "depression_scale": "unclear",
       "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
       "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "longitudinal_data": "no",
+      "medication_status": "yes",
+      "trauma_or_life_stress": "unclear",
+      "cognitive_data": "yes",
+      "blood_or_biomarker_data": "yes"
     },
     "sample_summary": {
       "sample_size": null,
@@ -10336,13 +10374,20 @@
     "website_card": {
       "short_title": "Cell adhesion molecule expression in the dorsolateral prefrontal cortex and anterior cingu",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "20 MDD patients and 20 healthy controls",
+        "Immunohistochemistry for ICAM-1 and VCAM-1 biomarkers in post-mortem brain tissue",
+        "Medication history and cognitive test data recorded via case notes and assessments",
+        "Cross-sectional design with no longitudinal follow-up"
+      ],
+      "short_description": "Post-mortem neuropathological study measuring cell adhesion molecule expression in the prefrontal cortex of elderly subjects with major depression compared to healthy controls."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Extracted features strictly from the Methods, Results, and Discussion sections. Study is a post-mortem neuropathology analysis; MRI/VBM not used in this study. Depression diagnosed via DSM-IV criteria but specific rating scales are not named. Biomarkers (ICAM-1, VCAM-1) were measured in brain tissue. Medication status and cognitive tests were explicitly recorded."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Extracted features strictly from the Methods, Results, and Discussion sections. Study is a post-mortem neuropathology analysis; MRI/VBM not used in this study. Depression diagnosed via DSM-IV criteria but specific rating scales are not named. Biomarkers (ICAM-1, VCAM-1) were measured in brain tissue. Medication status and cognitive tests were explicitly recorded."
   },
   {
     "paper_id": "REFINE-0255",
@@ -10833,13 +10878,13 @@
     "citation": "Colloby, S. J., Vasudev, A., O’Brien, J. T., Firbank, M. J., Parry, S. W., & Thomas, A. J. (2011). Relationship of orthostatic blood pressure to white matter hyperintensities and subcortical volumes in late-life depression. The British Journal of Psychiatry, 199(5), 404–410. https://doi.org/10.1192/bjp.bp.110.090423",
     "dataset_features_needed": {
       "t1w_mri": "yes",
-      "vbm_or_voxelwise_morphometry": "yes",
+      "vbm_or_voxelwise_morphometry": "unclear",
       "mdd_patients": "yes",
       "healthy_controls": "yes",
       "genetic_data": "unclear",
       "depression_scale": "yes",
       "anxiety_scale": "unclear",
-      "clinical_outcomes": "yes",
+      "clinical_outcomes": "unclear",
       "longitudinal_data": "no",
       "medication_status": "yes",
       "trauma_or_life_stress": "unclear",
@@ -10854,21 +10899,19 @@
       "short_title": "Relationship of orthostatic blood pressure to white matter hyperintensities and subcortica",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted MRI acquired (MPRAGE sequence)",
-        "Voxel-wise/volumetric morphometry performed using SPM5 and FIRST",
-        "MDD patients (n=38) and healthy controls (n=30)",
-        "Depression scales: MADRS, GDS",
-        "Cognitive data: MMSE",
-        "Medication status recorded in detail",
-        "Cross-sectional design with single time-point assessment"
+        "T1-weighted MRI acquired",
+        "MDD patients and healthy controls included",
+        "Depression scales (MADRS, GDS) used",
+        "Cognitive assessment (MMSE) collected",
+        "Medication status recorded"
       ]
     },
     "extraction": {
       "status": "completed",
-      "notes": "Features extracted directly from Methods, Results, and Table 1. Genetic data, anxiety scales, trauma/stress exposure, and blood/biomarker samples were not reported in the text. Study design is explicitly cross-sectional."
+      "notes": "Cross-sectional study examining orthostatic blood pressure, WMH volumes, and subcortical grey matter volumes in late-life depression. No genetic, anxiety, longitudinal, or biomarker data reported."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Features extracted directly from Methods, Results, and Table 1. Genetic data, anxiety scales, trauma/stress exposure, and blood/biomarker samples were not reported in the text. Study design is explicitly cross-sectional."
+    "extraction_notes": "Cross-sectional study examining orthostatic blood pressure, WMH volumes, and subcortical grey matter volumes in late-life depression. No genetic, anxiety, longitudinal, or biomarker data reported."
   },
   {
     "paper_id": "REFINE-0268",
@@ -10878,15 +10921,15 @@
     "doi_url": "https://doi.org/10.1186/s12991-020-00318-y",
     "citation": "Wang, P., Zhang, R., Jiang, X., Wei, S., Wang, F., & Tang, Y. (2020). Gray matter volume alterations associated with suicidal ideation and suicide attempts in patients with mood disorders. Annals of General Psychiatry, 19. https://doi.org/10.1186/s12991-020-00318-y",
     "dataset_features_needed": {
-      "t1w_mri": "yes",
+      "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "yes",
       "healthy_controls": "yes",
       "genetic_data": "unclear",
       "depression_scale": "yes",
       "anxiety_scale": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_data": "unclear",
+      "clinical_outcomes": "yes",
+      "longitudinal_data": "no",
       "medication_status": "no",
       "trauma_or_life_stress": "unclear",
       "cognitive_data": "unclear",
@@ -10900,20 +10943,20 @@
       "short_title": "Gray matter volume alterations associated with suicidal ideation and suicide attempts in p",
       "one_sentence_description": null,
       "dataset_features_summary": [
-        "T1-weighted MRI acquired",
-        "Voxel-based morphometry performed",
-        "MDD/BD patients included",
-        "Healthy controls included",
-        "Depression scales (HAMD) used"
+        "Voxel-based morphometry (VBM) analysis",
+        "MDD and BD patient cohorts",
+        "Healthy control group",
+        "Hamilton Depression Rating Scale (HAMD)",
+        "Clinical outcomes related to suicidal ideation and attempts"
       ],
-      "short_description": "Cross-sectional study examining gray matter volume alterations in mood disorder patients with suicidal behavior compared to controls using T1-weighted MRI and VBM."
+      "short_description": "Cross-sectional structural MRI study examining gray matter volume alterations in mood disorder patients with and without suicidal behavior compared to healthy controls."
     },
     "extraction": {
       "status": "completed",
-      "notes": "Extracted features based on explicit mentions in Methods and Results. Medication status explicitly noted as not collected. Other features like genetics, anxiety scales, trauma, cognitive data, blood biomarkers, longitudinal follow-up, and clinical outcomes were not reported or ambiguous."
+      "notes": "Extracted features based strictly on explicit mentions in the text. Medication duration was explicitly noted as not collected. Longitudinal data is absent (cross-sectional design). Other biomarkers, anxiety scales, trauma history, and cognitive data were not reported."
     },
     "extraction_status": "completed",
-    "extraction_notes": "Extracted features based on explicit mentions in Methods and Results. Medication status explicitly noted as not collected. Other features like genetics, anxiety scales, trauma, cognitive data, blood biomarkers, longitudinal follow-up, and clinical outcomes were not reported or ambiguous."
+    "extraction_notes": "Extracted features based strictly on explicit mentions in the text. Medication duration was explicitly noted as not collected. Longitudinal data is absent (cross-sectional design). Other biomarkers, anxiety scales, trauma history, and cognitive data were not reported."
   },
   {
     "paper_id": "REFINE-0269",
@@ -11617,22 +11660,19 @@
     "doi_url": "https://doi.org/10.1017/S0033291711002133",
     "citation": "Dombrovski, A. Y., Siegle, G. J., Szanto, K., Clark, L., Reynolds, C. F., & Aizenstein, H. (2012a). The temptation of suicide: striatal gray matter, discounting of delayed rewards, and suicide attempts in late-life depression. PSYCHOLOGICAL MEDICINE, 42(6), 1203–1215. https://doi.org/10.1017/S0033291711002133",
     "dataset_features_needed": {
-      "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
+      "t1w_mri": "yes",
+      "vbm_or_voxelwise_morphometry": "yes",
+      "mdd_patients": "yes",
+      "healthy_controls": "yes",
       "genetic_data": "unclear",
       "depression_scale": "unclear",
       "anxiety_scale": "unclear",
+      "clinical_outcomes": "yes",
+      "longitudinal_data": "no",
+      "medication_status": "yes",
       "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "cognitive_data": "yes",
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -11641,13 +11681,22 @@
     "website_card": {
       "short_title": "The temptation of suicide: striatal gray matter, discounting of delayed rewards, and suici",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "T1-weighted MRI data acquired",
+        "Voxel-wise morphometry (atlas-based segmentation) performed",
+        "Major depressive disorder patients included",
+        "Healthy non-depressed controls included",
+        "Medication exposure recorded as covariate",
+        "Cognitive and behavioral assessments administered"
+      ],
+      "short_description": "Cross-sectional case-control study examining striatal gray matter voxel counts and delay discounting in late-life depression with suicide attempts."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Extracted features strictly from provided text. Genetic data, depression/anxiety scales, trauma/stress measures, and blood/biomarker data were not explicitly reported in the text. Longitudinal follow-up was absent as it is a cross-sectional case-control design."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Extracted features strictly from provided text. Genetic data, depression/anxiety scales, trauma/stress measures, and blood/biomarker data were not explicitly reported in the text. Longitudinal follow-up was absent as it is a cross-sectional case-control design."
   },
   {
     "paper_id": "REFINE-0287",
@@ -11900,22 +11949,19 @@
     "doi_url": "https://doi.org/10.1016/j.neuroimage.2010.05.027",
     "citation": "Tomoda, A., Sheu, Y.-S., Rabi, K., Suzuki, H., Navalta, C. P., Polcari, A., & Teicher, M. H. (2011). Exposure to parental verbal abuse is associated with increased gray matter volume in superior temporal gyrus. NeuroImage, 54(Suppl 1), S280–S286. https://doi.org/10.1016/j.neuroimage.2010.05.027",
     "dataset_features_needed": {
-      "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
+      "t1w_mri": "yes",
+      "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
+      "healthy_controls": "yes",
       "genetic_data": "unclear",
-      "depression_scale": "unclear",
-      "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
+      "depression_scale": "yes",
+      "anxiety_scale": "yes",
       "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
-      "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "longitudinal_data": "unclear",
+      "medication_status": "yes",
+      "trauma_or_life_stress": "yes",
+      "cognitive_data": "yes",
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -11924,13 +11970,24 @@
     "website_card": {
       "short_title": "Exposure to parental verbal abuse is associated with increased gray matter volume in super",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "T1-weighted MRI",
+        "Voxel-based morphometry",
+        "Healthy controls",
+        "Depression symptom scale",
+        "Anxiety symptom scale",
+        "Medication status (unmedicated)",
+        "Parental verbal abuse exposure",
+        "Cognitive assessment"
+      ],
+      "short_description": "Cross-sectional neuroimaging study assessing gray matter volume in young adults with and without histories of parental verbal abuse."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Extracted features based on explicit mentions in abstract and methods. Cross-sectional design noted; longitudinal, blood, genetic data, and MDD diagnosis not explicitly reported."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Extracted features based on explicit mentions in abstract and methods. Cross-sectional design noted; longitudinal, blood, genetic data, and MDD diagnosis not explicitly reported."
   },
   {
     "paper_id": "REFINE-0294",
@@ -13531,21 +13588,18 @@
     "citation": "Batail, J. M., Coloigner, J., Soulas, M., Robert, G., Barillot, C., & Drapier, D. (2020a). Structural abnormalities associated with poor outcome of a major depressive episode: The role of thalamus. Psychiatry Research - Neuroimaging, 305. https://doi.org/10.1016/j.pscychresns.2020.111158",
     "dataset_features_needed": {
       "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
+      "vbm_or_voxelwise_morphometry": "yes",
+      "mdd_patients": "yes",
       "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
       "genetic_data": "unclear",
-      "depression_scale": "unclear",
-      "anxiety_scale": "unclear",
+      "depression_scale": "yes",
+      "anxiety_scale": "yes",
+      "clinical_outcomes": "yes",
+      "longitudinal_data": "yes",
+      "medication_status": "yes",
       "trauma_or_life_stress": "unclear",
-      "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
       "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "blood_or_biomarker_data": "unclear"
     },
     "sample_summary": {
       "sample_size": null,
@@ -13554,13 +13608,23 @@
     "website_card": {
       "short_title": "Structural abnormalities associated with poor outcome of a major depressive episode: The r",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "Voxel-Based Morphometry (VBM) analyses performed",
+        "Major Depressive Disorder patients categorized as responders vs non-responders",
+        "Depression scales: MADRS, BDI",
+        "Anxiety scales: HAMA, STAI-YA/YB",
+        "Clinical outcomes: CGI-S, treatment response at 6 months",
+        "Longitudinal data collected at baseline (M0) and 6 months (M6)",
+        "Medication status recorded for antidepressants, mood stabilizers, and benzodiazepines"
+      ],
+      "short_description": "Study examining structural brain abnormalities, particularly in the thalamus, associated with poor outcomes in major depressive episodes using VBM analysis and clinical scales at baseline and 6-month follow-up."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Extracted features directly from provided tables and text. VBM analysis explicitly stated. Depression and anxiety scales listed. Longitudinal data spans M0 to M6. Medication status detailed. Healthy controls, genetic, cognitive, trauma exposure, biomarker, and explicit T1 MRI acquisition are not mentioned in the provided text."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Extracted features directly from provided tables and text. VBM analysis explicitly stated. Depression and anxiety scales listed. Longitudinal data spans M0 to M6. Medication status detailed. Healthy controls, genetic, cognitive, trauma exposure, biomarker, and explicit T1 MRI acquisition are not mentioned in the provided text."
   },
   {
     "paper_id": "REFINE-0334",
@@ -13978,21 +14042,18 @@
     "citation": "Brooks, J. O. I. I. I., Kruse, J. L., Kubicki, A., Hellemann, G., Espinoza, R. T., Irwin, M. R., & Narr, K. L. (2024). Structural brain plasticity and inflammation are independently related to changes in depressive symptoms six months after an index ECT course. Psychological Medicine, 54(1), 108–116. https://doi.org/10.1017/S0033291722003555",
     "dataset_features_needed": {
       "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
+      "vbm_or_voxelwise_morphometry": "yes",
       "mdd_patients": "unclear",
       "healthy_controls": "unclear",
-      "other_clinical_population": "unclear",
       "genetic_data": "unclear",
-      "depression_scale": "unclear",
+      "depression_scale": "yes",
       "anxiety_scale": "unclear",
-      "trauma_or_life_stress": "unclear",
+      "clinical_outcomes": "yes",
+      "longitudinal_data": "yes",
       "medication_status": "unclear",
-      "treatment_or_antidepressant_data": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_followup": "unclear",
+      "trauma_or_life_stress": "unclear",
       "cognitive_data": "unclear",
-      "blood_or_biomarker_data": "unclear",
-      "multi_site_data": "unclear"
+      "blood_or_biomarker_data": "yes"
     },
     "sample_summary": {
       "sample_size": null,
@@ -14001,13 +14062,21 @@
     "website_card": {
       "short_title": "Structural brain plasticity and inflammation are independently related to changes in depre",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "Structural magnetic resonance imaging scans acquired at two time points (post-ECT and 6-month follow-up)",
+        "Voxel-based morphometry used for gray matter volume analysis",
+        "HAM-D depression scale administered to assess symptom changes",
+        "Peripheral blood biomarkers measured: IL-6, IL-8, TNFα, CRP",
+        "Longitudinal design tracking depressive symptoms and brain/inflammation changes over six months"
+      ],
+      "short_description": "Longitudinal study of 20 treatment-resistant depression patients assessing structural MRI changes and peripheral inflammation over six months post-ECT."
     },
     "extraction": {
-      "status": "seeded_from_spreadsheet",
-      "source": "eligible_studies.csv",
-      "notes": "Broad dataset features not extracted yet."
-    }
+      "status": "completed",
+      "notes": "Features extracted strictly from explicit text in abstract and methods. Unreported variables marked as unclear per bias rules. Study focuses on treatment-resistant depression patients without reported healthy controls, genetic data, or cognitive assessments."
+    },
+    "extraction_status": "completed",
+    "extraction_notes": "Features extracted strictly from explicit text in abstract and methods. Unreported variables marked as unclear per bias rules. Study focuses on treatment-resistant depression patients without reported healthy controls, genetic data, or cognitive assessments."
   },
   {
     "paper_id": "REFINE-0345",
@@ -14017,15 +14086,15 @@
     "doi_url": "https://doi.org/10.1136/jnnp.73.5.556",
     "citation": "Davis, S., Thomas, A., Perry, R., Oakley, A., Kalaria, R. N., & O’Brien, J. T. (2002). Glial fibrillary acidic protein in late life major depressive disorder: An immunocytochemical study. Journal of Neurology, Neurosurgery & Psychiatry, 73(5), 556–560. https://doi.org/10.1136/jnnp.73.5.556",
     "dataset_features_needed": {
-      "t1w_mri": "unclear",
-      "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
+      "t1w_mri": "no",
+      "vbm_or_voxelwise_morphometry": "no",
+      "mdd_patients": "yes",
+      "healthy_controls": "yes",
       "genetic_data": "unclear",
       "depression_scale": "unclear",
       "anxiety_scale": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_data": "unclear",
+      "clinical_outcomes": "no",
+      "longitudinal_data": "no",
       "medication_status": "unclear",
       "trauma_or_life_stress": "unclear",
       "cognitive_data": "unclear",
@@ -14038,14 +14107,17 @@
     "website_card": {
       "short_title": "Glial fibrillary acidic protein in late life major depressive disorder: An immunocytochemi",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "mdd_patients",
+        "healthy_controls"
+      ]
     },
     "extraction": {
-      "status": "template_no_llm",
-      "notes": "No LLM configured. Fallback template generated with all dataset features set to unclear."
+      "status": "completed",
+      "notes": "Study design is cross-sectional postmortem neuropathology using immunocytochemistry. Only MDD patients and healthy controls are explicitly confirmed. Other clinical, genetic, cognitive, and biological data types are not reported."
     },
-    "extraction_status": "template_no_llm",
-    "extraction_notes": "No LLM configured. Fallback template generated with all dataset features set to unclear."
+    "extraction_status": "completed",
+    "extraction_notes": "Study design is cross-sectional postmortem neuropathology using immunocytochemistry. Only MDD patients and healthy controls are explicitly confirmed. Other clinical, genetic, cognitive, and biological data types are not reported."
   },
   {
     "paper_id": "REFINE-0346",
@@ -14615,15 +14687,15 @@
     "dataset_features_needed": {
       "t1w_mri": "unclear",
       "vbm_or_voxelwise_morphometry": "unclear",
-      "mdd_patients": "unclear",
-      "healthy_controls": "unclear",
+      "mdd_patients": "yes",
+      "healthy_controls": "no",
       "genetic_data": "unclear",
-      "depression_scale": "unclear",
-      "anxiety_scale": "unclear",
-      "clinical_outcomes": "unclear",
-      "longitudinal_data": "unclear",
-      "medication_status": "unclear",
-      "trauma_or_life_stress": "unclear",
+      "depression_scale": "yes",
+      "anxiety_scale": "yes",
+      "clinical_outcomes": "yes",
+      "longitudinal_data": "yes",
+      "medication_status": "yes",
+      "trauma_or_life_stress": "yes",
       "cognitive_data": "unclear",
       "blood_or_biomarker_data": "unclear"
     },
@@ -14634,14 +14706,24 @@
     "website_card": {
       "short_title": "Social threat, fronto-cingulate-limbic morphometry, and symptom course in depressed adoles",
       "one_sentence_description": null,
-      "dataset_features_summary": []
+      "dataset_features_summary": [
+        "Depressed adolescent participants (MDD)",
+        "Structural MRI acquisition",
+        "Gray matter volume and surface area morphometry",
+        "Reynolds Adolescent Depression Scale (RADS-2)",
+        "Multidimensional Scale for Anxiety for Children (MASC-2)",
+        "Stress and Adversity Inventory (STRAIN) for trauma/life stress assessment",
+        "Antidepressant medication status recorded as covariate",
+        "Longitudinal follow-up assessments over 9 months"
+      ],
+      "short_description": "Longitudinal study of depressed adolescents examining the association between lifetime social threat stress, fronto-cingulate-limbic gray matter morphometry, and depressive symptom course over 9 months."
     },
     "extraction": {
-      "status": "template_no_llm",
-      "notes": "No LLM configured. Fallback template generated with all dataset features set to unclear."
+      "status": "completed",
+      "notes": "Features extracted strictly from explicit text. T1-weighted specification, VBM/voxelwise methods, genetic data, cognitive tests, and biomarkers were not explicitly reported. Healthy controls were absent from the recruitment criteria."
     },
-    "extraction_status": "template_no_llm",
-    "extraction_notes": "No LLM configured. Fallback template generated with all dataset features set to unclear."
+    "extraction_status": "completed",
+    "extraction_notes": "Features extracted strictly from explicit text. T1-weighted specification, VBM/voxelwise methods, genetic data, cognitive tests, and biomarkers were not explicitly reported. Healthy controls were absent from the recruitment criteria."
   },
   {
     "paper_id": "REFINE-0361",
