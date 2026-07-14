@@ -1,14 +1,12 @@
 name: Sync Replication Registrations
 
-# Trigger on issue lifecycle events + manual dispatch
 on:
   issues:
     types: [opened, edited, labeled, unlabeled, reopened, closed]
   workflow_dispatch:
 
-# Prevent concurrent runs for the same branch
 concurrency:
-  group: sync-registrations-${{ github.ref }}
+  group: sync-registrations
   cancel-in-progress: true
 
 permissions:
@@ -19,18 +17,20 @@ jobs:
   sync:
     name: Sync replication registrations to claims.json
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # needed for git operations
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
-      - name: Run sync script (write claims.json)
+      - name: Run sync script
+        working-directory: ReFiNe_Hub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: ${{ github.repository }}
@@ -41,21 +41,16 @@ jobs:
 
       - name: Commit and push if changed
         run: |
+          set -euo pipefail
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Check if claims.json has uncommitted changes or is new
-          CHANGES=0
-          if [ ! -f site/data/claims.json ]; then
-            CHANGES=1
-          elif ! git diff --quiet --cached -- site/data/claims.json 2>/dev/null; then
-            CHANGES=1
-          fi
+          git add ReFiNe_Hub/site/data/claims.json
 
-          if [ "$CHANGES" = "1" ]; then
-            git add site/data/claims.json
-            git commit -m "chore: sync replication registrations from issues [skip ci]"
-            git push origin HEAD:${{ github.ref_name }}
-          else
+          if git diff --cached --quiet; then
             echo "No changes to commit."
+          else
+            git commit -m "chore: sync replication registrations from issues [skip ci]"
+            git push origin "HEAD:${{ github.event.repository.default_branch }}"
           fi
