@@ -295,6 +295,49 @@ function escapeHtml(str) {
 }
 
 // ============================================================
+// Extract author text from a paper's metadata
+// Checks dedicated fields first, then falls back to citation
+// ============================================================
+function getAuthorsText(paper) {
+  try {
+    if (!paper) return "Unknown authors";
+
+    if (Array.isArray(paper.authors) && paper.authors.length) {
+      return escapeHtml(paper.authors.join(", "));
+    }
+
+    if (typeof paper.authors === "string" && paper.authors.trim()) {
+      return escapeHtml(paper.authors.trim());
+    }
+
+    if (typeof paper.author === "string" && paper.author.trim()) {
+      return escapeHtml(paper.author.trim());
+    }
+
+    if (typeof paper.citation === "string" && paper.citation.trim()) {
+      const citation = paper.citation.trim();
+      const match = citation.match(/^(.*?)\s*\(\d{4}[a-z]?\)\./i);
+      const authorPart = match ? match[1].trim() : "";
+
+      if (authorPart) {
+        const firstAuthor = authorPart.split(",")[0].trim();
+        if (firstAuthor) {
+          if (authorPart.includes(",") || authorPart.includes("&")) {
+            return `${firstAuthor} et al.`;
+          }
+          return firstAuthor;
+        }
+      }
+    }
+
+    return "Unknown authors";
+  } catch (err) {
+    console.warn("Could not parse authors", err, paper);
+    return "Unknown authors";
+  }
+}
+
+// ============================================================
 // Get display label for a filter tag value using the config
 // ============================================================
 function getTagLabel(tagValue) {
@@ -338,7 +381,7 @@ function renderCard(paper) {
 
   let card = `<div class="card" data-paper-id="${paper.paper_id}">`;
   card += `<h3>${escapeHtml(paper.title)} <span class="status-badge ${status.class}">${status.label}</span></h3>`;
-  card += `<div class="meta">${escapeHtml(paper.authors || "Unknown authors")} · ${paper.year}</div>`;
+  card += `<div class="meta">${getAuthorsText(paper)} · ${paper.year}</div>`;
   card += `<div class="meta">DOI: <a href="${paper.doi}" target="_blank">${paper.doi || "N/A"}</a></div>`;
 
   // Summary section (only if available)
