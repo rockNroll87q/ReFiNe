@@ -402,3 +402,100 @@
 2026-07-13T14:37:48.395931 | REFINE-0004 | completed
 2026-07-13T14:43:35.775844 | REFINE-0003 | completed
 2026-07-13T14:45:02.141380 | REFINE-0004 | completed
+2026-07-13T15:48:12.929481 | REFINE-0003 | completed
+2026-07-13T15:48:52.839030 | REFINE-0004 | completed
+2026-07-13T15:49:25.816754 | REFINE-0017 | completed
+2026-07-13T15:49:58.343406 | REFINE-0020 | completed
+2026-07-13T15:50:42.349485 | REFINE-0103 | completed
+2026-07-13T15:51:21.238055 | REFINE-0105 | completed
+2026-07-13T15:52:06.916251 | REFINE-0119 | completed
+2026-07-13T15:52:43.658001 | REFINE-0123 | completed
+2026-07-13T15:53:19.465529 | REFINE-0127 | completed
+2026-07-13T15:53:51.445350 | REFINE-0130 | completed
+2026-07-13T15:54:21.177607 | REFINE-0131 | completed
+2026-07-13T15:54:53.137815 | REFINE-0135 | completed
+2026-07-13T15:55:42.399580 | REFINE-0138 | completed
+2026-07-13T15:56:23.405660 | REFINE-0151 | completed
+2026-07-13T15:56:58.453510 | REFINE-0154 | completed
+2026-07-13T15:57:32.398515 | REFINE-0156 | completed
+2026-07-13T15:58:19.712607 | REFINE-0157 | completed
+2026-07-13T15:58:59.037282 | REFINE-0159 | completed
+2026-07-13T15:59:32.495129 | REFINE-0166 | completed
+2026-07-13T16:00:15.848508 | REFINE-0177 | completed
+2026-07-13T16:00:53.490601 | REFINE-0178 | completed
+2026-07-13T16:01:35.212501 | REFINE-0180 | completed
+2026-07-13T16:02:13.472298 | REFINE-0185 | completed
+2026-07-13T16:02:58.019046 | REFINE-0192 | completed
+2026-07-13T16:03:33.600669 | REFINE-0209 | failed | LLM response failed JSON validation: Could not parse LLM response as JSON. Raw response:
+
+
+{
+  "paper_id": "REFINE-0209",
+  "dataset_features_needed": {
+    "t1w_mri": "yes",
+    "vbm_or_voxelwise_morphometry": "no",
+    "mdd_patients": "yes",
+    "healthy_controls": "yes",
+    "genetic_data": "yes",
+    "depression_scale": "yes",
+    "anxiety_scale": "unclear",
+    "clinical_outcomes": "no",
+    "longitudinal_data": "no",
+    "medication_status": "yes",
+    "trauma_or_life_stress": "no",
+    "cognitive_data": "yes",
+    "blood_or_biomarker_data": "yes"
+  },
+  "website_card": {
+    
+2026-07-13T16:04:09.190016 | REFINE-0213 | completed
+2026-07-13T16:04:46.181348 | REFINE-0224 | completed
+2026-07-13T16:05:28.925397 | REFINE-0233 | completed
+2026-07-13T16:06:05.699093 | REFINE-0234 | completed
+2026-07-13T16:06:43.079301 | REFINE-0236 | completed
+2026-07-13T16:07:16.366597 | REFINE-0243 | completed
+2026-07-13T16:07:54.436705 | REFINE-0247 | completed
+2026-07-13T16:08:26.234319 | REFINE-0248 | failed | LLM response failed JSON validation: Could not parse LLM response as JSON. Raw response:
+
+
+{
+  "paper_id": "REFINE-0248",
+  "dataset_features_needed": {
+    "t1w_mri": "yes",
+    "vbm_or_voxelwise_morphometry": "yes",
+    "mdd_patients": "yes",
+    "healthy_controls": "yes",
+    "genetic_data": "unclear",
+    "depression_scale": "yes",
+    "anxiety_scale": "unclear",
+    "clinical_outcomes": "yes",
+    "longitudinal_data": "yes",
+    "medication_status": "yes",
+    "trauma_or_life_stress": "unclear",
+    "cognitive_data": "unclear",
+    "blood_or_biomarker_data": "unclear"
+  },
+  "w
+2026-07-13T16:08:59.236074 | REFINE-0249 | completed
+2026-07-13T16:09:34.243811 | REFINE-0251 | completed
+2026-07-13T16:10:03.698746 | REFINE-0254 | completed
+2026-07-13T16:10:38.709241 | REFINE-0267 | completed
+2026-07-13T16:11:09.033293 | REFINE-0268 | completed
+2026-07-13T16:11:52.578238 | REFINE-0270 | completed
+2026-07-13T16:12:35.979399 | REFINE-0271 | completed
+2026-07-13T16:13:08.555313 | REFINE-0285 | completed
+2026-07-13T16:13:50.610956 | REFINE-0286 | completed
+2026-07-13T16:14:25.089288 | REFINE-0289 | completed
+2026-07-13T16:15:08.880667 | REFINE-0291 | completed
+2026-07-13T16:15:52.422417 | REFINE-0293 | completed
+2026-07-13T16:16:28.073980 | REFINE-0294 | completed
+2026-07-13T16:16:59.419658 | REFINE-0301 | completed
+2026-07-13T16:17:33.039376 | REFINE-0307 | completed
+2026-07-13T16:18:03.628037 | REFINE-0315 | completed
+2026-07-13T16:18:53.295157 | REFINE-0320 | completed
+2026-07-13T16:19:32.099342 | REFINE-0333 | completed
+2026-07-13T16:20:12.067005 | REFINE-0337 | completed
+2026-07-13T16:20:49.655016 | REFINE-0342 | completed
+2026-07-13T16:21:23.717463 | REFINE-0344 | completed
+2026-07-13T16:22:01.997868 | REFINE-0345 | completed
+2026-07-13T16:22:42.467281 | REFINE-0360 | completed
