@@ -2,57 +2,28 @@
    ReFiNe Website — Compact Filter Layout Stylesheet
    ============================================================ */
 
-/* ---------- Reset & base ---------- */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
+/* ---------- Scoped base for replication-targets app ---------- */
+.replication-targets-page,
+.replication-targets-app {
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: #f7f8fa;
   color: #2d3748;
   line-height: 1.6;
 }
 
-/* ---------- Header / nav ---------- */
-.site-header,
-header {
-  background: linear-gradient(135deg, #0b6e4f 0%, #1a9f6f 100%);
-  color: white;
-  padding: 24px 32px 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-header h1 {
-  font-size: 1.75rem;
-  margin-bottom: 4px;
-  text-align: center;
-}
-header p {
-  font-size: 0.95rem;
-  opacity: 0.85;
-  text-align: center;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 /* ---------- Main content container — centered, max-width ~1160px ---------- */
-.main-container,
-main {
+.replication-targets-app {
   max-width: 1160px;
   margin: 0 auto;
   padding: 24px 28px;
 }
 
-/* Ensure main behaves as a block with centered layout */
-main {
-  display: block;
-}
-
 /* ---------- Search bar — now inside filter-panel-container ---------- */
-#search-container {
+.replication-targets-page #search-container {
   width: 100%;
   position: relative;
   margin-bottom: 16px;
 }
-.search-input {
+.replication-targets-page .search-input {
   width: 100%;
   padding: 14px 48px 14px 18px;
   font-size: 1rem;
@@ -61,12 +32,12 @@ main {
   background: white;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-.search-input:focus {
+.replication-targets-page .search-input:focus {
   outline: none;
   border-color: #0b6e4f;
   box-shadow: 0 0 0 3px rgba(11, 110, 79, 0.15);
 }
-.clear-search-btn {
+.replication-targets-page .clear-search-btn {
   position: absolute;
   right: 14px;
   top: 50%;
@@ -78,7 +49,7 @@ main {
   cursor: pointer;
   display: none;
 }
-.clear-search-btn:hover { color: #2d3748; }
+.replication-targets-page .clear-search-btn:hover { color: #2d3748; }
 
 /* ============================================================
    COMPACT FILTER BUTTONS (replaces vertical list)
@@ -87,7 +58,7 @@ main {
 /* ============================================================
    FILTER BUTTONS ROW — evenly distributed across container width
    ============================================================ */
-.filter-buttons-row {
+.replication-targets-page .filter-buttons-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 8px;
@@ -95,12 +66,12 @@ main {
 }
 
 /* Individual filter button fills its grid cell */
-.compact-filter-btn {
+.replication-targets-page .compact-filter-btn {
   width: 100%;
   justify-content: center;
 }
 
-.compact-filter-btn {
+.replication-targets-page .compact-filter-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -116,30 +87,30 @@ main {
   white-space: nowrap;
   user-select: none;
 }
-.compact-filter-btn:hover {
+.replication-targets-page .compact-filter-btn:hover {
   border-color: #0b6e4f;
   color: #0b6e4f;
   background: #f0faf6;
 }
-.compact-filter-btn.active,
-.compact-filter-btn.open {
+.replication-targets-page .compact-filter-btn.active,
+.replication-targets-page .compact-filter-btn.open {
   border-color: #0b6e4f;
   background: #0b6e4f;
   color: white;
   box-shadow: 0 2px 6px rgba(11, 110, 79, 0.25);
 }
-.compact-filter-btn .arrow {
+.replication-targets-page .compact-filter-btn .arrow {
   font-size: 0.65rem;
   transition: transform 0.2s;
 }
-.compact-filter-btn.active .arrow {
+.replication-targets-page .compact-filter-btn.active .arrow {
   transform: rotate(180deg);
 }
 
 /* ============================================================
    DROPDOWN PANELS (positioned below buttons)
    ============================================================ */
-.filter-dropdown-panel {
+.replication-targets-page .filter-dropdown-panel {
   display: none;
   position: fixed;
   z-index: 100;
@@ -153,17 +124,17 @@ main {
   max-height: 70vh;
   overflow-y: auto;
 }
-.filter-dropdown-panel.show { display: block; }
+.replication-targets-page .filter-dropdown-panel.show { display: block; }
 
 /* Filter chips wrap inside dropdown */
-.filter-chips-wrap {
+.replication-targets-page .filter-chips-wrap {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
 /* Individual filter chip input (checkbox label) */
-.filter-chip-input {
+.replication-targets-page .filter-chip-input {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -174,10 +145,10 @@ main {
   font-size: 0.85rem;
   color: #4a5568;
 }
-.filter-chip-input:hover {
+.replication-targets-page .filter-chip-input:hover {
   background: #f7fafc;
 }
-.filter-chip-input input[type="checkbox"] {
+.replication-targets-page .filter-chip-input input[type="checkbox"] {
   width: 16px;
   height: 16px;
   accent-color: #0b6e4f;
@@ -187,7 +158,7 @@ main {
 /* ============================================================
     ACTIVE FILTERS BAR — always visible, inherits alignment from filters-compact parent
     ============================================================ */
-.active-filters-bar {
+.replication-targets-page .active-filters-bar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -200,14 +171,13 @@ main {
   width: 100%;
 }
 
-/* When no filters active, show "none" placeholder */
-.active-filters-bar .no-filters-label {
+.replication-targets-page .active-filters-bar .no-filters-label {
   color: #a0aec0;
   font-style: italic;
   font-size: 0.9rem;
 }
 
-.active-filters-chips {
+.replication-targets-page .active-filters-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -215,7 +185,7 @@ main {
   flex: 1;
 }
 
-.filter-chip {
+.replication-targets-page .filter-chip {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -226,7 +196,7 @@ main {
   font-size: 0.8rem;
   font-weight: 500;
 }
-.chip-remove {
+.replication-targets-page .chip-remove {
   background: none;
   border: none;
   color: #0b6e4f;
@@ -246,8 +216,8 @@ main {
   background: rgba(11, 110, 79, 0.15);
 }
 
-/* Reset filters button — subtle warning/reset style */
-#reset-filters-btn {
+.replication-targets-page .reset-filters-btn,
+.replication-targets-page #reset-filters-btn {
   padding: 5px 14px;
   font-size: 0.82rem;
   font-weight: 600;
@@ -259,16 +229,13 @@ main {
   transition: all 0.15s ease;
   white-space: nowrap;
 }
-#reset-filters-btn:hover {
+.replication-targets-page #reset-filters-btn:hover {
   background: #fef2f0;
   color: #c94a30;
   border-color: #f5b8ab;
 }
 
-/* ============================================================
-    FILTER PANEL TITLE — green heading above container
-    ============================================================ */
-.filter-panel-title {
+.replication-targets-page .filter-panel-title {
   font-size: 1.15rem;
   font-weight: 700;
   color: #0b6e4f;
@@ -276,10 +243,8 @@ main {
   padding-left: 4px;
 }
 
-/* ============================================================
-    FILTER PANEL CONTAINER — bordered card wrapping all controls
-    ============================================================ */
-.filter-panel-container {
+.replication-targets-page .filter-panel-container,
+.filters-compact .filter-panel-container {
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
@@ -287,24 +252,22 @@ main {
   padding: 20px;
 }
 
-/* ============================================================
-    RESULT COUNT — bold, close to paper list
-    ============================================================ */
-#count {
+.replication-targets-page #count,
+.replication-targets-app #count {
   font-weight: 700;
   font-size: 0.95rem;
   color: #2d3748;
   margin-bottom: 12px;
 }
 
-.results-count-bar {
+.replication-targets-page .results-count-bar {
   margin-top: 12px;
   padding: 6px 0;
   font-size: 0.9rem;
   color: #718096;
 }
 
-/* ---------- Paper grid ---------- */
+.replication-targets-page .paper-grid,
 .paper-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -312,6 +275,8 @@ main {
   margin-top: 8px;
 }
 
+.replication-targets-page .card,
+.replication-targets-app .card,
 .card {
   background: white;
   border-radius: 12px;
@@ -324,17 +289,23 @@ main {
   border-bottom: 1px solid #e8ecf1;
   margin-bottom: 4px;
 }
+.replication-targets-page .card:hover,
+.replication-targets-app .card:hover,
 .card:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0,0,0,0.09);
 }
 
+.replication-targets-page .card h3,
+.replication-targets-app .card h3,
 .card h3 {
   font-size: 1.05rem;
   margin-bottom: 8px;
   line-height: 1.4;
 }
 
+.replication-targets-page .meta,
+.replication-targets-app .meta,
 .meta {
   font-size: 0.82rem;
   color: #718096;
@@ -344,6 +315,8 @@ main {
 .meta a:hover { text-decoration: underline; }
 
 /* Summary section — gray bg, light green left border */
+.replication-targets-page .summary-section,
+.replication-targets-app .summary-section,
 .summary-section {
   margin-top: 12px;
   padding: 12px;
@@ -351,6 +324,8 @@ main {
   border-radius: 8px;
   border-left: 3px solid #e6ffed;
 }
+.replication-targets-page .summary-section h4,
+.replication-targets-app .summary-section h4,
 .summary-section h4 {
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -358,18 +333,21 @@ main {
   color: #0b6e4f;
   margin-bottom: 6px;
 }
+.replication-targets-page .summary-section p,
+.replication-targets-app .summary-section p,
 .summary-section p {
   font-size: 0.875rem;
   line-height: 1.55;
   color: #4a5568;
 }
 
-/* ============================================================
-   Replication requirements — compact inline chips
-   ============================================================ */
+.replication-targets-page .replication-requirements,
+.replication-targets-app .replication-requirements,
 .replication-requirements {
   margin-top: 12px;
 }
+.replication-targets-page .replication-requirements h4,
+.replication-targets-app .replication-requirements h4,
 .replication-requirements h4 {
   font-size: 0.8rem;
   text-transform: uppercase;
@@ -377,11 +355,15 @@ main {
   color: #718096;
   margin-bottom: 6px;
 }
+.replication-targets-page .req-chips-inline,
+.replication-targets-app .req-chips-inline,
 .req-chips-inline {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
 }
+.replication-targets-page .req-chip,
+.replication-targets-app .req-chip,
 .req-chip {
   padding: 3px 9px;
   background: #edf2f7;
@@ -391,7 +373,8 @@ main {
   font-weight: 500;
 }
 
-/* Coverage line */
+.replication-targets-page .coverage-line,
+.replication-targets-app .coverage-line,
 .coverage-line {
   margin-top: 8px;
   font-size: 0.78rem;
@@ -399,7 +382,8 @@ main {
   font-style: italic;
 }
 
-/* Status badges */
+.replication-targets-page .status-badge,
+.replication-targets-app .status-badge,
 .status-badge {
   display: inline-block;
   padding: 2px 10px;
@@ -408,11 +392,19 @@ main {
   font-weight: 600;
   margin-left: 8px;
 }
+.replication-targets-page .status-available,
+.replication-targets-app .status-available,
 .status-available { background: #e6ffed; color: #0b6e4f; }
+.replication-targets-page .status-selected,
+.replication-targets-app .status-selected,
 .status-selected { background: #fef3cd; color: #856404; }
+.replication-targets-page .status-volunteer-pending,
+.replication-targets-app .status-volunteer-pending,
 .status-volunteer-pending { background: #d1ecf1; color: #0c5460; }
 
 /* Volunteer button — compact, NOT full-width */
+.replication-targets-page .volunteer-btn,
+.replication-targets-app .volunteer-btn,
 .volunteer-btn {
   display: inline-block;
   width: auto;
@@ -427,48 +419,69 @@ main {
   cursor: pointer;
   transition: transform 0.12s, box-shadow 0.15s;
 }
+.replication-targets-page .volunteer-btn:hover,
+.replication-targets-app .volunteer-btn:hover,
 .volunteer-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(11, 110, 79, 0.3);
 }
+.replication-targets-page .add-another-btn,
+.replication-targets-app .add-another-btn,
 .add-another-btn {
   background: linear-gradient(135deg, #6c757d 0%, #868e96 100%);
   margin-top: 8px;
 }
 
-/* Volunteer list */
+.replication-targets-page .volunteer-list,
+.replication-targets-app .volunteer-list,
 .volunteer-list {
   margin-top: 10px;
 }
+.replication-targets-page .volunteer-list details,
+.replication-targets-app .volunteer-list details,
 .volunteer-list details {
   font-size: 0.85rem;
 }
+.replication-targets-page .volunteer-list summary,
+.replication-targets-app .volunteer-list summary,
 .volunteer-list summary {
   cursor: pointer;
   color: #0b6e4f;
   font-weight: 500;
   padding: 4px 0;
 }
+.replication-targets-page .volunteer-list-inner,
+.replication-targets-app .volunteer-list-inner,
 .volunteer-list-inner {
   margin-top: 6px;
   border-left: 2px solid #e2e8f0;
   padding-left: 10px;
 }
+.replication-targets-page .volunteer-entry,
+.replication-targets-app .volunteer-entry,
 .volunteer-entry {
   padding: 6px 0 6px 10px;
   font-size: 0.83rem;
 }
+.replication-targets-page .volunteer-details,
+.replication-targets-app .volunteer-details,
 .volunteer-details {
   margin-top: 4px;
 }
+.replication-targets-page .volunteer-details summary,
+.replication-targets-app .volunteer-details summary,
 .volunteer-details summary {
   font-size: 0.8rem;
   color: #718096;
 }
+.replication-targets-page .detail-row,
+.replication-targets-app .detail-row,
 .detail-row {
   padding: 2px 0;
   font-size: 0.8rem;
 }
+.replication-targets-page .detail-label,
+.replication-targets-app .detail-label,
 .detail-label {
   font-weight: 600;
   color: #4a5568;
@@ -476,8 +489,10 @@ main {
 }
 
 /* ============================================================
-   CLAIMS PANEL (right sidebar)
+   CLAIMS PANEL (right sidebar) — scoped to replication page
    ============================================================ */
+.replication-targets-page .claims-panel,
+.replication-targets-app .claims-panel,
 .claims-panel {
   background: white;
   border-radius: 12px;
@@ -485,6 +500,8 @@ main {
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   border: 1px solid #e8ecf1;
 }
+.replication-targets-page .claims-panel h3,
+.replication-targets-app .claims-panel h3,
 .claims-panel h3 {
   font-size: 1rem;
   margin-bottom: 14px;
@@ -493,6 +510,8 @@ main {
   border-bottom: 2px solid #e8ecf1;
 }
 
+.replication-targets-page .claim-item,
+.replication-targets-app .claim-item,
 .claim-item {
   padding: 10px 12px;
   background: #f7fafc;
@@ -501,12 +520,16 @@ main {
   font-size: 0.85rem;
   border-left: 3px solid #0b6e4f;
 }
+.replication-targets-page .claim-item strong,
+.replication-targets-app .claim-item strong,
 .claim-item strong { color: #2d3748; }
 
-/* ============================================================
-   EXPORT / DEMO PANELS
-   ============================================================ */
-.export-panel, .demo-panel {
+.replication-targets-page .export-panel,
+.replication-targets-page .demo-panel,
+.replication-targets-app .export-panel,
+.replication-targets-app .demo-panel,
+.export-panel,
+.demo-panel {
   margin-top: 16px;
   padding: 16px;
   background: #f7fafc;
@@ -514,31 +537,41 @@ main {
   border: 1px solid #e2e8f0;
 }
 
-/* ============================================================
-   DEMO SECTION — styled card with proper button styles
-   ============================================================ */
+.replication-targets-page .demo-actions,
+.replication-targets-app .demo-actions,
 .demo-actions {
   max-width: 1160px;
   margin: 0 auto;
   padding: 0 28px;
 }
+.replication-targets-page .demo-actions h2,
+.replication-targets-app .demo-actions h2,
 .demo-actions h2 {
   font-size: 1.1rem;
   color: #2d3748;
   margin-bottom: 6px;
 }
+.replication-targets-page .demo-note,
+.replication-targets-app .demo-note,
 .demo-note {
   font-size: 0.85rem;
   color: #718096;
   margin-bottom: 12px;
 }
+.replication-targets-page .demo-buttons,
+.replication-targets-app .demo-buttons,
 .demo-buttons {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-/* Demo buttons — styled, less dominant than volunteer button */
+.replication-targets-page #export-json,
+.replication-targets-page #clear-demo,
+.replication-targets-app #export-json,
+.replication-targets-app #clear-demo,
+.replication-targets-page .demo-buttons button,
+.replication-targets-app .demo-buttons button,
 #export-json,
 #clear-demo,
 .demo-buttons button {
@@ -550,26 +583,36 @@ main {
   transition: all 0.15s ease;
 }
 
+.replication-targets-page #export-json,
+.replication-targets-app #export-json,
 #export-json {
   background: linear-gradient(135deg, #0b6e4f 0%, #1a9f6f 100%);
   color: white;
   border: none;
 }
+.replication-targets-page #export-json:hover,
+.replication-targets-app #export-json:hover,
 #export-json:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(11, 110, 79, 0.3);
 }
 
+.replication-targets-page #clear-demo,
+.replication-targets-app #clear-demo,
 #clear-demo {
   background: white;
   color: #e53e3e;
   border: 1.5px solid #fed7d7;
 }
+.replication-targets-page #clear-demo:hover,
+.replication-targets-app #clear-demo:hover,
 #clear-demo:hover {
   background: #fff5f5;
   border-color: #fc8181;
 }
 
+.replication-targets-page .btn-primary,
+.replication-targets-app .btn-primary,
 .btn-primary {
   padding: 8px 18px;
   background: linear-gradient(135deg, #0b6e4f 0%, #1a9f6f 100%);
@@ -581,12 +624,15 @@ main {
   cursor: pointer;
   transition: transform 0.12s, box-shadow 0.15s;
 }
+.replication-targets-page .btn-primary:hover,
+.replication-targets-app .btn-primary:hover,
 .btn-primary:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(11, 110, 79, 0.3);
 }
 
-/* Modal secondary button */
+.replication-targets-page .btn-secondary,
+.replication-targets-app .btn-secondary,
 .btn-secondary {
   padding: 8px 18px;
   background: white;
@@ -598,13 +644,16 @@ main {
   cursor: pointer;
   transition: all 0.15s ease;
 }
+.replication-targets-page .btn-secondary:hover,
+.replication-targets-app .btn-secondary:hover,
 .btn-secondary:hover {
   background: #f7fafc;
   border-color: #a0aec0;
   color: #4a5568;
 }
 
-/* Modal close button */
+.replication-targets-page .close-btn,
+.replication-targets-app .close-btn,
 .close-btn {
   background: none;
   border: none;
@@ -620,11 +669,15 @@ main {
   border-radius: 6px;
   transition: background 0.12s, color 0.12s;
 }
+.replication-targets-page .close-btn:hover,
+.replication-targets-app .close-btn:hover,
 .close-btn:hover {
   background: #f7fafc;
   color: #2d3748;
 }
 
+.replication-targets-page .btn-danger,
+.replication-targets-app .btn-danger,
 .btn-danger {
   padding: 8px 18px;
   background: white;
@@ -636,11 +689,15 @@ main {
   cursor: pointer;
   transition: all 0.15s ease;
 }
+.replication-targets-page .btn-danger:hover,
+.replication-targets-app .btn-danger:hover,
 .btn-danger:hover {
   background: #fff5f5;
   border-color: #fc8181;
 }
 
+.replication-targets-page #export-output,
+.replication-targets-app #export-output,
 #export-output {
   margin-top: 12px;
   padding: 14px;
@@ -656,9 +713,8 @@ main {
   display: none;
 }
 
-/* ============================================================
-   VOLUNTEER MODAL
-   ============================================================ */
+.replication-targets-page .modal-overlay,
+.replication-targets-app .modal-overlay,
 .modal-overlay {
   display: none;
   position: fixed;
@@ -668,8 +724,14 @@ main {
   align-items: center;
   justify-content: center;
 }
+.replication-targets-page .modal-overlay.show,
+.replication-targets-app .modal-overlay.show,
 .modal-overlay.show { display: flex; }
 
+.replication-targets-page .modal-content,
+.replication-targets-page .modal,
+.replication-targets-app .modal-content,
+.replication-targets-app .modal,
 .modal-content,
 .modal {
   background: white;
@@ -681,16 +743,22 @@ main {
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0,0,0,0.2);
 }
+.replication-targets-page .modal-header,
+.replication-targets-app .modal-header,
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 6px;
 }
+.replication-targets-page .modal-header h2,
+.replication-targets-app .modal-header h2,
 .modal-header h2 {
   margin-bottom: 0;
   color: #2d3748;
 }
+.replication-targets-page .modal-paper-info,
+.replication-targets-app .modal-paper-info,
 .modal-paper-info {
   font-size: 0.85rem;
   color: #718096;
@@ -699,27 +767,37 @@ main {
   background: #f7fafc;
   border-radius: 6px;
 }
+.replication-targets-page .modal-disclaimer,
+.replication-targets-app .modal-disclaimer,
 .modal-disclaimer {
   font-size: 0.8rem;
   color: #a0aec0;
   margin-bottom: 16px;
   font-style: italic;
 }
+.replication-targets-page .form-actions,
+.replication-targets-app .form-actions,
 .form-actions {
   display: flex;
   gap: 10px;
   justify-content: flex-end;
   margin-top: 20px;
 }
+.replication-targets-page .modal-subtitle,
+.replication-targets-app .modal-subtitle,
 .modal-subtitle {
   font-size: 0.85rem;
   color: #718096;
   margin-bottom: 20px;
 }
 
+.replication-targets-page .form-group,
+.replication-targets-app .form-group,
 .form-group {
   margin-bottom: 16px;
 }
+.replication-targets-page .form-group label,
+.replication-targets-app .form-group label,
 .form-group label {
   display: block;
   font-size: 0.85rem;
@@ -727,6 +805,12 @@ main {
   color: #4a5568;
   margin-bottom: 4px;
 }
+.replication-targets-page .form-group input,
+.replication-targets-page .form-group select,
+.replication-targets-page .form-group textarea,
+.replication-targets-app .form-group input,
+.replication-targets-app .form-group select,
+.replication-targets-app .form-group textarea,
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -737,6 +821,12 @@ main {
   border-radius: 8px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
+.replication-targets-page .form-group input:focus,
+.replication-targets-page .form-group select:focus,
+.replication-targets-page .form-group textarea:focus,
+.replication-targets-app .form-group input:focus,
+.replication-targets-app .form-group select:focus,
+.replication-targets-app .form-group textarea:focus,
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
@@ -745,6 +835,8 @@ main {
   box-shadow: 0 0 0 3px rgba(11, 110, 79, 0.12);
 }
 
+.replication-targets-page .modal-actions,
+.replication-targets-app .modal-actions,
 .modal-actions {
   display: flex;
   gap: 10px;
@@ -752,9 +844,17 @@ main {
   margin-top: 20px;
 }
 
-/* ============================================================
-   LAYOUT — two-column on wide screens
-   ============================================================ */
+.replication-targets-page .content-layout,
+.replication-targets-app .content-layout,
+.content-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.replication-targets-page .content-layout,
+.replication-targets-app .content-layout,
 .content-layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -763,15 +863,14 @@ main {
 }
 
 @media (min-width: 1024px) {
+  .replication-targets-page .content-layout,
+  .replication-targets-app .content-layout,
   .content-layout {
     grid-template-columns: 1fr 360px;
   }
 }
 
-/* ============================================================
-   FILTER COMPACT SECTION — full width, no outer padding
-   (padding is now handled by filter-panel-container)
-   ============================================================ */
+.replication-targets-page .filters-compact,
 .filters-compact {
   max-width: 1160px;
   margin: 0 auto;
@@ -779,22 +878,17 @@ main {
 }
 
 /* ============================================================
-   RESPONSIVE — mobile-first adjustments
+   RESPONSIVE — mobile-first adjustments (scoped)
    ============================================================ */
 @media (max-width: 768px) {
-  .site-header { padding: 18px 16px 16px; }
-  .site-header h1 { font-size: 1.4rem; }
-  .main-container { padding: 16px 12px; }
-  .paper-grid { grid-template-columns: 1fr; }
-  .card { padding: 16px; }
-
-  /* Compact filter buttons on mobile */
+  .replication-targets-page .compact-filter-btn,
   .compact-filter-btn {
     padding: 7px 10px;
     font-size: 0.8rem;
   }
 
   /* Dropdown panels go full-width on small screens */
+  .replication-targets-page .filter-dropdown-panel,
   .filter-dropdown-panel {
     left: 8px !important;
     right: 8px !important;
@@ -803,16 +897,19 @@ main {
   }
 
   /* Active filters bar wraps nicely */
+  .replication-targets-page .active-filters-bar,
   .active-filters-bar {
     gap: 6px;
     padding: 8px 10px;
   }
 
+  .replication-targets-page .filter-chip,
   .filter-chip {
     font-size: 0.75rem;
     padding: 3px 8px;
   }
 
+  .replication-targets-page #reset-filters-btn,
   #reset-filters-btn {
     font-size: 0.78rem;
     padding: 4px 10px;
@@ -820,10 +917,12 @@ main {
 }
 
 @media (max-width: 480px) {
+  .replication-targets-page .compact-filter-btn,
   .compact-filter-btn {
     padding: 6px 8px;
     font-size: 0.75rem;
   }
+  .replication-targets-page .filter-chip-input,
   .filter-chip-input {
     padding: 5px 8px;
     font-size: 0.8rem;
@@ -831,21 +930,31 @@ main {
 }
 
 /* ============================================================
-   SCROLLBAR styling (subtle)
+   SCROLLBAR styling (subtle) — scoped
    ============================================================ */
+.replication-targets-page .filter-dropdown-panel::-webkit-scrollbar,
+.replication-targets-app .filter-dropdown-panel::-webkit-scrollbar,
 .filter-dropdown-panel::-webkit-scrollbar,
+.replication-targets-page #export-output::-webkit-scrollbar,
+.replication-targets-app #export-output::-webkit-scrollbar,
 #export-output::-webkit-scrollbar {
   width: 6px;
 }
+.replication-targets-page .filter-dropdown-panel::-webkit-scrollbar-thumb,
+.replication-targets-app .filter-dropdown-panel::-webkit-scrollbar-thumb,
 .filter-dropdown-panel::-webkit-scrollbar-thumb,
+.replication-targets-page #export-output::-webkit-scrollbar-thumb,
+.replication-targets-app #export-output::-webkit-scrollbar-thumb,
 #export-output::-webkit-scrollbar-thumb {
   background: #cbd5e0;
   border-radius: 3px;
 }
 
 /* ============================================================
-   Registration note — info text below results count
+   Registration note — info text below results count (scoped)
    ============================================================ */
+.replication-targets-page .registration-note,
+.replication-targets-app .registration-note,
 .registration-note {
   font-size: 0.875rem;
   color: #4a5568;
@@ -859,6 +968,8 @@ main {
 /* ============================================================
    Register interest link — anchor-style button on paper cards
    ============================================================ */
+.replication-targets-page .register-link,
+.replication-targets-app .register-link,
 .register-link {
   display: inline-block;
   padding: 10px 22px;
