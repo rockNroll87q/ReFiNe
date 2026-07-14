@@ -176,7 +176,7 @@ def _fetch_all_issues(repo: str, token: str | None) -> list[dict[str, Any]]:
     ]
     all_issues: list[dict[str, Any]] = []
 
-    page_url = f"{url}?{'&'.join(urllib.parse.quote_plus(p) for p in params)}" if params else url
+    page_url = f"{url}?{urllib.parse.urlencode(params)}" if params else url
 
     while page_url:
         req = urllib.request.Request(page_url, headers=headers)
