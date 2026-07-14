@@ -38,7 +38,7 @@ def _as_dict(value):
 # Paths (relative to the project root)
 # ---------------------------------------------------------------------------
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent  # ReFiNe_starter/
+PROJECT_ROOT = Path(__file__).resolve().parent.parent  # ReFiNe_Hub/
 PAPERS_JSON = PROJECT_ROOT / "site" / "data" / "papers.json"
 PDFS_DIR = PROJECT_ROOT / "data" / "pdfs"
 TEXT_DIR = PROJECT_ROOT / "data" / "text"

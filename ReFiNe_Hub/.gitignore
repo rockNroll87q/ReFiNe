@@ -1,5 +1,7 @@
 # API keys
 .env
+.clinerules
+.venv
 
 # Downloaded PDFs (large binary files)
 data/pdfs/*.pdf

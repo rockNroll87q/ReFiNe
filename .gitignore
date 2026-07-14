@@ -1,5 +1,5 @@
-ReFiNe_starter/out.txt
-ReFiNe_starter/refine/__pycache__
-ReFiNe_starter/refine/__pycache__/*
-ReFiNe_starter/refine/__pycache__/*.pyc
+ReFiNe_Hub/out.txt
+ReFiNe_Hub/refine/__pycache__
+ReFiNe_Hub/refine/__pycache__/*
+ReFiNe_Hub/refine/__pycache__/*.pyc
 .env
