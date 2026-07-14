@@ -4,99 +4,42 @@ title: ReFiNe
 permalink: /replication-targets/
 ---
 
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+<!-- ============================================================
+     Replication Targets — loads papers.json and renders cards
+     using relative_url for Jekyll compatibility.
+     ============================================================ -->
+<header>
+  <h1>ReFiNe</h1>
+  <p>Dataset features needed to attempt replications of depression-related morphometry papers.</p>
+</header>
 
-# Replication targets
-
-Use the filters below to identify papers that could be feasible replication targets for your dataset.
-
-<span style="background-color: #FFFF00">**Note**</span>: This is a demo version! The site is currently under construction (started at the OHBM hackathon 2026).
-
-
-
-<section class="filters">
-  <h2>Filter by dataset features needed</h2>
-  <div id="filters"></div>
-  <button id="reset">Reset filters</button>
-</section>
-
-<section>
-  <div id="count"></div>
-  <div id="cards"></div>
-</section>
-
-<section class="demo-actions">
-  <h2>Indicate interest</h2>
-  <p class="demo-note">
-    This is currently a static demo. Selections are stored only in your browser and are not submitted anywhere.
-  </p>
-
-  <div id="export-output" class="export-output" style="display:none;"></div>
-</section>
-
-<div id="volunteer-modal" class="modal-overlay" style="display:none;">
-  <div class="modal">
-    <div class="modal-header">
-      <h2>Volunteer to replicate this paper</h2>
-      <button id="close-modal" class="close-btn">&times;</button>
+<!-- Filter panel with title and bordered container (includes search bar) -->
+<section class="filters-compact" id="filters-compact">
+  <h2 class="filter-panel-title">Filter by dataset features needed</h2>
+  <div class="filter-panel-container">
+    <!-- Search bar inside the filter panel -->
+    <div id="search-container">
+      <input type="text" id="search-input" placeholder="Search papers by title, diagnosis, feature, or summary..." class="search-input">
+      <button id="clear-search" class="clear-search-btn" style="display:none;" title="Clear search">&times;</button>
     </div>
 
-    <p id="modal-paper-info" class="modal-paper-info"></p>
-
-    <p class="demo-disclaimer">
-      Demo only. This information is stored only in your browser and is not submitted anywhere.
-    </p>
-
-    <form id="volunteer-form">
-      <input type="hidden" id="form-paper-id">
-
-      <div class="form-group">
-        <label for="form-name">Name *</label>
-        <input type="text" id="form-name" required>
-      </div>
-
-      <div class="form-group">
-        <label for="form-institution">Institution / research group *</label>
-        <input type="text" id="form-institution" required>
-      </div>
-
-      <div class="form-group">
-        <label for="form-contact">Contact preference *</label>
-        <select id="form-contact" required>
-          <option value="">Select...</option>
-          <option value="Contact via project coordinator">Contact via project coordinator</option>
-          <option value="Contact directly via email">Contact directly via email</option>
-          <option value="Contact via phone">Contact via phone</option>
-          <option value="No preference">No preference</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="form-dataset">Dataset description, short free text *</label>
-        <textarea id="form-dataset" rows="3" required></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="form-replication">Type of replication *</label>
-        <select id="form-replication" required>
-          <option value="">Select...</option>
-          <option value="direct">Direct</option>
-          <option value="partial">Partial</option>
-          <option value="exploratory">Exploratory</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="form-notes">Notes</label>
-        <textarea id="form-notes" rows="3"></textarea>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn-primary">Save demo selection</button>
-        <button type="button" id="cancel-volunteer" class="btn-secondary">Cancel</button>
-      </div>
-    </form>
+    <!-- Compact filter buttons row -->
+    <div class="filter-buttons-row" id="filter-buttons-row"></div>
+    <!-- Dropdown panels appear below the button when opened -->
+    <div id="filter-dropdowns-container"></div>
+    <!-- Active filter chips (inline, always visible) -->
+    <div id="active-filters-bar" class="active-filters-bar">
+      <span class="active-filters-label">Active filters:</span>
+      <div id="active-filters-chips"></div>
+      <button id="reset-filters-btn" class="reset-filters-btn">&times;&nbsp;Reset filters</button>
+    </div>
   </div>
-</div>
+</section>
 
+<main>
+  <div id="count"></div>
+  <div id="cards"></div>
+</main>
+
+<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
 <script src="{{ '/assets/js/app.js' | relative_url }}"></script>
