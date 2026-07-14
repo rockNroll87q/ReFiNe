@@ -8,12 +8,12 @@ claims.json file that the ReFiNe website reads.
 
 Usage (local testing):
     # Set GITHUB_TOKEN if the repo is private or you hit rate limits
-    python scripts/sync_replication_registrations.py
+    python ReFiNe_Hub/scripts/sync_replication_registrations.py
 
 Environment variables:
     GITHUB_TOKEN   – GitHub personal access token or GH App token
     GITHUB_REPO    – owner/repo (default: derived from remote URL)
-    OUTPUT_PATH    – path to write claims.json (default: site/data/claims.json)
+    OUTPUT_PATH    – path to write claims.json (default: ReFiNe_Hub/site/data/claims.json)
 """
 
 from __future__ import annotations
@@ -361,7 +361,7 @@ def main() -> None:
         sys.exit(1)
 
     # Determine output path
-    output_path = args.output or _get_env("OUTPUT_PATH", "site/data/claims.json")
+    output_path = args.output or _get_env("OUTPUT_PATH", "ReFiNe_Hub/site/data/claims.json")
 
     token = _get_env("GITHUB_TOKEN")
 

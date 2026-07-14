@@ -7,7 +7,7 @@ This document describes how GitHub Issues are used as the **source of truth** fo
 - **GitHub Issues are the source of truth.** Each issue titled `Replication interest: REFINE-XXXX` represents one group's registration to attempt a replication of that paper.
 - **One issue = one volunteering group.** Multiple groups may register for the same paper by creating separate issues.
 - **Multiple registrations per paper are expected and encouraged.** The website counts all active registrations and displays `N groups registered`.
-- **The generated file is `site/data/claims.json`.** This file is produced automatically by a GitHub Action and should not normally be edited by hand.
+- **The generated file is `ReFiNe_Hub/site/data/claims.json`.** This file is produced automatically by a GitHub Action and should not normally be edited by hand.
 
 ## Issue title format
 
@@ -73,7 +73,7 @@ Labels on the issue determine its logical status. The following label-to-status 
 
 ## Generated claims.json schema
 
-Each matching issue produces one entry in `site/data/claims.json`:
+Each matching issue produces one entry in `ReFiNe_Hub/site/data/claims.json`:
 
 ```json
 {
@@ -111,11 +111,11 @@ Each matching issue produces one entry in `site/data/claims.json`:
 
 ## Website display logic
 
-The website loads `site/data/claims.json` (a JSON array) and counts active registrations per paper:
+The website loads `ReFiNe_Hub/site/data/claims.json` (a JSON array) and counts active registrations per paper:
 
 | Active count | Display text |
 |-------------|-------------|
-| 0 | `Available — no groups registered` |
+| 0 | `Open — no groups registered` |
 | 1 | `1 group registered` |
 | N > 1 | `N groups registered` |
 
@@ -151,7 +151,7 @@ The "Register interest" button remains visible and enabled regardless of how man
 
 1. Checks out the repository.
 2. Sets up Python 3.12.
-3. Runs `scripts/sync_replication_registrations.py` (fetches all issues, generates claims.json).
+3. Runs `ReFiNe_Hub/scripts/sync_replication_registrations.py` (fetches all issues, generates claims.json).
 4. Commits and pushes only if the file changed.
 5. Uses `[skip ci]` in the commit message to avoid triggering another workflow run.
 
@@ -176,7 +176,7 @@ cd ReFiNe_Hub
 python scripts/sync_replication_registrations.py
 ```
 
-This writes to `site/data/claims.json`.
+This writes to `ReFiNe_Hub/site/data/claims.json`.
 
 ### Dry run (print without writing)
 
@@ -243,7 +243,7 @@ The synchronisation script makes the following assumptions about the GitHub issu
 
 ## What NOT to edit by hand
 
-**`site/data/claims.json`** should not normally be edited manually because the GitHub Action overwrites it on every issue event. If you need to fix data, either:
+**`ReFiNe_Hub/site/data/claims.json`** should not normally be edited manually because the GitHub Action overwrites it on every issue event. If you need to fix data, either:
 
 1. Edit the corresponding GitHub issue and let the sync run, or
 2. Run `sync_replication_registrations.py --dry-run` to inspect output before committing.
