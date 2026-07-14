@@ -49,3 +49,4 @@ jobs:
           publish_branch: gh-pages
           publish_dir: ./_gh_pages_payload
           keep_files: true
+          enable_jekyll: true 
