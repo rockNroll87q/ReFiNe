@@ -41,5 +41,5 @@ permalink: /replication-targets/
   <div id="cards"></div>
 </main>
 
-<link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/replication-targets.css' | relative_url }}">
 <script src="{{ '/assets/js/app.js' | relative_url }}"></script>
