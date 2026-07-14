@@ -98,42 +98,72 @@ const FILTER_GROUP_CONFIG = [
   }
 ];
 
-// Legacy REFINE_FEATURES kept for volunteer/claim rendering (not used as main filter)
-const REFINE_FEATURES = [
-  ["t1w_mri", "T1w MRI"],
-  ["vbm_or_voxelwise_morphometry", "VBM / voxel-wise morphometry"],
-  ["mdd_patients", "MDD patients"],
-  ["healthy_controls", "Healthy controls"],
-  ["genetic_data", "Genetic data"],
-  ["depression_scale", "Depression scale"],
-  ["anxiety_scale", "Anxiety scale"],
-  ["clinical_outcomes", "Clinical outcomes"],
-  ["longitudinal_data", "Longitudinal data"],
-  ["medication_status", "Medication status"],
-  ["trauma_or_life_stress", "Trauma / life-stress data"],
-  ["cognitive_data", "Cognitive data"],
-  ["blood_or_biomarker_data", "Blood / biomarker data"]
-];
+// ============================================================
+// GitHub registration config
+// ============================================================
+const GITHUB_REPO_URL = "https://github.com/rocknroll87q/ReFiNe";
 
-function getFeatureLabel(key) {
-  const found = REFINE_FEATURES.find(f => f[0] === key);
-  return found ? found[1] : key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+function buildRegistrationIssueUrl(paper) {
+  const paperId = paper.paper_id || "";
+  const paperTitle = paper.title || "";
+  const doi = paper.doi || "";
+
+  // Build title: `Replication interest: REFINE-0003 — <paper title>`
+  const title = "Replication interest: " + paperId + " \u2014 " + paperTitle;
+
+  // Build body with structured registration fields
+  const lines = [
+    "## Replication Interest Registration",
+    "",
+    "| Field | Value |",
+    "| --- | --- |",
+    "| **Paper ID** | " + paperId + " |",
+    "| **Paper title** | " + paperTitle + " |",
+    "| **DOI** | " + (doi ? "[" + doi + "](" + (doi.startsWith("http") ? doi : "https://doi.org/" + doi) + ") |" : "N/A |"),
+    "",
+    "---",
+    "",
+    "## Contributor / Group Information",
+    "",
+    "- **Name / group:** ",
+    "- **Institution:** ",
+    "",
+    "---",
+    "",
+    "## Dataset Availability",
+    "",
+    "- [ ] I have access to the required dataset and can share it",
+    "- [ ] I can re-collect data from scratch",
+    "- [ ] I need to find / request access to the dataset",
+    "",
+    "---",
+    "",
+    "## Replication Plan",
+    "",
+    "- [ ] Direct replication (exact same methods)",
+    "- [ ] Partial replication (key analyses only)",
+    "- [ ] Exploratory replication (related questions)",
+    "",
+    "---",
+    "",
+    "## Additional Information",
+    "",
+    "- **Public listing:** I agree to have this registration listed publicly on GitHub.",
+    "- **Notes for organisers:** ",
+    ""
+  ];
+
+  const body = lines.join("\n");
+
+  // Build URL with query parameters
+  const baseUrl = GITHUB_REPO_URL + "/issues/new";
+  const params = new URLSearchParams();
+  params.set("title", title);
+  params.set("body", body);
+  params.set("labels", "replication-registration");
+
+  return baseUrl + "?" + params.toString();
 }
-
-const CONTACT_LABELS = {
-  "Contact via project coordinator": "Contact via project coordinator",
-  "Contact directly via email": "Contact directly via email",
-  "Contact via phone": "Contact via phone",
-  "No preference": "No preference"
-};
-
-const REPLICATION_LABELS = {
-  "direct": "Direct",
-  "partial": "Partial",
-  "exploratory": "Exploratory"
-};
-
-const STORAGE_KEY = "refine_demo_claims";
 
 let papers = [];
 let claims = [];
@@ -154,7 +184,7 @@ async function loadStaticClaims() {
 // Load demo claims from localStorage as an array
 function loadDemoClaims() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem("refine_demo_claims");
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     // Backward compatibility: old format was an object keyed by paper_id
@@ -176,7 +206,7 @@ function loadDemoClaims() {
 function saveDemoClaims(claimsArray) {
   try {
     const storage = { claims: claimsArray };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+    localStorage.setItem("refine_demo_claims", JSON.stringify(storage));
   } catch (e) {
     console.warn("Could not save demo claims to localStorage:", e);
   }
@@ -272,7 +302,7 @@ function renderVolunteerList(claimsArray) {
         html += `<div class="detail-row"><span class="detail-label">Dataset:</span> ${escapeHtml(claim.dataset_description)}</div>`;
       }
       if (claim.replication_type) {
-        html += `<div class="detail-row"><span class="detail-label">Replication type:</span> ${REPLICATION_LABELS[claim.replication_type] || claim.replication_type}</div>`;
+        html += `<div class="detail-row"><span class="detail-label">Replication type:</span> ${escapeHtml(claim.replication_type)}</div>`;
       }
       if (claim.notes) {
         html += `<div class="detail-row"><span class="detail-label">Notes:</span> ${escapeHtml(claim.notes)}</div>`;
@@ -418,13 +448,9 @@ function renderCard(paper) {
   const coverage = computeCoverageForPaper(paper.paper_id);
   card += `<div class="coverage-line">${renderCoverageLine(coverage)}</div>`;
 
-  // Volunteer section
-  if (activeCount === 0) {
-    card += `<button class="volunteer-btn" onclick="openVolunteerModal('${paper.paper_id}')">Volunteer to replicate this paper</button>`;
-  } else {
-    card += renderVolunteerList(paperClaims);
-    card += `<button class="volunteer-btn add-another-btn" onclick="openVolunteerModal('${paper.paper_id}')">Add another group</button>`;
-  }
+  // Registration button — always shown, opens GitHub issue in new tab
+  const regUrl = buildRegistrationIssueUrl(paper);
+  card += `<a class="volunteer-btn register-link" href="${regUrl}" target="_blank" rel="noopener noreferrer">Register interest</a>`;
 
   card += `</div>`;
   return card;
@@ -764,151 +790,14 @@ async function init() {
     }
   }
 
-  // Setup volunteer modal
-  setupVolunteerModal();
-
-  // Setup clear demo button
-  document.getElementById("clear-demo").addEventListener("click", clearDemoSelections);
-
-  // Setup export button
-  document.getElementById("export-json").addEventListener("click", exportSelectionsAsJson);
-}
-
-function setupVolunteerModal() {
-  const modal = document.getElementById("volunteer-modal");
-  const closeBtn = document.getElementById("close-modal");
-  const cancelBtn = document.getElementById("cancel-volunteer");
-  const form = document.getElementById("volunteer-form");
-
-  function closeModal() {
-    modal.style.display = "none";
-    form.reset();
+  // Append registration info note below the results count
+  const countEl = document.getElementById("count");
+  if (countEl) {
+    const noteDiv = document.createElement("div");
+    noteDiv.className = "registration-note";
+    noteDiv.textContent = "Registrations are submitted as public GitHub issues and used to coordinate ReFiNe replication efforts.";
+    countEl.parentNode.insertBefore(noteDiv, countEl.nextSibling);
   }
-
-  closeBtn.addEventListener("click", closeModal);
-  cancelBtn.addEventListener("click", closeModal);
-
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeModal();
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modal.style.display !== "none") closeModal();
-  });
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const paperId = document.getElementById("form-paper-id").value;
-    const name = document.getElementById("form-name").value.trim();
-    const institution = document.getElementById("form-institution").value.trim();
-    const contact = document.getElementById("form-contact").value;
-    const dataset = document.getElementById("form-dataset").value.trim();
-    const replication = document.getElementById("form-replication").value;
-    const mddN = document.getElementById("form-mdd-n").value;
-    const healthyN = document.getElementById("form-healthy-n").value;
-    const notes = document.getElementById("form-notes").value.trim();
-
-    // Build new claim entry (array-based)
-    const newClaim = {
-      paper_id: paperId,
-      status: "selected",
-      volunteer_name: name,
-      institution: institution,
-      contact_preference: contact,
-      dataset_description: dataset,
-      replication_type: replication,
-      notes: notes || "No additional notes"
-    };
-
-    // Add optional sample-size fields only if provided
-    if (mddN !== "") {
-      newClaim.mdd_n_available = parseInt(mddN, 10);
-    }
-    if (healthyN !== "") {
-      newClaim.healthy_control_n_available = parseInt(healthyN, 10);
-    }
-
-    // Load current claims array and append the new claim
-    const demoClaims = loadDemoClaims();
-    demoClaims.push(newClaim);
-
-    saveDemoClaims(demoClaims);
-
-    // Reload static claims and re-merge
-    loadStaticClaims().then(static => {
-      claims = mergeClaims(static, demoClaims);
-      render();
-      closeModal();
-    });
-  });
-}
-
-function openVolunteerModal(paperId) {
-  const modal = document.getElementById("volunteer-modal");
-  const paperInfo = document.getElementById("modal-paper-info");
-  const paperIdInput = document.getElementById("form-paper-id");
-
-  // Find paper details
-  const paper = papers.find(p => p.paper_id === paperId);
-  if (paper) {
-    paperInfo.textContent = `${paper.title} (${paper.paper_id})`;
-  } else {
-    paperInfo.textContent = `Paper ${paperId}`;
-  }
-
-  paperIdInput.value = paperId;
-  modal.style.display = "flex";
-}
-
-function clearDemoSelections() {
-  if (confirm("Clear all demo volunteer selections? This will restore the original static claims from claims.json.")) {
-    const storage = { claims: [] };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
-
-    // Reload static claims and re-render
-    loadStaticClaims().then(static => {
-      claims = mergeClaims(static, []);
-      render();
-    });
-  }
-}
-
-function exportSelectionsAsJson() {
-  const demoClaims = loadDemoClaims();
-
-  // Build export from all claims (static + demo) as an array
-  loadStaticClaims().then(static => {
-    const allClaims = mergeClaims(static, demoClaims);
-    const exportData = {
-      claims: allClaims.map(c => ({
-        paper_id: c.paper_id,
-        status: c.status?.toLowerCase() || "available",
-        volunteer_name: c.volunteer_name || "",
-        institution: c.institution || "",
-        contact_preference: c.contact_preference || "",
-        dataset_description: c.dataset_description || "",
-        replication_type: c.replication_type || "",
-        notes: c.notes || ""
-      }))
-    };
-
-    const jsonStr = JSON.stringify(exportData, null, 2);
-    const output = document.getElementById("export-output");
-    output.textContent = jsonStr;
-    output.style.display = "block";
-
-    // Also offer download
-    const blob = new Blob([jsonStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "refine_demo_selections.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  });
 }
 
 init();
