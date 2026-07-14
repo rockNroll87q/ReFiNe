@@ -9,6 +9,10 @@ The script:
 4. Writes a CSV report describing copied, existing, invalid, and missing files.
 
 It never writes to the Zotero database.
+
+Usage:
+    $ python import_zotero_pdfs.py [options]
+
 """
 
 from __future__ import annotations
