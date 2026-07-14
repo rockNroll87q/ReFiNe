@@ -114,8 +114,8 @@ function buildRegistrationIssueUrl(paper) {
   const paperTitle = paper.title || "";
   const doi = paper.doi || "";
 
-  // Build title: `Replication interest: REFINE-0003 — <paper title>`
-  const title = "Replication interest: " + paperId + " \u2014 " + paperTitle;
+  // Build title: `Replication interest: REFINE-0003`
+  const title = "Replication interest: " + paperId;
 
   // Build body with structured registration fields
   const lines = [
