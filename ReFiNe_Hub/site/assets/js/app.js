@@ -1,4 +1,10 @@
 // ============================================================
+// Base URL resolution — used when this app is served under sub-paths
+// (e.g. /replication-targets/) so that data/ paths resolve correctly.
+// ============================================================
+const REFINE_BASE_URL = typeof window !== "undefined" && window.REFINE_BASE_URL ? window.REFINE_BASE_URL : "/";
+
+// ============================================================
 // Tag-label mapping for filter_tags taxonomy
 // Uses exact internal tag values from paper.filter_tags
 // ============================================================
@@ -168,10 +174,10 @@ function buildRegistrationIssueUrl(paper) {
 let papers = [];
 let claims = [];
 
-// Load static claims from claims.json (returns array)
+// Load static claims from claims.json (returns array) — uses REFINE_BASE_URL
 async function loadStaticClaims() {
   try {
-    const resp = await fetch("data/claims.json");
+    const resp = await fetch(`${REFINE_BASE_URL}data/claims.json`);
     if (resp.ok) {
       return await resp.json();
     }
@@ -747,8 +753,8 @@ function buildFilterGroups() {
 }
 
 async function init() {
-  // Load papers
-  const papersResp = await fetch("data/papers.json");
+  // Load papers — use REFINE_BASE_URL so paths resolve correctly under sub-paths
+  const papersResp = await fetch(`${REFINE_BASE_URL}data/papers.json`);
   papers = await papersResp.json();
 
   // Load and merge claims (both are arrays)

@@ -4,14 +4,14 @@ title: ReFiNe
 permalink: /replication-targets/
 ---
 
+<link rel="stylesheet" href="{{ '/assets/css/replication-targets.css' | relative_url }}">
+
+<div class="replication-targets-page">
+
 <!-- ============================================================
      Replication Targets — loads papers.json and renders cards
      using relative_url for Jekyll compatibility.
      ============================================================ -->
-<header>
-  <h1>ReFiNe</h1>
-  <p>Dataset features needed to attempt replications of depression-related morphometry papers.</p>
-</header>
 
 <!-- Filter panel with title and bordered container (includes search bar) -->
 <section class="filters-compact" id="filters-compact">
@@ -36,10 +36,14 @@ permalink: /replication-targets/
   </div>
 </section>
 
-<main>
+<section class="replication-targets-app">
   <div id="count"></div>
   <div id="cards"></div>
-</main>
+</section>
 
-<link rel="stylesheet" href="{{ '/assets/css/replication-targets.css' | relative_url }}">
+</div><!-- /.replication-targets-page -->
+
+<script>
+  window.REFINE_BASE_URL = "{{ '/' | relative_url }}";
+</script>
 <script src="{{ '/assets/js/app.js' | relative_url }}"></script>
