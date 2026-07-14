@@ -299,9 +299,11 @@
 .replication-targets-page .card h3,
 .replication-targets-app .card h3,
 .card h3 {
-  font-size: 1.05rem;
-  margin-bottom: 8px;
+  font-size: 1.20rem;
+  margin-bottom: 9px;
   line-height: 1.4;
+  color: #000000;
+  font-weight: normal;
 }
 
 .replication-targets-page .meta,
