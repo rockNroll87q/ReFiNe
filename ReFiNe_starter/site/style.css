@@ -46,11 +46,11 @@ main {
   display: block;
 }
 
-/* ---------- Search bar — centered, full-width of container ---------- */
+/* ---------- Search bar — now inside filter-panel-container ---------- */
 #search-container {
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 0 28px;
+  width: 100%;
+  position: relative;
+  margin-bottom: 16px;
 }
 .search-input {
   width: 100%;
@@ -266,8 +266,37 @@ main {
 }
 
 /* ============================================================
-    RESULT COUNT — compact, close to paper list
-   ============================================================ */
+    FILTER PANEL TITLE — green heading above container
+    ============================================================ */
+.filter-panel-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0b6e4f;
+  margin-bottom: 12px;
+  padding-left: 4px;
+}
+
+/* ============================================================
+    FILTER PANEL CONTAINER — bordered card wrapping all controls
+    ============================================================ */
+.filter-panel-container {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 20px;
+}
+
+/* ============================================================
+    RESULT COUNT — bold, close to paper list
+    ============================================================ */
+#count {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #2d3748;
+  margin-bottom: 12px;
+}
+
 .results-count-bar {
   margin-top: 12px;
   padding: 6px 0;
@@ -289,7 +318,10 @@ main {
   padding: 22px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   transition: transform 0.15s, box-shadow 0.15s;
-  border: 1px solid #e8ecf1;
+  border-left: 3px solid #0b6e4f;
+  border-top: 1px solid #e8ecf1;
+  border-right: 1px solid #e8ecf1;
+  border-bottom: 1px solid #e8ecf1;
   margin-bottom: 4px;
 }
 .card:hover {
@@ -311,13 +343,13 @@ main {
 .meta a { color: #0b6e4f; text-decoration: none; }
 .meta a:hover { text-decoration: underline; }
 
-/* Summary section */
+/* Summary section — gray bg, light green left border */
 .summary-section {
   margin-top: 12px;
   padding: 12px;
   background: #f7fafc;
   border-radius: 8px;
-  border-left: 3px solid #0b6e4f;
+  border-left: 3px solid #e6ffed;
 }
 .summary-section h4 {
   font-size: 0.8rem;
@@ -737,12 +769,13 @@ main {
 }
 
 /* ============================================================
-   FILTER COMPACT SECTION — inside centered container
+   FILTER COMPACT SECTION — full width, no outer padding
+   (padding is now handled by filter-panel-container)
    ============================================================ */
 .filters-compact {
   max-width: 1160px;
   margin: 0 auto;
-  padding: 0 28px;
+  padding: 0;
 }
 
 /* ============================================================
