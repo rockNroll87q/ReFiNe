@@ -23,20 +23,22 @@ import re
 import shutil
 import sqlite3
 import sys
+import tempfile
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 from urllib.parse import unquote
 
-DEFAULT_ZOTERO_STORAGE = Path("/Users/micheles/Zotero/storage")
-DEFAULT_PROJECT_ROOT = Path(
-    "/Users/micheles/Desktop/Temp/sshfs_2/home/micheles/Desktop/"
-    "Vigilate/agent_yoda/workspaces/ReFiNe/ReFiNe_Hub"
-)
-DEFAULT_TARGET_DIR = DEFAULT_PROJECT_ROOT / "data" / "pdfs"
-DEFAULT_INPUT_DIR = DEFAULT_PROJECT_ROOT / "data" / "input"
-DEFAULT_REPORT = DEFAULT_INPUT_DIR / "zotero_import_report.csv"
+# Portable defaults — work when launched from any working directory.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_INPUT_DIR = PROJECT_ROOT / "data" / "input"
+DEFAULT_TARGET_DIR = PROJECT_ROOT / "data" / "pdfs"
+DEFAULT_REPORT_PATH = DEFAULT_INPUT_DIR / "zotero_import_report.csv"
+
+DEFAULT_ZOTERO_DIR = Path.home() / "Zotero"
+DEFAULT_ZOTERO_STORAGE = DEFAULT_ZOTERO_DIR / "storage"
+DEFAULT_ZOTERO_DATABASE = DEFAULT_ZOTERO_DIR / "zotero.sqlite"
 
 REFINE_RE = re.compile(r"\bREFINE-\d+\b", re.IGNORECASE)
 DOI_RE = re.compile(r"10\.\d{4,9}/[^\s\"<>]+", re.IGNORECASE)
@@ -134,41 +136,53 @@ def query_zotero_pdfs(zotero_db: Path, storage_dir: Path) -> list[ZoteroPDF]:
     """
     Read Zotero attachment metadata without modifying the database.
 
+    Copies the Zotero SQLite files into a temporary directory before querying
+    to avoid "database is locked" errors when Zotero is running.
+
     Zotero stores an attachment in:
         <storage>/<attachment item key>/<filename from storage:... path>
     """
-    uri = f"{zotero_db.resolve().as_uri()}?mode=ro"
-    connection = sqlite3.connect(uri, uri=True, timeout=5)
-    connection.row_factory = sqlite3.Row
+    # Build a temp copy of all relevant SQLite files.
+    with tempfile.TemporaryDirectory(prefix="zotero_snapshot_") as tmpdir:
+        tmp_db = Path(tmpdir) / zotero_db.name
 
-    sql = """
-        SELECT
-            idv.value AS doi,
-            attachment_item.key AS attachment_key,
-            ia.path AS attachment_path
-        FROM itemAttachments AS ia
-        JOIN items AS attachment_item
-            ON attachment_item.itemID = ia.itemID
-        JOIN itemData AS metadata
-            ON metadata.itemID = ia.parentItemID
-        JOIN fieldsCombined AS field
-            ON field.fieldID = metadata.fieldID
-        JOIN itemDataValues AS idv
-            ON idv.valueID = metadata.valueID
-        WHERE LOWER(field.fieldName) = 'doi'
-          AND ia.parentItemID IS NOT NULL
-          AND ia.path IS NOT NULL
-          AND ia.path LIKE 'storage:%'
-          AND (
-                LOWER(COALESCE(ia.contentType, '')) = 'application/pdf'
-                OR LOWER(ia.path) LIKE '%.pdf'
-              )
-    """
+        for suffix in ("", "-wal", "-shm"):
+            src = zotero_db.with_name(zotero_db.name + suffix) if suffix else zotero_db
+            if src.exists():
+                shutil.copy2(src, Path(tmpdir) / src.name)
 
-    try:
-        rows = connection.execute(sql).fetchall()
-    finally:
-        connection.close()
+        uri = f"{tmp_db.resolve().as_uri()}?mode=ro"
+        connection = sqlite3.connect(uri, uri=True, timeout=10)
+        connection.row_factory = sqlite3.Row
+
+        sql = """
+            SELECT
+                idv.value AS doi,
+                attachment_item.key AS attachment_key,
+                ia.path AS attachment_path
+            FROM itemAttachments AS ia
+            JOIN items AS attachment_item
+                ON attachment_item.itemID = ia.itemID
+            JOIN itemData AS metadata
+                ON metadata.itemID = ia.parentItemID
+            JOIN fieldsCombined AS field
+                ON field.fieldID = metadata.fieldID
+            JOIN itemDataValues AS idv
+                ON idv.valueID = metadata.valueID
+            WHERE LOWER(field.fieldName) = 'doi'
+              AND ia.parentItemID IS NOT NULL
+              AND ia.path IS NOT NULL
+              AND ia.path LIKE 'storage:%'
+              AND (
+                    LOWER(COALESCE(ia.contentType, '')) = 'application/pdf'
+                    OR LOWER(ia.path) LIKE '%.pdf'
+                  )
+        """
+
+        try:
+            rows = connection.execute(sql).fetchall()
+        finally:
+            connection.close()
 
     results: list[ZoteroPDF] = []
     for row in rows:
@@ -294,16 +308,29 @@ def build_parser() -> argparse.ArgumentParser:
         description="Copy Zotero PDFs into ReFiNe data/pdfs using DOI matching."
     )
     parser.add_argument(
+        "--zotero-dir",
+        type=Path,
+        default=None,
+        help=(
+            f"Root Zotero directory (default: {DEFAULT_ZOTERO_DIR}). "
+            "When provided, --zotero-storage and --zotero-database are inferred "
+            "from this path unless explicitly overridden."
+        ),
+    )
+    parser.add_argument(
         "--zotero-storage",
         type=Path,
         default=DEFAULT_ZOTERO_STORAGE,
         help=f"Zotero storage directory (default: {DEFAULT_ZOTERO_STORAGE})",
     )
     parser.add_argument(
-        "--zotero-db",
+        "--zotero-database",
         type=Path,
         default=None,
-        help="Path to zotero.sqlite. Defaults to the parent of --zotero-storage.",
+        help=(
+            f"Path to zotero.sqlite (default: {DEFAULT_ZOTERO_DATABASE}). "
+            "Overrides the database path inferred from --zotero-dir."
+        ),
     )
     parser.add_argument(
         "--input-dir",
@@ -320,8 +347,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--report",
         type=Path,
-        default=DEFAULT_REPORT,
-        help=f"CSV report path (default: {DEFAULT_REPORT})",
+        default=DEFAULT_REPORT_PATH,
+        help=f"CSV report path (default: {DEFAULT_REPORT_PATH})",
     )
     parser.add_argument(
         "--dry-run",
@@ -339,15 +366,45 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     args = build_parser().parse_args()
 
-    storage_dir = args.zotero_storage.expanduser().resolve()
-    zotero_db = (
-        args.zotero_db.expanduser().resolve()
-        if args.zotero_db
-        else storage_dir.parent / "zotero.sqlite"
+    # Resolve Zotero paths: --zotero-dir is the primary convenience option.
+    # If --zotero-dir is given, infer storage and database from it unless the
+    # user explicitly overrides them with --zotero-storage / --zotero-database.
+    zotero_dir = args.zotero_dir.expanduser().resolve() if args.zotero_dir else None
+
+    if zotero_dir:
+        inferred_storage = zotero_dir / "storage"
+        inferred_db = zotero_dir / "zotero.sqlite"
+    else:
+        inferred_storage = DEFAULT_ZOTERO_STORAGE
+        inferred_db = DEFAULT_ZOTERO_DATABASE
+
+    storage_dir = (
+        args.zotero_storage.expanduser().resolve()
+        if args.zotero_storage
+        else inferred_storage
     )
-    input_dir = args.input_dir.expanduser().resolve()
-    target_dir = args.target_dir.expanduser().resolve()
-    report_path = args.report.expanduser().resolve()
+    zotero_db = (
+        args.zotero_database.expanduser().resolve()
+        if args.zotero_database
+        else inferred_db
+    )
+
+    # Resolve ReFiNe directory defaults from the module-level constants.
+    input_dir = (
+        args.input_dir.expanduser().resolve()
+        if args.input_dir
+        else DEFAULT_INPUT_DIR
+    )
+    target_dir = (
+        args.target_dir.expanduser().resolve()
+        if args.target_dir
+        else DEFAULT_TARGET_DIR
+    )
+    report_path = (
+        args.report.expanduser().resolve()
+        if args.report
+        else DEFAULT_REPORT_PATH
+    )
 
     missing = [
         str(path)

@@ -287,6 +287,53 @@ For full details, see [docs/replication-registrations.md](docs/replication-regis
 
 ---
 
+## Optional: recover missing PDFs through Zotero
+
+This is an **optional second-pass retrieval method** for papers not found by the normal downloader. Use it when you have a local Zotero library that contains (or can be populated with) the missing PDFs.
+
+### On the computer where Zotero is installed
+
+1. Add any missing papers to a dedicated Zotero collection using their DOIs.
+2. Use Zotero's **Find Available PDF** command (puzzle-piece icon → "Find Full Text") to let Zotero retrieve open-access copies automatically.
+3. Close Zotero if necessary (to ensure the database is fully flushed).
+4. Run a dry-run first, then the real import:
+
+```bash
+python3 scripts/import_zotero_pdfs.py --dry-run
+python3 scripts/import_zotero_pdfs.py
+```
+
+The script reads your local Zotero library and copies matched PDFs into `data/pdfs/REFINE-XXXX.pdf`.
+
+### When the repository is remote
+
+The Zotero import **must** run on the local machine where the Zotero library exists. You have two options:
+
+1. Run it against a locally cloned ReFiNe repository, then synchronise the `data/pdfs/` files to your compute machine afterwards.
+2. Run it against a remote repository mounted locally through SSHFS (use `--target-dir` and `--input-dir` to point at the mount):
+
+```bash
+python3 scripts/import_zotero_pdfs.py \
+  --target-dir /path/to/mounted/ReFiNe_Hub/data/pdfs \
+  --input-dir /path/to/mounted/ReFiNe_Hub/data/input
+```
+
+After importing, run the normal extraction pipeline on your compute machine:
+
+```bash
+python -m refine.run extract-all
+```
+
+### Important notes
+
+- PDFs are renamed to `REFINE-XXXX.pdf` so they integrate with the existing extraction pipeline.
+- Existing PDFs are **protected** — they will not be overwritten unless you supply `--overwrite`.
+- A status of `not_found_in_zotero` means no DOI-linked PDF attachment was found for that paper in Zotero; it does **not** prove that no copy exists anywhere in your library.
+- Zotero's "Find Available PDF" may only retrieve a subset of the missing papers (depending on open-access availability and institutional access).
+- Users must respect publisher licences and institutional-access conditions. Article PDFs should not be committed to a public repository unless redistribution is permitted.
+
+---
+
 ## Recommended next step
 
 Add this next command later:
