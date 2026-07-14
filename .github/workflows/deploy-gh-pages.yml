@@ -20,7 +20,7 @@ jobs:
         run: |
           test -f ReFiNe_Hub/site/replication_targets.md || (echo "Missing replication_targets.md" && exit 1)
           test -f ReFiNe_Hub/site/assets/js/app.js || (echo "Missing assets/js/app.js" && exit 1)
-          test -f ReFiNe_Hub/site/assets/css/style.css || (echo "Missing assets/css/style.css" && exit 1)
+          test -f ReFiNe_Hub/site/assets/css/replication-targets.css || (echo "Missing assets/css/replication-targets.css" && exit 1)
           test -f ReFiNe_Hub/site/data/papers.json || (echo "Missing data/papers.json" && exit 1)
 
       - name: Build gh-pages payload
@@ -32,7 +32,7 @@ jobs:
 
           cp ReFiNe_Hub/site/replication_targets.md _gh_pages_payload/replication_targets.md
           cp ReFiNe_Hub/site/assets/js/app.js _gh_pages_payload/assets/js/app.js
-          cp ReFiNe_Hub/site/assets/css/style.css _gh_pages_payload/assets/css/style.css
+          cp ReFiNe_Hub/site/assets/css/replication-targets.css _gh_pages_payload/assets/css/replication-targets.css
           cp ReFiNe_Hub/site/data/papers.json _gh_pages_payload/data/papers.json
 
           if [ -f ReFiNe_Hub/site/data/claims.json ]; then
