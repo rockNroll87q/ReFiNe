@@ -382,7 +382,8 @@ function renderCard(paper) {
   let card = `<div class="card" data-paper-id="${paper.paper_id}">`;
   card += `<h3>${escapeHtml(paper.title)} <span class="status-badge ${status.class}">${status.label}</span></h3>`;
   card += `<div class="meta">${getAuthorsText(paper)} · ${paper.year}</div>`;
-  card += `<div class="meta">DOI: <a href="${paper.doi}" target="_blank">${paper.doi || "N/A"}</a></div>`;
+  const doiUrl = paper.doi ? (paper.doi.startsWith('http') ? paper.doi : `https://doi.org/${paper.doi}`) : '';
+  card += `<div class="meta">DOI: ${doiUrl ? `<a href="${doiUrl}" target="_blank" rel="noopener noreferrer">${paper.doi || "N/A"}</a>` : "N/A"}</div>`;
 
   // Summary section (only if available)
   if (summaryText !== null) {
