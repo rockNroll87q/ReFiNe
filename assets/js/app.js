@@ -271,16 +271,27 @@ function renderCoverageLine(coverage) {
   return "Coverage: " + parts.join(" | ");
 }
 
+// Statuses that count as active registrations on the website
+const _ACTIVE_REGISTRATION_STATUSES = new Set([
+  "pending", "confirmed", "in_progress", "completed",
+  // Legacy statuses for backward compatibility
+  "selected", "volunteer_pending",
+]);
+
 function hasActiveClaimForPaper(paperId) {
   return getClaimsForPaper(paperId).some(
-    c => c.status?.toLowerCase() === "selected" || c.status?.toLowerCase() === "volunteer_pending"
+    c => _ACTIVE_REGISTRATION_STATUSES.has((c.status || "").toLowerCase())
   );
 }
 
+/**
+ * Count active registrations for a paper and return a display object.
+ * Supports multiple groups per paper (one record per GitHub issue).
+ */
 function getStatusDisplay(count) {
-  if (count === 0) return { label: "Available", class: "status-available" };
-  if (count === 1) return { label: "1 group volunteered", class: "status-selected" };
-  return { label: `${count} groups volunteered`, class: "status-volunteer-pending" };
+  if (count === 0) return { label: "Open — no groups registered", class: "status-available" };
+  if (count === 1) return { label: "Open — 1 group registered", class: "status-selected" };
+  return { label: `Open — ${count} groups registered`, class: "status-volunteer-pending" };
 }
 
 // Render a compact list of all volunteers for a paper
@@ -404,7 +415,13 @@ function closeAllDropdowns() {
 // ============================================================
 function renderCard(paper) {
   const paperClaims = getClaimsForPaper(paper.paper_id);
-  const activeCount = paperClaims.filter(c => c.status?.toLowerCase() === "selected" || c.status?.toLowerCase() === "volunteer_pending").length;
+  // Count only active registrations (exclude withdrawn, malformed, invalid paper_id)
+  const _PAPER_ID_RE = /^REFINE-\d{4}$/i;
+  const activeCount = paperClaims.filter(c => {
+    if (!c || typeof c !== "object") return false;
+    if (!c.paper_id || !_PAPER_ID_RE.test(c.paper_id)) return false;
+    return _ACTIVE_REGISTRATION_STATUSES.has((c.status || "").toLowerCase());
+  }).length;
   const status = getStatusDisplay(activeCount);
 
   // Determine summary text: plain_text_summary > short_description fallback
