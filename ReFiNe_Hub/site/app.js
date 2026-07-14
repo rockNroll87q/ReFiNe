@@ -265,16 +265,38 @@ function renderCoverageLine(coverage) {
   return "Coverage: " + parts.join(" | ");
 }
 
+// Check if a paper has any active (non-withdrawn) registrations.
 function hasActiveClaimForPaper(paperId) {
+  var ACTIVE_STATUSES = ["pending", "confirmed", "in_progress", "completed"];
   return getClaimsForPaper(paperId).some(
-    c => c.status?.toLowerCase() === "selected" || c.status?.toLowerCase() === "volunteer_pending"
+    function(c) { return c.status && ACTIVE_STATUSES.indexOf(c.status.toLowerCase()) !== -1; }
   );
 }
 
+// Count active registrations for a paper (excludes withdrawn, malformed, invalid entries).
+function countActiveRegistrations(paperId) {
+  var ACTIVE_STATUSES = ["pending", "confirmed", "in_progress", "completed"];
+  let count = 0;
+  try {
+    const paperClaims = getClaimsForPaper(paperId);
+    for (const c of paperClaims) {
+      if (c.status && ACTIVE_STATUSES.indexOf(c.status.toLowerCase()) !== -1) {
+        // Validate paper_id format
+        if (c.paper_id && /^REFINE-\d{4}$/i.test(c.paper_id)) {
+          count++;
+        }
+      }
+    }
+  } catch (e) {
+    console.warn("Could not count active registrations for", paperId, e);
+  }
+  return count;
+}
+
 function getStatusDisplay(count) {
-  if (count === 0) return { label: "Available", class: "status-available" };
-  if (count === 1) return { label: "1 group volunteered", class: "status-selected" };
-  return { label: `${count} groups volunteered`, class: "status-volunteer-pending" };
+  if (count === 0) return { label: "Available — no groups registered", class: "status-available" };
+  if (count === 1) return { label: "1 group registered", class: "status-selected" };
+  return { label: `${count} groups registered`, class: "status-volunteer-pending" };
 }
 
 // Render a compact list of all volunteers for a paper
@@ -397,9 +419,12 @@ function closeAllDropdowns() {
 // Render paper card with Summary + Replication requirements tags
 // ============================================================
 function renderCard(paper) {
-  const paperClaims = getClaimsForPaper(paper.paper_id);
-  const activeCount = paperClaims.filter(c => c.status?.toLowerCase() === "selected" || c.status?.toLowerCase() === "volunteer_pending").length;
+  // Count active registrations using the new logic (excludes withdrawn, malformed entries)
+  const activeCount = countActiveRegistrations(paper.paper_id);
   const status = getStatusDisplay(activeCount);
+
+  // Get all claims for volunteer list display (including confirmed/completed)
+  const paperClaims = getClaimsForPaper(paper.paper_id);
 
   // Determine summary text: plain_text_summary > short_description fallback
   let summaryText = null;

@@ -1,0 +1,61 @@
+name: Sync Replication Registrations
+
+# Trigger on issue lifecycle events + manual dispatch
+on:
+  issues:
+    types: [opened, edited, labeled, unlabeled, reopened, closed]
+  workflow_dispatch:
+
+# Prevent concurrent runs for the same branch
+concurrency:
+  group: sync-registrations-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  sync:
+    name: Sync replication registrations to claims.json
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # needed for git operations
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run sync script (write claims.json)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+          OUTPUT_PATH: site/data/claims.json
+        run: |
+          set -euo pipefail
+          python scripts/sync_replication_registrations.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Check if claims.json has uncommitted changes or is new
+          CHANGES=0
+          if [ ! -f site/data/claims.json ]; then
+            CHANGES=1
+          elif ! git diff --quiet --cached -- site/data/claims.json 2>/dev/null; then
+            CHANGES=1
+          fi
+
+          if [ "$CHANGES" = "1" ]; then
+            git add site/data/claims.json
+            git commit -m "chore: sync replication registrations from issues [skip ci]"
+            git push origin HEAD:${{ github.ref_name }}
+          else
+            echo "No changes to commit."
+          fi

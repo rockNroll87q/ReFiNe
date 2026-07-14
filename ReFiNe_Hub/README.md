@@ -250,6 +250,43 @@ In future versions, the localStorage-based demo could be replaced with a real ba
 The current static demo is designed to be a drop-in visual replacement — the frontend code structure makes it straightforward to swap `localStorage` calls for real API calls later.
 
 
+## Volunteer replication registrations (GitHub Issues)
+
+Groups can register interest in replicating a ReFiNe paper by opening a **public GitHub issue** titled `Replication interest: REFINE-XXXX`. Each issue represents one volunteering group. Multiple groups may register for the same paper.
+
+### How it works
+
+1. Click **"Register interest"** on any paper card → opens a new GitHub issue pre-filled with the paper ID and title.
+2. Fill in your group name, institution, and other details in the issue body.
+3. Submit the issue. The synchronisation script (or GitHub Action) picks it up automatically.
+4. The website reads `site/data/claims.json` and displays the count of registered groups per paper.
+
+### Registration statuses
+
+Labels on the issue determine its status:
+
+| Label | Status | Counted? |
+|-------|--------|----------|
+| `registration-pending` | pending | Yes |
+| `registration-confirmed` | confirmed | Yes |
+| `replication-in-progress` | in_progress | Yes |
+| `replication-completed` | completed | Yes |
+| `registration-withdrawn` | withdrawn | No |
+
+If no recognised label exists, an open issue defaults to `pending`. A closed issue remains registered unless explicitly labelled `registration-withdrawn`.
+
+### Synchronisation
+
+A GitHub Action at `.github/workflows/sync-replication-registrations.yml` runs automatically on issue events and writes the generated data to `site/data/claims.json`. It can also be run manually via `workflow_dispatch`.
+
+For full details, see [docs/replication-registrations.md](docs/replication-registrations.md).
+
+### What NOT to edit by hand
+
+**`site/data/claims.json`** is generated automatically. Do not edit it manually — changes will be overwritten on the next sync run. To fix data, either edit the corresponding GitHub issue or run `python scripts/sync_replication_registrations.py --dry-run` locally first.
+
+---
+
 ## Recommended next step
 
 Add this next command later:
