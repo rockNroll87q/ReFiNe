@@ -1,0 +1,51 @@
+name: Update ReFiNe replication targets on gh-pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Check required replication-target files exist
+        run: |
+          test -f ReFiNe_Hub/site/replication_targets.md || (echo "Missing replication_targets.md" && exit 1)
+          test -f ReFiNe_Hub/site/assets/js/app.js || (echo "Missing assets/js/app.js" && exit 1)
+          test -f ReFiNe_Hub/site/assets/css/style.css || (echo "Missing assets/css/style.css" && exit 1)
+          test -f ReFiNe_Hub/site/data/papers.json || (echo "Missing data/papers.json" && exit 1)
+
+      - name: Build gh-pages payload
+        run: |
+          rm -rf _gh_pages_payload
+          mkdir -p _gh_pages_payload/assets/js
+          mkdir -p _gh_pages_payload/assets/css
+          mkdir -p _gh_pages_payload/data
+
+          cp ReFiNe_Hub/site/replication_targets.md _gh_pages_payload/replication_targets.md
+          cp ReFiNe_Hub/site/assets/js/app.js _gh_pages_payload/assets/js/app.js
+          cp ReFiNe_Hub/site/assets/css/style.css _gh_pages_payload/assets/css/style.css
+          cp ReFiNe_Hub/site/data/papers.json _gh_pages_payload/data/papers.json
+
+          if [ -f ReFiNe_Hub/site/data/claims.json ]; then
+            cp ReFiNe_Hub/site/data/claims.json _gh_pages_payload/data/claims.json
+          fi
+
+          echo "=== Deploy payload contents ==="
+          find _gh_pages_payload -maxdepth 3 -type f -print
+
+      - name: Deploy selected files to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./_gh_pages_payload
+          keep_files: true

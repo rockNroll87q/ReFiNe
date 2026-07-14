@@ -37,6 +37,24 @@ Contributors are welcome to open issues, submit pull requests, and join the comm
 - `ReFiNe_Hub/` — Contains the static website, extraction pipeline, prompts, and data-generation workflow.
 - Root-level files — Describe the initiative, licensing, and public repository purpose.
 
+## Deployment (GitHub Pages)
+
+### Selective file sync to gh-pages
+
+A GitHub Action on `main` automatically syncs only the **replication-targets** related files to the `gh-pages` branch:
+
+- `replication_targets.md`
+- `assets/js/app.js`
+- `assets/css/style.css`
+- `data/papers.json`
+- `data/claims.json` (only if it exists)
+
+The rest of the public website content on `gh-pages` (e.g., `index.md`, `contributors.md`, `resources.md`, `_layouts/`, `_config.yml`, `misc/`) is **manually maintained** and will **not** be overwritten by the automated deployment. The action uses `keep_files: true` to preserve all existing files that are not part of the sync payload.
+
+### Manual website pages
+
+The gh-pages branch already contains Jekyll source files for the main site (index.md, contributors.md, resources.md, etc.). These are hand-written and should be updated manually via direct commits or PRs to the `gh-pages` branch.
+
 ## Important notes
 
 - The catalogue is intended to support replication planning only.
