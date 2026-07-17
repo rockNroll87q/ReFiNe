@@ -436,9 +436,6 @@ function renderCard(paper) {
    }
 
   // Coverage line
-  const coverage = computeCoverageForPaper(paper.paper_id);
-  card += `<div class="coverage-line">${renderCoverageLine(coverage)}</div>`;
-
   // Registration button — always shown, opens GitHub issue in new tab
   const regUrl = buildRegistrationIssueUrl(paper);
   card += `<a class="volunteer-btn register-link" href="${regUrl}" target="_blank" rel="noopener noreferrer">Register interest</a>`;
