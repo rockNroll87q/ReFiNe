@@ -9,47 +9,31 @@ permalink: /contributors/
 <hr>
 
 
-# Contributors - Open Call
+# How to contribute to ReFiNe
+Researchers interested in contributing to ReFiNe should have access to an independent neuroimaging dataset that is suitable for directly replicating published MRI findings. ReFiNe follows a decentralized collaborative model in which participating research groups perform all analyses locally using their own datasets while following a common methodological framework. No transfer of individual participant data to ReFiNe is required.
 
-Call for ReFiNe replication project - form to contribute: [link](https://forms.gle/gM9EymHnxZRJBWRC6)
+Contribution workflow:
 
+1. **Identify a suitable replication target** using either the curated collection of eligible findings in the ReFiNe-Hub or by selecting a replication target manually and checking eligibility.
+2. **Evaluate replication feasibility** by assessing the compatibility between the original study and the available replication dataset.
+3. **Send replication plan for review by ReFiNe team** with information on how the original study methods are copied in the planned replication.
+4. **Conduct the replication study** following the standardized ReFiNe replication protocols.
+5. **Report the replication results** using standardized results reporting forms to be analyzed in the overall ReFiNe project.
+6. **Optionally: publish individual replication results** (see below)
 
-<div class="contributor-counter">
-  <div class="counter-number">15</div>
-  <div class="counter-label">contributors and interested collaborators</div>
-</div>
+# Publication of replication findings and authorship
+Replication findings can be published on two levels:
 
-## Open community call
+*Overall ReFiNe publication:* All completed individual replication attempts will be summarized in a meta-analysis and results will be reported in one overarching publication. The current publication strategy is to submit a Registered Report prior to the start of the project, allowing the study design and analysis plan to be peer-reviewed before the results are known. All researchers involved in at least one completed individual replication attempt will be included as a co-author on this publication, in accordance with established authorship guidelines
 
-**ReFiNe** (*Replicability of Findings in Neuroimaging*) is an open community initiative to systematically evaluate which neuroimaging findings replicate in independent datasets.
+*Publication of individual replication results* Independent of the collaborative publication, replication teams may publish their individual replication study results separately if desired. In such cases, we ask that the ReFiNe project lead (Janik Goltermann) and if applicable, additional ReFiNe team members who made substantial scientific contributions to the respective replication study are included as co-authors in accordance with established authorship guidelines.
 
-We invite researchers, cohorts, and consortia with existing neuroimaging data to take part in coordinated direct replication studies. The goal is to reproduce original analyses as closely as possible, document where adaptations are needed, and build a clearer picture of which findings are robust across datasets, methods, populations, and modalities.
+# Current contributors
 
-## How to contribute
-
-First: register your availability: [link](https://forms.gle/gM9EymHnxZRJBWRC6)!
-
-Then, you can contribute by:
-
-- selecting a replication target from the eligible studies list;
-- checking whether your dataset has the required imaging, clinical, behavioural, or demographic variables;
-- using the ReFiNe replication protocol and preregistration template;
-- contacting the original authors where needed;
-- running the replication and documenting any deviations from the original analysis;
-- sharing the outcome using the ReFiNe reporting template.
-
-Contributions can focus on a single replication study, a set of related findings, or broader methodological questions such as robustness across preprocessing pipelines, diagnostic definitions, imaging modalities, or phenotype operationalisations.
-
-## Authorship and publication plan
-
-ReFiNe is designed to support both **individual replication papers** and a larger **community meta-analysis**.
-
-Individual replication teams will lead and receive appropriate authorship credit for the studies they conduct. Across replications, the ReFiNe community will also work towards a coordinated meta-analysis evaluating replication rates, sources of heterogeneity, and predictors of replication success.
-
-The publication plan will be transparent and discussed openly with contributors as the project develops.
-
-## Current replication activity
-
-The project is currently building a shared list of eligible replication targets and matching them to available datasets. Initial work focuses on structural MRI findings in major depressive disorder, with the aim of expanding over time to additional topics, disorders, and neuroimaging modalities.
+## ReFiNe core team
 
 
+## Replication team members of the pilot study
+A series of individual replications is currently ongoing in a pilot study of ReFiNe (ReFiNe-MDD). Researchers that are part of individual replication teams can be found in our OSF repository of the project (each individual replication attempt linked as a separate component): https://osf.io/n86q9/overview?view_only=ca5b49664bb24c1ba7e1049bdc6d4e02
+
+## 2026 OHBM BrainHack contributors
