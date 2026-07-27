@@ -50,38 +50,6 @@ If you find this work useful, please consider citing our paper:
 }
 ```
 -->
-<hr>
-
-# OHBM 2026 BrainHack contributors
-
-The ReFiNe concept was presented and discussed during the OHBM 2026 BrainHack in Bordeaux, where feedback from the broader BrainHack community helped refine the project and its planned infrastructure. In addition to this valuable community input, the following contributors played central roles in developing the ReFiNe-Hub as a means of coordinating and harmonizing replications:
-
-<div style="text-align:center; font-size:18px; display:flex; justify-content:center; gap:28px; flex-wrap:wrap; margin:0 0 0.5rem 0;">
-
-  <span>
-    <a href="https://www.linkedin.com/in/janik-goltermann-4089ba303/" target="_blank">Janik Goltermann</a>
-    <sup>✦</sup>
-  </span>
-
-  <span>
-    <a href="https://www.linkedin.com/in/michele-svanera/" target="_blank">Michele Svanera</a>
-    <sup>♫</sup>
-  </span>
-
-  <span>
-    <a href="https://www.linkedin.com/in/katie-robertson-6704a61a3/" target="_blank">Katie Robertson</a>
-    <sup>♫</sup>
-  </span>
-
-</div>
-
-<div style="text-align:center; font-size:15px; line-height:1.5; margin-top:0;">
-
-  <div><sup>✦</sup> Charité – Universitätsmedizin Berlin</div>
-
-  <div><sup>♫</sup> Center for Cognitive Neuroimaging, University of Glasgow, UK</div>
-
-</div>
   
 <hr>
 <!--
