@@ -10,11 +10,11 @@ Learn about the scope of ReFiNe and the eligibility criteria for replication tar
 
 ---
 
-> **Searchable curated list of replication targets**
+> **Searchable database of replication targets**
 >
-> We provide a curated collection of eligible original findings based on a systematic literature search and standardized eligibility ratings. Browse and filter these curated findings using the available filters that allow you to match published findings to the characteristics of your own dataset, helping you efficiently identify suitable replication targets. Findings not yet included in the Replication Hub can be added manually following confirmation of eligibility. 
+> We provide a curated collection of eligible original findings based on a systematic literature search and standardized eligibility ratings. You can browse and filter these curated findings using the available filters and descriptors that allow you to match published findings to the characteristics of your own dataset. This tool aims to make it easy to identify suitable replication targets for a given dataset. Findings not yet included in the Replication Hub can be added manually following confirmation of eligibility by the ReFiNe team. 
 >
-> This collection was developed as part of the ReFiNe-MDD pilot study and is currently available for **voxel-based morphometry findings related to depression**. Expansions of this list of replication targets covering other disorder domains and modalities will be subject of further expansions. Researchers with relevant datasets or an interest in conducting direct replications can register their interest below to help identify and prioritize future areas of expansion. For example, if you have access to a Parkinson's disease dataset with resting-state MRI and would like to conduct direct replications, you can register your interest in adding this domain. If sufficient interest and suitable datasets are available, ReFiNe will prioritize the development of a curated collection of eligible findings in this area.
+> This collection was developed as part of the ReFiNe-MDD pilot study and is currently available for **voxel-based morphometry findings related to depression**. Expansions of this list of replication targets covering other disorder domains and modalities will be subject of further expansions. Researchers with relevant datasets or an interest in conducting direct replications can register their interest below to help identify and prioritize future areas of expansion. For example, if you have access to a Parkinson's disease dataset with resting-state fMRI you would like to use to conduct  replications, you can register your interest in adding this domain. If sufficient interest and suitable datasets are available, ReFiNe will prioritize the development of a curated collection of eligible findings in this area.
 
 ---
 
