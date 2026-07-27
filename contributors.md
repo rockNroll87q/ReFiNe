@@ -31,9 +31,9 @@ Replication findings can be published on two levels:
 # Current contributors
 
 ## ReFiNe core team
-Janik Goltermann (project lead) - Department of Psychiatry and Neuroscience, Campus Benjamin Franklin, Charité Universitätsmedizin Berlin, Germany
-Luisa Altegoer - Institute for Translational Psychiatry, University of Münster, Germany
-Dunya Bedir - Institute for Translational Psychiatry, University of Münster, Germany
+Janik Goltermann (project lead) - Department of Psychiatry and Neuroscience, Campus Benjamin Franklin, Charité Universitätsmedizin Berlin, Germany  
+Luisa Altegoer - Institute for Translational Psychiatry, University of Münster, Germany  
+Dunya Bedir - Institute for Translational Psychiatry, University of Münster, Germany  
 
 ## Replication team members of the pilot study
 A series of individual replications is currently ongoing in a pilot study of ReFiNe (ReFiNe-MDD). Researchers that are part of individual replication teams can be found in our OSF repository of the project (each individual replication attempt linked as a separate component): https://osf.io/n86q9/overview?view_only=ca5b49664bb24c1ba7e1049bdc6d4e02
