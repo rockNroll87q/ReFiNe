@@ -26,7 +26,7 @@ Replication findings can be published on two levels:
 
 *Overall ReFiNe publication:* All completed individual replication attempts will be summarized in a meta-analysis and results will be reported in one overarching publication. The current publication strategy is to submit a Registered Report prior to the start of the project, allowing the study design and analysis plan to be peer-reviewed before the results are known. All researchers involved in at least one completed individual replication attempt will be included as a co-author on this publication, in accordance with established authorship guidelines
 
-*Publication of individual replication results* Independent of the collaborative publication, replication teams may publish their individual replication study results separately if desired. In such cases, we ask that the ReFiNe project lead (Janik Goltermann) and if applicable, additional ReFiNe team members who made substantial scientific contributions to the respective replication study are included as co-authors in accordance with established authorship guidelines.
+*Publication of individual replication results:* Independent of the collaborative publication, replication teams may publish their individual replication study results separately if desired. In such cases, we ask that the ReFiNe project lead (Janik Goltermann) and if applicable, additional ReFiNe team members who made substantial scientific contributions to the respective replication study are included as co-authors in accordance with established authorship guidelines.
 
 # Current contributors
 
