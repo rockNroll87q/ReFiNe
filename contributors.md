@@ -31,9 +31,39 @@ Replication findings can be published on two levels:
 # Current contributors
 
 ## ReFiNe core team
-
+Janik Goltermann (project lead) - Department of Psychiatry and Neuroscience, Campus Benjamin Franklin, Charité Universitätsmedizin Berlin, Germany
+Luisa Altegoer - Institute for Translational Psychiatry, University of Münster, Germany
+Dunya Bedir - Institute for Translational Psychiatry, University of Münster, Germany
 
 ## Replication team members of the pilot study
 A series of individual replications is currently ongoing in a pilot study of ReFiNe (ReFiNe-MDD). Researchers that are part of individual replication teams can be found in our OSF repository of the project (each individual replication attempt linked as a separate component): https://osf.io/n86q9/overview?view_only=ca5b49664bb24c1ba7e1049bdc6d4e02
 
 ## 2026 OHBM BrainHack contributors
+The ReFiNe concept was presented and discussed during the OHBM 2026 BrainHack in Bordeaux, where feedback from the broader BrainHack community helped refine the project and its planned infrastructure. In addition to this valuable community input, the following contributors played central roles in developing the ReFiNe-Hub as a means of coordinating and harmonizing replications:
+
+<div style="text-align:center; font-size:18px; display:flex; justify-content:center; gap:28px; flex-wrap:wrap; margin:0 0 0.5rem 0;">
+
+  <span>
+    <a href="https://www.linkedin.com/in/janik-goltermann-4089ba303/" target="_blank">Janik Goltermann</a>
+    <sup>✦</sup>
+  </span>
+
+  <span>
+    <a href="https://www.linkedin.com/in/michele-svanera/" target="_blank">Michele Svanera</a>
+    <sup>♫</sup>
+  </span>
+
+  <span>
+    <a href="https://www.linkedin.com/in/katie-robertson-6704a61a3/" target="_blank">Katie Robertson</a>
+    <sup>♫</sup>
+  </span>
+
+</div>
+
+<div style="text-align:center; font-size:15px; line-height:1.5; margin-top:0;">
+
+  <div><sup>✦</sup> Charité – Universitätsmedizin Berlin</div>
+
+  <div><sup>♫</sup> Center for Cognitive Neuroimaging, University of Glasgow, UK</div>
+
+</div>
