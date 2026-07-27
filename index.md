@@ -3,7 +3,7 @@ layout: page
 title: <a href="https://rocknroll87q.github.io/ReFiNe">ReFiNe</a>
 ---
 
-# About the replication project
+# About ReFiNe
 
 
 <img src="./misc/refine_logo_text-large.png"
@@ -11,13 +11,18 @@ title: <a href="https://rocknroll87q.github.io/ReFiNe">ReFiNe</a>
      width="180"
      style="margin-left: 24px; margin-bottom: 12px;" />
 
-**ReFiNe** (*Replicability of Findings in Neuroimaging*) is an open community initiative aimed at systematically evaluating the replicability of neuroimaging findings. The project is based on a series of direct replication studies that reproduce original analyses as closely as possible in independent datasets to determine which findings replicate, which do not, and which factors predict replication success.
+**ReFiNe** (*Replicability of Findings in Neuroimaging*) is a systematic community-driven initiative aimed at evaluating the replicability of neuropsychiatric MRI findings through direct replication studies. Direct replications reproduce the methods and analyses of original studies as closely as possible in independent replication datasets. ReFiNe combines a standardized replication framework with an open collaborative infrastructure that enables researchers worldwide to contribute direct replication studies using their own independent datasets.
 
-The current focus of ReFiNe is structural MRI research in major depressive disorder, where ongoing pilot work has established the feasibility of the approach. Over time, the initiative aims to expand across psychiatric disorders, research topics, and neuroimaging modalities.
+The central objectives are:
 
-The ReFiNe website serves as a central hub for coordinating and standardizing replication research. It will provide resources such as curated lists of potential replication targets, replication protocols, preregistration templates, study matching guidance, standardized data extraction forms, replication reporting templates, and information on ongoing and completed replication projects.
+1. Estimating the rate of replicability for the field
+2. Identifying study characteristics that are predictive of replication success
 
-Researchers interested in conducting replications, contributing datasets, developing methods, or supporting the initiative are invited to join the growing ReFiNe community.
+The overall goal is to investigate the reliability of the current literature and to derive evidence-based methodological recommendations for designing MRI studies that produce replicable findings.
+
+The ReFiNe-Hub website serves as a central hub for coordinating and standardizing this replication project. Its purpose is to facilitate the identification of eligible replication targets and their matching to suitable existing datasets. Furthermore, it provides resources including guidance on selecting replication targets (original findings to replicate), replication protocols, preregistration templates, and standardized results reporting forms.
+
+The ReFiNe-Hub also provides information on the underlying replication framework, related publications, and guidance for contributors, including the publication strategy and authorship policy.
 
 
 <hr>
@@ -46,8 +51,10 @@ If you find this work useful, please consider citing our paper:
 ```
 -->
 <hr>
-# BrainHack contributers
 
+# OHBM 2026 BrainHack contributors
+
+The ReFiNe concept was presented and discussed during the OHBM 2026 BrainHack in Bordeaux, where feedback from the broader BrainHack community helped refine the project and its planned infrastructure. In addition to this valuable community input, the following contributors played central roles in developing the ReFiNe-Hub as a means of coordinating and harmonizing replications:
 
 <div style="text-align:center; font-size:18px; display:flex; justify-content:center; gap:28px; flex-wrap:wrap; margin:0 0 0.5rem 0;">
 
@@ -88,11 +95,3 @@ xxx
 Call for ReFiNe replication project - [link](https://docs.google.com/presentation/d/1Cnp0aUq7NzE-Q5TsfxHGOZatzmeiUWtZP1Ee-_VhzuU/edit?usp=sharing)
 
 <hr>-->
-
-
-
-# Open Call
-Call for ReFiNe replication project - form to contribute: [link](https://forms.gle/gM9EymHnxZRJBWRC6)
-
-
-
