@@ -18,7 +18,7 @@ The central objectives are:
 1. Estimating the rate of replicability for the field (percentage of original findings successfully replicable)
 2. Identifying study characteristics that are predictive of replication success
 
-The overall goal is to investigate the reliability of the current literature and to derive evidence-based methodological recommendations for designing MRI studies that produce replicable findings.
+Replicability rates will be estimated across psychiatric and neurological disorders and across different MRI modalities. The overall goal is to investigate the reliability of the current literature and to derive evidence-based methodological recommendations for designing MRI studies that produce replicable findings.
 
 The ReFiNe-Hub website serves as a central hub for coordinating and standardizing this replication project. Its purpose is to facilitate the identification of eligible replication targets and their matching to suitable existing datasets. Furthermore, it provides resources including guidance on selecting replication targets (original findings to replicate), replication protocols, preregistration templates, and standardized results reporting forms.
 
