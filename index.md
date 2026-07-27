@@ -15,7 +15,7 @@ title: <a href="https://rocknroll87q.github.io/ReFiNe">ReFiNe</a>
 
 The central objectives are:
 
-1. Estimating the rate of replicability for the field
+1. Estimating the rate of replicability for the field (percentage of original findings successfully replicable)
 2. Identifying study characteristics that are predictive of replication success
 
 The overall goal is to investigate the reliability of the current literature and to derive evidence-based methodological recommendations for designing MRI studies that produce replicable findings.
