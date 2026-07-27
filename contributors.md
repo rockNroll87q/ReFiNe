@@ -10,7 +10,7 @@ permalink: /contributors/
 
 
 # How to contribute to ReFiNe
-Researchers interested in contributing to ReFiNe should have access to an independent neuroimaging dataset that is suitable for directly replicating published MRI findings. ReFiNe follows a decentralized collaborative model in which participating research groups perform all analyses locally using their own datasets while following a common methodological framework. No transfer of individual participant data to ReFiNe is required.
+Researchers can directly contribute to ReFiNe conducting a direct replication study using data that they have access to (either institutional access or openly available datasets) as a replication dataset. ReFiNe follows a decentralized collaborative concept in which participating research groups perform all analyses locally using their own datasets while following harmonized replication protocols. No transfer of individual participant data to ReFiNe is required.
 
 Contribution workflow:
 
