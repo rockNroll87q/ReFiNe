@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Eligibility criteria
+title: ReFiNe
 permalink: /criteria/
 ---
 
