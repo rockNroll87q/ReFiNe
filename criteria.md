@@ -1,21 +1,21 @@
 ---
 layout: page
-title: ReFiNe
+title: Eligibility criteria
 permalink: /criteria/
 ---
 
 <link rel="stylesheet" href="{{ '/assets/css/replication-targets.css' | relative_url }}">
 
 
-## Eligibility criteria
+# Eligibility criteria
 
 Studies included in the ReFiNe Replication Hub are identified through systematic literature searches and screened using predefined eligibility criteria. Candidate studies first undergo an eligibility assessment and are subsequently evaluated regarding their suitability for direct replication using available datasets.
 
-### Scientific scope of ReFiNe
+## Scientific scope of ReFiNe
 
 ReFiNe is designed to support systematic direct replications within the following research domains. The current implementation of the Replication Hub contains a curated collection of replication targets for voxel-based morphometry findings in major depression only (see **Current implementation** above). Additional research domains and imaging modalities will be incorporated as curated collections become available.
 
-#### Clinical domains
+### Clinical domains
 
 - Affective disorders (depression and bipolar disorder)
 - Anxiety disorders (including PTSD and OCD)
@@ -27,13 +27,13 @@ ReFiNe is designed to support systematic direct replications within the followin
 - Stroke
 - Ataxia
 
-#### MRI modalities
+### MRI modalities
 
 - Voxel-based morphometry (VBM)
 - Resting-state functional MRI
 - Task-based functional MRI
 
-### General eligibility criteria
+## General eligibility criteria
 
 Eligible studies must:
 
@@ -44,7 +44,7 @@ Eligible studies must:
 - use whole-brain, mass-univariate voxel-based MRI analyses within a general linear modelling framework or a comparable statistical approach (multivariate machine-learning approaches are excluded);
 - be published as primary research articles in peer-reviewed journals and be available in English.
 
-### Replication-specific feasibility assessment
+## Replication-specific feasibility assessment
 
 For each selected replication target, the replication team evaluates whether direct replication is feasible using the available dataset. This assessment includes:
 
