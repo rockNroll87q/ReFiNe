@@ -30,4 +30,4 @@ Here, we provide further references of previous publications and replications fr
 
 1. Altegoer et al. (2026). Toward a replicable neuroimaging science: A framework for conducting MRI replication research. PsyArXiv. https://doi.org/10.31234/osf.io/ycwuv_v1
 2. Goltermann et al. (2025). Gray matter correlates of childhood maltreatment lack replicability in a multi-cohort brain-wide association study. Nature Communications. https://doi.org/10.1038/s41467-025-62374-w
-3. Dannlowski et al. (2026). The neuroanatomy of depression: weak but replicable effects in 4021 individuals from three clinical cohorts. Neuropsychopharmacology (in press). (preprint: http://dx.doi.org/10.2139/ssrn.4854882) 
+3. Dannlowski et al. (2026). The neuroanatomy of depression: weak but replicable effects in 4021 individuals from three clinical cohorts. Neuropsychopharmacology. https://doi.org/10.1038/s41386-026-02491-2
