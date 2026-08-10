@@ -13,7 +13,7 @@ Studies included in the ReFiNe Replication Hub are identified through systematic
 
 ## Scientific scope of ReFiNe
 
-ReFiNe is designed to support systematic direct replications within the following research domains. The current implementation of the Replication Hub contains a curated collection of replication targets for voxel-based morphometry findings in major depression only (see **Current implementation** above). Additional research domains and imaging modalities will be incorporated as curated collections become available.
+ReFiNe is designed to support systematic direct replications within the clinical domains described below (based on available ENIGMA working groups) and for a selection of voxel-based MRI modalities. 
 
 ### Clinical domains
 
