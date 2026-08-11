@@ -28,7 +28,7 @@ The ReFiNe-Hub also provides information on the underlying replication framework
 <hr>
 # Project overview
 
-![](./misc/framework.png)
+![](./misc/framework_updated.png)
 
 <!--<hr>
 # Citation
