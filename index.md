@@ -3,7 +3,7 @@ layout: page
 title: <a href="https://rocknroll87q.github.io/ReFiNe">ReFiNe</a>
 ---
 
-# About ReFiNe
+# Mission - goals and vision of ReFiNe
 
 
 <img src="./misc/refine_logo_text-large.png"
