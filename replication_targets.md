@@ -6,6 +6,8 @@ permalink: /replication-targets/
 
 <link rel="stylesheet" href="{{ '/assets/css/replication-targets.css' | relative_url }}">
 
+***(This is a demo version of the replication target database)***
+
 Screen potential replication targets to decide which original findings to replicate with your own (or an openly available) dataset
 
 ---
