@@ -1,0 +1,260 @@
+# =============================================================================
+# ReFiNe_screen — eligibility criteria
+#
+# Two blocks:
+#   criteria            full-text criteria (Tier 3), one per scored human column
+#   abstract_screening  gate criteria judged from title + abstract (Tier 2)
+#
+# source_column / human_column values are the EXACT headers of
+# data/input/screened_studies_full.csv (latin-1; '?' is mojibake of '>=' in the
+# two MRI headers). Human cell values: "1", "0", "n/a" or blank.
+#
+# Definitions follow the ReFiNe-MDD pilot eligibility criteria as used by the
+# human raters (co-author list, received 2026-11-04):
+#   - primary research (no systematic reviews / meta-analyses)
+#   - German or English; peer-reviewed journal            [not LLM-rated; see notes]
+#   - a neurobiological finding associating a depression-related variable
+#     (risk factors e.g. genetic/environmental risk, protective factors, diagnosis,
+#     symptoms, course, subtypes, or similar) with gray matter brain structure
+#   - gray matter measured on a 3T scanner producing T1-weighted scans
+#   - VBM approach, minimum voxel resolution 1.5 mm, approximately isotropic
+#     (1.2 x 1.2 x 1.5 ok; 1.2 x 1.2 x 2.5 not ok)
+#   - at least one significant effect regarding gray matter volume
+#   - standard univariate statistical methods
+#   - sample/methods comparable to the replication data, replication n >= 90% of
+#     original n                                          [not LLM-rated; needs the Hub instrument/subsample lists]
+#
+# Not rated by the LLM on purpose:
+#   - "duplicate entry", "corrupted entry": properties of search-result rows.
+#   - "instrument available": the comparability criterion; needs Hub metadata.
+#   - language / peer review: taken from record metadata, not the text.
+#
+# History
+#   v1-v3 (2026-09): initial pilots; "instrument available" dropped (v2).
+#   v4 (2026-09-17): resolution required near-cubic voxels (REFINE-0150);
+#       gray_matter exclusion of CBF/BOLD/MRS measured inside GM.
+#   v5 (2026-09-17): statistics_reported = univariate standard statistics, no ML.
+#   v6 (2026-09-29): ML-primary studies -> statistics 0; multi-disorder designs
+#       count for depression; own participants only for living/infancy;
+#       VBM-toolbox segmentation feeding ML/normative models is not VBM.
+#   v7 (2026-11-04): aligned with the co-author's eligibility list:
+#       - depression_related broadened to any depression-related variable
+#         (incl. risk/protective factors such as adversity, stress, genetic risk,
+#         also in healthy samples) associated with gray matter structure;
+#       - gray_matter = at least one significant gray-matter effect (primary OR
+#         secondary analysis), replacing "primary outcome";
+#       - mri_resolution_isotropic = no voxel dimension coarser than ~1.5 mm
+#         (1.2 x 1.2 x 1.5 ok), replacing the v4 near-cubic requirement;
+#       - mri_3t = ALL structural T1 data at >= 3T (mixed 1.5T/3T samples -> 0);
+#       - abstract gates: depression gate broadened; mri_used -> structural_mri.
+#   v8 (2026-11-05): depression_related narrowed to the human raters' actual
+#       practice, from the 70 dev false positives of abstract_v2:
+#       - depression (or a depression risk/protective factor) must be part of the
+#         study's stated aim/main question; depression as one of several secondary
+#         symptom measures/correlates in a study of ANOTHER condition -> 0
+#         (humans scored 0 even when a depression-GM correlation was reported,
+#         e.g. REFINE-0752, 1106, 1204, 1227 — differs from the written criterion);
+#       - risk factors count when studied as depression risk in healthy/at-risk or
+#         depressed samples; adversity/traits studied within samples defined by
+#         another disorder (SUD, psychosis, BPD), and personality traits
+#         (neuroticism, optimism, impulsivity...) -> 0 unless depression is a
+#         main variable;
+#       - absence in an informative abstract -> 0, not n/a.
+#       ABSTRACT GATE EXCEPTION (same day): depression as a secondary symptom
+#       measure in a study of another condition is NOT excluded at the abstract
+#       stage when a depression-brain finding is reported — the human 0s there may
+#       be rater practice or rater error (e.g. REFINE-0752), so the decision is
+#       deferred to full text. The full-text definition above still encodes the
+#       narrow reading pending a team decision.
+#   v9 (2026-11-05): from the 2 finally-included papers lost by abstract_v3 (dev):
+#       depression-related variables explicitly include perceived/chronic stress
+#       (REFINE-0042) and mood states / low mood / negative affect (REFINE-0178),
+#       also when the word "depression" is not used. Last dev iteration before
+#       the held-out test run.
+# =============================================================================
+
+profile: depression_fulltext_replication
+version: 9
+created: "2026-11-05"
+source_csv: data/input/screened_studies_full.csv
+csv_encoding: latin-1
+
+value_semantics:
+  "1":   "the paper text explicitly supports YES (stated or unambiguously reported)."
+  "0":   "the paper text explicitly contradicts it, or makes it clearly impossible from the described design."
+  "n/a": "not stated / cannot be determined from the provided text. Default to n/a whenever in doubt; never guess between 1 and 0."
+
+criteria:
+  - id: depression_related
+    source_column: "research question related to depression yes/no"
+    definition: >-
+      Is depression part of the study's main research question, with a finding that
+      relates it to gray matter brain structure? Answer 1 when (a) depression — a
+      diagnosis such as MDD, depressive symptoms, mood states / low mood / negative
+      affect, depression subtypes or course of illness — is a primary focus or a main grouping/outcome, including studies of
+      depression within another condition (e.g., patients with vs without depression)
+      and multi-disorder designs where depression is one of the principal groups; or
+      (b) the study investigates an established risk or protective factor for
+      depression (e.g., childhood adversity, maltreatment, trauma, stressful life
+      events, perceived or chronic stress, genetic risk) in healthy, at-risk or
+      depressed samples, even if the word "depression" is not used. Answer 0 when
+      the study is about another condition or construct and depression appears only
+      as one of several secondary symptom measures, exploratory correlates,
+      covariates or sample descriptors; when risk factors or personality traits are
+      studied within samples defined by another disorder (e.g., substance use,
+      psychosis, borderline personality disorder) or as general traits (e.g.,
+      neuroticism, optimism, impulsivity) without depression as a main variable;
+      or for non-psychiatric uses of "depression" (e.g., cortical spreading depression).
+
+  - id: primary_research
+    source_column: "primary research yes/no"
+    definition: >-
+      Is this an original empirical study reporting its own (primary) data and
+      analyses, rather than a systematic review, meta-analysis, narrative review,
+      commentary, editorial, perspective article, or a summary of previously
+      published results?
+
+  - id: human_subjects
+    source_column: "human subjects yes/no"
+    definition: >-
+      Does the study include human participants / human-derived data as subjects
+      (as opposed to purely animal, cell-line, or computational-only studies)?
+
+  - id: living_human_subjects
+    source_column: "living human subjects yes/no"
+    definition: >-
+      Do ALL human-derived data in this study come from living persons? Answer 1
+      only if every human component of the study uses living participants.
+      Answer 0 if ANY part of the study relies on post-mortem / autopsy tissue,
+      even when other parts use living subjects. Judge the study's OWN components:
+      external public reference datasets or atlas data used purely for comparison
+      do not count.
+
+  - id: past_infancy
+    source_column: "human subjects past infancy yes/no"
+    definition: >-
+      Are the human subjects past infancy (i.e., the sample is not neonates or
+      infants in their first months/early year of life)? Judge the study's OWN
+      participants only.
+
+  - id: mri_3t
+    source_column: "MRI field strength ? 3 Tesla"
+    definition: >-
+      Were ALL of the study's structural (T1-weighted) MRI data acquired at a field
+      strength of 3 Tesla or higher (e.g., 3T, 7T)? Answer 0 if any part of the
+      structural data was acquired at 1.5T or lower (including mixed 1.5T/3T
+      samples). Answer n/a if the field strength is not stated in the text.
+
+  - id: mri_resolution_isotropic
+    source_column: "MRI resolution ? 1.5mm & approximately isotropic"
+    definition: >-
+      Was the structural T1-weighted MRI acquired with voxels of about 1.5 mm or
+      finer in EVERY dimension? Examples that qualify: 1 x 1 x 1 mm, 1.2 x 1.2 x 1.2 mm,
+      1.2 x 1.2 x 1.5 mm, 1 x 1 x 1.5 mm, 0.9 x 0.9 x 1.2 mm, or a stated voxel volume
+      of 1 mm^3 for a 3D T1 sequence. Examples that do not qualify: 1.2 x 1.2 x 2.5 mm,
+      1 x 1 x 3 mm, or any dimension clearly coarser than ~1.5 mm. If voxel size is
+      not stated directly, derive it from field of view / matrix and slice
+      thickness (+ gap) when these are reported. Judge the ACQUISITION, not the
+      resolution data were resampled to. Answer n/a if it cannot be determined.
+
+  - id: gray_matter
+    source_column: "gray matter yes/no"
+    definition: >-
+      Does the study report at least one statistically significant effect involving
+      gray matter brain structure (e.g., gray matter volume, density, or thickness),
+      in a primary or secondary analysis of its own data? Answer 0 if no
+      gray-matter structural effect is significant, or if the only "gray matter"
+      measures quantify something else inside gray matter (e.g., CBF/BOLD signal in
+      a gray-matter mask, MRS metabolites in a GM voxel, histological cell counts),
+      or if gray-matter findings come only from other studies (e.g., a
+      meta-analysis).
+
+  - id: vbm
+    source_column: "VBM yes/no"
+    definition: >-
+      Does this study itself apply voxel-based morphometry (VBM) to MRI data it
+      acquired or processed itself — i.e., perform morphometric analyses such as
+      group comparisons or associations on VBM-derived gray matter maps?
+      Synthesizing, citing, or meta-analyzing VBM results from other studies does
+      not count. Using a VBM toolbox (e.g., CAT12/SPM) only to segment tissue in
+      order to feed machine-learning classifiers or normative models, without such
+      morphometric analyses, also does not count.
+
+  - id: statistics_reported
+    source_column: "statistics yes/no"
+    definition: >-
+      Does the paper employ/report univariate standard inferential statistics — e.g.,
+      general linear models or similar (t/F/chi-square values, ANOVA/regression results
+      with p-values, correlations) — for analyses performed on this study's own data?
+      Statistics based on machine-learning models do NOT count (e.g., classifier accuracy
+      assessed by permutation or binomial tests, cross-validated prediction metrics),
+      and if the study's PRIMARY inference is machine-learning-based
+      (prediction/classification), answer 0 even when secondary or exploratory classical
+      tests of model features are reported. Neither does only summarizing or
+      meta-analyzing statistical results from other studies.
+
+# =============================================================================
+# Tier 2 — abstract-level screening gates.
+# Only criteria a screener can reliably decide from title + abstract alone.
+# The decision rule is applied IN CODE: a paper is dropped when ANY gate is an
+# explicit "0"; "n/a" never excludes (recall-first; precision belongs to Tier 3).
+#
+# Evaluation (s4b_report_abstract.py): each gate is compared with
+#   human_column        a human column with the same meaning (full 1/0 reference), or
+#   human_proxy_column  a column whose being scored (1/0) implies the gate is met
+#                       -> positives only, sensitivity only.
+# =============================================================================
+
+abstract_screening:
+  decision_rule: no_if_any_gate_zero
+  min_abstract_chars: 50
+  criteria:
+    - id: primary_research
+      human_column: "primary research yes/no"
+      definition: >-
+        Is this an original empirical study reporting its own (primary) data and
+        analyses, rather than a systematic review, meta-analysis, narrative review,
+        commentary, editorial, or similar non-primary article? Judge from the
+        title/abstract alone.
+
+    - id: human_subjects
+      human_column: "human subjects yes/no"
+      definition: >-
+        Does the study include human participants / human-derived data as subjects
+        (as opposed to purely animal, cell-line, or computational-only studies)?
+        Answer n/a if no subject type is stated in the title/abstract.
+
+    - id: depression_related
+      human_column: "research question related to depression yes/no"
+      definition: >-
+        Is depression part of the study's main research question, as stated in the
+        title/abstract? Answer 1 when depression (diagnosis, depressive symptoms,
+        mood states / low mood / negative affect, subtypes, course of illness) is a
+        primary focus or a main group/outcome — including depression within another
+        condition (e.g., patients with vs without depression) and multi-disorder
+        designs where depression is one of the principal groups — or when the study
+        investigates an established depression risk/protective factor (childhood
+        adversity, maltreatment, trauma, stressful life events, perceived or chronic
+        stress, genetic risk) in healthy, at-risk or depressed samples, even if the
+        abstract never uses the word "depression". Answer 0 when the abstract describes the study's aims
+        and measures and depression is absent, or appears only as a covariate,
+        exclusion criterion or sample descriptor; when adversity or personality traits are
+        studied within samples defined by another disorder (substance use,
+        psychosis, borderline personality disorder) or as general traits
+        (neuroticism, optimism, impulsivity) without depression as a main
+        variable; or when "depression" is non-psychiatric. If the abstract reports a
+        finding relating depressive symptoms to brain structure, answer 1 even when
+        the study is mainly about another condition (whether such papers meet the
+        criterion is decided at full text). Answer n/a only if the abstract is too
+        short or vague to tell.
+
+    - id: structural_mri
+      human_proxy_column: "MRI field strength ? 3 Tesla"
+      definition: >-
+        Does the study measure gray matter brain structure from structural MRI
+        (e.g., T1-weighted scans analysed for gray matter volume, density or
+        thickness, voxel-based morphometry, or regional brain volumes)? Answer 0 only
+        when the title/abstract make clear that no structural MRI gray-matter measure
+        is used — e.g., only functional MRI, diffusion MRI/DTI, MR spectroscopy, PET,
+        EEG/MEG, CT, post-mortem histology, or no brain imaging at all. Answer n/a if
+        MRI is mentioned but the type of measure is unclear.
