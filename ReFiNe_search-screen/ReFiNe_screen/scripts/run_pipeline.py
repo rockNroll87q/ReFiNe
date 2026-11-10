@@ -41,7 +41,7 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
-from common import DEFAULT_RUN, HUB_MANIFEST_CSV, HUB_ROOT, PDF_DIR, ROOT, load_env, run_paths  # noqa: E402
+from common import DEFAULT_RUN, HUB_MANIFEST_CSV, HUB_ROOT, PDF_DIR, ROOT, load_env, path_str, run_paths  # noqa: E402
 
 SCRIPTS = ROOT / "scripts"
 HUB_SCRIPTS = HUB_ROOT / "scripts"
@@ -53,7 +53,7 @@ def script(local_name: str, hub_name: str | None = None) -> Path:
 
 
 def build_merged_manifest(hub_csv: Path, run_csv: Path, out_csv: Path) -> int:
-    """Hub + run manifests (run rows win), pdf_path pointed at cache/pdf. Returns row count."""
+    """Hub + run manifests (run rows win), pdf_path pointed at the PDF cache. Returns row count."""
     rows: dict[str, dict] = {}
     for path, winning in ((hub_csv, False), (run_csv, True)):
         if not path.exists():
@@ -67,7 +67,7 @@ def build_merged_manifest(hub_csv: Path, run_csv: Path, out_csv: Path) -> int:
         return 0
     for pid, r in rows.items():
         local = PDF_DIR / f"{pid}.pdf"
-        r["pdf_path"] = str(local.relative_to(ROOT)) if local.exists() else ""  # failures: no path -> no "missing" noise
+        r["pdf_path"] = path_str(local) if local.exists() else ""  # failures: no path -> no "missing" noise
     out_csv.parent.mkdir(parents=True, exist_ok=True)
     fields = list(dict.fromkeys(k for r in rows.values() for k in r))
     with open(out_csv, "w", newline="", encoding="utf-8") as fh:

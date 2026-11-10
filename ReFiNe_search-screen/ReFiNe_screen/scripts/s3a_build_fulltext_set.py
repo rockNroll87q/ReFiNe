@@ -24,7 +24,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
-from common import (HUB_MANIFEST_CSV, PDF_DIR, ROOT, SCREENED_CSV, add_run_arg, human_row_doi,  # noqa: E402
+from common import (HUB_MANIFEST_CSV, PDF_DIR, ROOT, path_str, SCREENED_CSV, add_run_arg, human_row_doi,  # noqa: E402
                     human_row_status, load_config, load_id_registry, norm_cell, norm_doi, read_papers,
                     run_paths)
 
@@ -86,7 +86,7 @@ def main() -> int:
             unmatched.append(f"{pdf.stem}\t{doi or '(no DOI known)'}\tno scored human row")
             continue
         records.append({"paper_id": pdf.stem, "doi": doi, "title": title,
-                        "pdf_path": str(pdf.relative_to(ROOT)), "human": rows[0],
+                        "pdf_path": path_str(pdf), "human": rows[0],
                         "n_csv_rows_for_doi": len(rows)})
 
     rp.dir.mkdir(parents=True, exist_ok=True)

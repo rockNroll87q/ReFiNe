@@ -11,6 +11,7 @@ Layout (see REORG_PLAN.md):
 from __future__ import annotations
 
 import csv
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -21,13 +22,33 @@ PROMPTS_DIR = ROOT / "prompts"
 INPUT_DIR = ROOT / "data" / "input"
 SCREENED_CSV = INPUT_DIR / "screened_studies_full.csv"   # human scores, latin-1
 SEARCH_CSV = INPUT_DIR / "vbm_depression_wide.csv"       # search output, utf-8
-CACHE_DIR = ROOT / "cache"
-PDF_DIR = CACHE_DIR / "pdf"
-TEXT_DIR = CACHE_DIR / "text"
-ID_REGISTRY = CACHE_DIR / "paper_ids.csv"
 RUNS_DIR = ROOT / "runs"
 
 HUB_ROOT = ROOT.parent.parent / "ReFiNe_Hub"
+ENV_FILES = (ROOT / ".env", HUB_ROOT / ".env")  # first existing wins; real env vars always win
+
+
+def _env_value(key: str) -> str:
+    """Read one setting before load_env() runs: real environment first, then the .env files."""
+    if os.environ.get(key):
+        return os.environ[key]
+    for f in ENV_FILES:
+        if f.exists():
+            for line in f.read_text(encoding="utf-8").splitlines():
+                k, sep, v = line.strip().removeprefix("export ").partition("=")
+                if sep and k.strip() == key:
+                    return v.strip().strip("'\"")
+            return ""
+    return ""
+
+
+# Shared cache: PDFs, extracted text and the DOI -> paper_id registry. These three MUST live
+# together: PDFs are named by paper_id, so a cache used with another registry would hand the
+# wrong PDF to a paper. Set REFINE_CACHE_DIR (in .env) to share one cache between users.
+CACHE_DIR = Path(_env_value("REFINE_CACHE_DIR") or ROOT / "cache").expanduser()
+PDF_DIR = CACHE_DIR / "pdf"
+TEXT_DIR = CACHE_DIR / "text"
+ID_REGISTRY = CACHE_DIR / "paper_ids.csv"
 HUB_ELIGIBLE_CSV = HUB_ROOT / "data/input/eligible_studies.csv"
 HUB_MANIFEST_CSV = HUB_ROOT / "data/input/pdf_download_manifest.csv"
 
@@ -105,6 +126,15 @@ def add_run_arg(ap, help_extra: str = "") -> None:
 # Identifiers / cell normalisation
 # ---------------------------------------------------------------------------
 
+def path_str(p: Path) -> str:
+    """Path for CSV/JSON records: repo-relative if inside the repo, else absolute (shared cache)."""
+    p = Path(p).resolve()
+    try:
+        return str(p.relative_to(ROOT))
+    except ValueError:
+        return str(p)
+
+
 def norm_doi(doi: str | None) -> str:
     doi = (doi or "").strip().lower()
     for prefix in ("https://doi.org/", "http://doi.org/", "https://dx.doi.org/",
@@ -172,7 +202,7 @@ def load_id_registry() -> dict[str, str]:
 
 def save_id_registry(reg: dict[str, str]) -> None:
     ID_REGISTRY.parent.mkdir(parents=True, exist_ok=True)
-    tmp = ID_REGISTRY.with_suffix(".tmp")
+    tmp = ID_REGISTRY.with_suffix(f".{os.getpid()}.tmp")
     with open(tmp, "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         w.writerow(["doi", "paper_id"])
@@ -183,17 +213,22 @@ def save_id_registry(reg: dict[str, str]) -> None:
 
 def assign_paper_ids(dois: list[str]) -> dict[str, str]:
     """Return DOI -> paper_id for `dois`, registering new DOIs as REFINE-<next>."""
-    reg = load_id_registry()
-    nxt = max((int(p.split("-")[1]) for p in reg.values()), default=0) + 1
-    changed = False
-    for d in dois:
-        d = norm_doi(d)
-        if d and d not in reg:
-            reg[d] = f"REFINE-{nxt:04d}"
-            nxt += 1
-            changed = True
-    if changed:
-        save_id_registry(reg)
+    import fcntl
+
+    ID_REGISTRY.parent.mkdir(parents=True, exist_ok=True)
+    with open(ID_REGISTRY.with_suffix(".lock"), "w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)  # shared cache: serialise read-modify-write across users
+        reg = load_id_registry()
+        nxt = max((int(p.split("-")[1]) for p in reg.values()), default=0) + 1
+        changed = False
+        for d in dois:
+            d = norm_doi(d)
+            if d and d not in reg:
+                reg[d] = f"REFINE-{nxt:04d}"
+                nxt += 1
+                changed = True
+        if changed:
+            save_id_registry(reg)
     return {norm_doi(d): reg[norm_doi(d)] for d in dois if norm_doi(d)}
 
 
@@ -306,16 +341,12 @@ def human_included(row: dict, criteria: list[dict]) -> bool:
 # Environment (.env) — API keys and LLM settings
 # ---------------------------------------------------------------------------
 
-ENV_FILES = (ROOT / ".env", HUB_ROOT / ".env")  # first existing wins; real env vars always win
-
 
 def load_env(path: Path | None = None) -> tuple[Path | None, int]:
     """Load KEY=VALUE lines into os.environ without overriding variables already set.
 
     Returns (file used or None, number of variables loaded). Values are never printed.
     """
-    import os
-
     candidates = [path] if path else [p for p in ENV_FILES if p.exists()]
     for p in candidates:
         if p is None or not p.exists():

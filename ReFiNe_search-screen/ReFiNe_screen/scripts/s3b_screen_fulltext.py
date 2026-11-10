@@ -37,7 +37,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
-from common import (ROOT, SYSTEM_PROMPT, TEXT_DIR, add_run_arg, load_config, pick_prompt,  # noqa: E402
+from common import (PDF_DIR, ROOT, SYSTEM_PROMPT, TEXT_DIR, add_run_arg, load_config, pick_prompt,  # noqa: E402
                     render_criteria_block, run_paths)
 from llm_client import CircuitBreaker, health_check, rate_with_retry  # noqa: E402
 from runner import print_stats, read_status, run_items  # noqa: E402
@@ -190,7 +190,8 @@ def ensure_text(rec: dict) -> Path:
     if not tp.exists():
         from pdf_to_text import pdf_to_text  # heavy (Docling); only import when converting
 
-        pdf_to_text(ROOT / rec["pdf_path"], tp)
+        pdf = PDF_DIR / f"{rec['paper_id']}.pdf"  # current cache, not the path stored at build time
+        pdf_to_text(pdf if pdf.exists() else ROOT / rec["pdf_path"], tp)
     return tp
 
 
