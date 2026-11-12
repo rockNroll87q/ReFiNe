@@ -1,0 +1,8 @@
+openai>=1.0
+requests
+pyyaml
+rapidfuzz
+matplotlib
+# full-text stage only (PDF -> text); large install
+docling
+ 
