@@ -2,4 +2,5 @@ ReFiNe_Hub/out.txt
 ReFiNe_Hub/refine/__pycache__
 ReFiNe_Hub/refine/__pycache__/*
 ReFiNe_Hub/refine/__pycache__/*.pyc
+ReFiNe_search-screen/ReFiNe_screen/**/*.pyc
 .env

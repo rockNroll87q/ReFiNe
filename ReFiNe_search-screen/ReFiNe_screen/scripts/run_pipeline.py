@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """One-command runner for the ReFiNe_screen pipeline. All outputs go to runs/<run>/.
 
+  s00  s00_search_papers.py            literature search (only with --search) -> search CSV
+       settings in config/search.yaml, overridden by --search-config/--query-group/--search-sources/--search-out
   s0   s0_collect_combined_papers.py | s0b_build_test_set.py | s0c_build_eligible_set.py
        -> runs/<run>/papers.csv (only if it does not exist yet; choose with --paper-set)
   s1   s1_screen_abstract.py          abstract screening        -> abstract/, abstract_yes.csv
@@ -84,12 +86,32 @@ def csv_has_rows(path: Path) -> bool:
         return any((r.get("paper_id") or "").strip() for r in csv.DictReader(fh))
 
 
+def search_args(args) -> list[str]:
+    """Translate the --search-* options into s00_search_papers.py arguments (unset options are omitted)."""
+    out: list[str] = []
+    if args.search_config:
+        out += ["--config", str(args.search_config)]
+    for g in args.query_group:
+        out += ["--query-group", g]
+    for flag, val in (("--sources", args.search_sources), ("--out", args.search_out)):
+        if val:
+            out += [flag, str(val)]
+    if args.search_force:
+        out.append("--force")
+    if args.env_file:
+        out += ["--env-file", str(args.env_file)]
+    return out
+
+
 def build_stages(args, rp) -> list[tuple[str, str, list[str]]]:
     py = sys.executable
     run = ["--run", args.run]
     grp = ["--group", args.group] if args.group else []
     llm = ["--workers", str(args.workers), "--max-consecutive-failures", str(args.max_consecutive_failures)]
     st: list[tuple[str, str, list[str]]] = []
+
+    if args.search:
+        st.append(("s00", "Search literature databases", [py, str(script("s00_search_papers.py")), *search_args(args)]))
 
     if not args.skip_collect and not rp.papers.exists():
         if args.paper_set == "combined":
@@ -144,6 +166,14 @@ def main() -> int:
     ap.add_argument("--group", default=None, help="restrict screening/reports to one split (e.g. dev)")
     ap.add_argument("--fulltext-scope", choices=("run", "all"), default="run",
                     help="s3a: this run's papers only, or every cached PDF")
+    ap.add_argument("--search", action="store_true",
+                    help="run s00 first: query the literature databases using config/search.yaml")
+    ap.add_argument("--search-config", type=Path, default=None, help="search config (default config/search.yaml)")
+    ap.add_argument("--query-group", action="append", default=[],
+                    help='AND group, terms separated by "|"; repeat per group; overrides config query_groups')
+    ap.add_argument("--search-sources", default=None, help="comma separated subset of sources")
+    ap.add_argument("--search-out", type=Path, default=None, help="search CSV path (overrides config output.csv)")
+    ap.add_argument("--search-force", action="store_true", help="overwrite an existing search CSV")
     ap.add_argument("--n-extra", type=int, default=100)
     ap.add_argument("--max-papers", type=int, default=None)
     ap.add_argument("--workers", type=int, default=2)

@@ -1,0 +1,23 @@
+# Inputs for scripts/s00_search_papers.py. Every value can be overridden on the command line.
+# API keys are not stored here. They come from .env or the environment
+# (OPENALEX_API_KEY, SEMANTIC_SCHOLAR_API_KEY) or from run_pipeline.py --api-key / --ss-api-key.
+
+# Outer list = AND, inner list = OR.
+query_groups:
+  - [voxel-based morphometry, voxel based morphometry, VBM]
+  - [depression, depressive disorder, major depressive disorder, major depression]
+  - [gray matter, grey matter]
+  - [magnetic resonance imaging, MRI]
+
+sources: [pubmed, openalex, semanticscholar, europepmc]
+
+# Contact address for OpenAlex. Falls back to NCBI_EMAIL.
+email: ""
+
+pubmed_max_results: 9998   # NCBI hard limit is 9999 per query
+
+# Relative paths resolve against the repo root. Leave csv unset to use common.SEARCH_CSV
+# (data/input/vbm_depression_wide.csv), the file every s0 script reads.
+output:
+  # csv: data/input/vbm_depression_wide.csv
+  pubmed_jsonl: data/input/pubmed_raw.jsonl
