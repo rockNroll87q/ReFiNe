@@ -1,0 +1,33 @@
+{
+  "date_utc": "2026-11-13T14:13:16+00:00",
+  "query_groups": [
+    [
+      "voxel-based morphometry",
+      "voxel based morphometry",
+      "VBM"
+    ],
+    [
+      "depression",
+      "depressive disorder",
+      "major depressive disorder",
+      "major depression"
+    ],
+    [
+      "gray matter",
+      "grey matter"
+    ],
+    [
+      "magnetic resonance imaging",
+      "MRI"
+    ]
+  ],
+  "raw_counts": {
+    "pubmed": 649,
+    "openalex": 472,
+    "semanticscholar": 414,
+    "europepmc": 6945
+  },
+  "errors": {},
+  "unique_dois": 6908,
+  "with_abstract": 6736
+}

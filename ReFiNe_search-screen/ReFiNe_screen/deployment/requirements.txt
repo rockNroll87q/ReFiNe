@@ -3,6 +3,9 @@ requests
 pyyaml
 rapidfuzz
 matplotlib
+pandas
+tqdm
+loguru
+paperscraper
 # full-text stage only (PDF -> text); large install
 docling
- 
