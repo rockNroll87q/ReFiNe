@@ -178,7 +178,8 @@ def fetch_europepmc(query_groups, **_):
         r = get_json(url, params)
         pbar = pbar or tqdm(total=r.get("hitCount", 0), desc="europepmc")
         results = r.get("resultList", {}).get("result", [])
-        records += [{"title": x.get("title"), "doi": x.get("doi"), "journal": x.get("journalTitle"),
+        records += [{"title": x.get("title"), "doi": x.get("doi"),
+                     "journal": ((x.get("journalInfo") or {}).get("journal") or {}).get("title"),
                      "year": x.get("pubYear"), "abstract": x.get("abstractText"), "source": "europepmc"}
                     for x in results]
         pbar.update(len(results))
@@ -311,7 +312,11 @@ def run_search(query_groups, sources, **cfg):
         try:
             got = FETCHERS[s](query_groups, **cfg)
         except Exception as e:
-            errors[s] = f"{type(e).__name__}: {e}"
+            if isinstance(e, requests.exceptions.RequestException):
+                detail = f"HTTP {e.response.status_code}" if e.response is not None else "request failed"
+            else:
+                detail = str(e)
+            errors[s] = f"{type(e).__name__}: {detail}"
             logger.error(f"{s} failed: {errors[s]}")
             continue
         counts[s] = len(got)

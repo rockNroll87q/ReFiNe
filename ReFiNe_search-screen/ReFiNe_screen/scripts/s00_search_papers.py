@@ -124,6 +124,9 @@ def main() -> int:
         return 1
 
     df = dedupe(records)
+    if df.empty:
+        print("[FAILED] no records with a usable DOI returned")
+        return 1
     df.to_csv(s["csv"], index=False)
     meta = {"date_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "query_groups": s["query_groups"], "raw_counts": counts, "errors": errors,
